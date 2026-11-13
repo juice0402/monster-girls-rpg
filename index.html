@@ -87,6 +87,27 @@ function actorReflection(pose,hop,p){
  ctx.save();ctx.globalCompositeOperation='screen';ctx.globalAlpha=.92*a;
  ctx.drawImage(light,0,hop);ctx.restore();
 }
+// Real ground-plane projection: rear rim is under the character; front rim is drawn after the character.
+function floorSigil(a,pulse){
+ const x=157,y=452,rx=119*pulse,ry=14;
+ ctx.save();
+ const halo=ctx.createRadialGradient(x,y,12,x,y,rx);
+ halo.addColorStop(0,`rgba(165,58,232,${.18*a})`);
+ halo.addColorStop(.6,`rgba(154,41,235,${.10*a})`);
+ halo.addColorStop(1,'rgba(122,43,204,0)');
+ ctx.save();ctx.translate(x,y);ctx.scale(1,.19);ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,rx,0,Math.PI*2);ctx.fill();ctx.restore();
+ ctx.strokeStyle=`rgba(209,101,255,${.57*a})`;
+ ctx.lineWidth=2.2;ctx.shadowColor='#b84cff';ctx.shadowBlur=13;
+ ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,Math.PI,Math.PI*2);ctx.stroke();
+ ctx.restore();
+}
+function floorFrontRim(a,pulse){
+ if(a<=0)return;
+ const x=157,y=452;
+ ctx.save();ctx.lineWidth=2;ctx.strokeStyle=`rgba(229,123,255,${a*.48})`;
+ ctx.shadowColor='#c05aff';ctx.shadowBlur=13;
+ ctx.beginPath();ctx.ellipse(x,y,119*pulse,14,0,0,Math.PI);ctx.stroke();ctx.restore();
+}
 // Layer 1: FX that must be BEHIND the actor: the ground ring is foot-anchored.
 function effectBehind(t,p,hop){
  if(C.only.checked||!C.aura.checked)return;
@@ -95,7 +116,10 @@ function effectBehind(t,p,hop){
  const gy=ANCHOR.groundY;
  const pulse=1+.055*Math.sin(t*.0075);
  // Ring aligned with the lowered character so boots meet the floor rather than hovering.
- pic('ground',ANCHOR.groundX-120*pulse,gy-76,240*pulse,108,a*.84);
+ // Drop the glowing ring onto the floor plane rather than raising the actor.
+ pic('ground',ANCHOR.groundX-120*pulse,gy-65,240*pulse,108,a*.67);
+ // Projected ellipse sits on the ground, extending in front of the boots.
+ floorSigil(a,pulse);
  // Broader body aura so the character feels wrapped by power, not just sitting on a ring.
  pic('aura',ANCHOR.torsoX-150,ANCHOR.torsoY-152+hop*.5,300,282,a*.42,Math.sin(t*.002)*.03);
 }
@@ -142,6 +166,7 @@ function draw(now){if(loaded<assetsCount()){ctx.fillStyle='#171024';ctx.fillRect
  const pose=casting?'cast_clean':'idle';
  pic(pose,20+(casting?0:0),(casting?193:187)+hop,casting?242:228,276,1);
  if(spell)actorReflection(pose,hop,p);
+ if(spell&&!C.only.checked&&C.aura.checked)floorFrontRim(fade(p,95,330,1180,1600),1+.055*Math.sin(now*.0075));
  if(spell)effectFront(now,p,hop);
  ctx.fillStyle='#e7c7ff';ctx.font='13px system-ui';ctx.fillText(casting?'CAST / 魔法発動':(hp===0?'WIN / 勝利':'IDLE / 待機'),22,494);
  if(spell&&p>840&&p<1310&&C.bullet.checked && !C.only.checked){ctx.font='bold 28px system-ui';ctx.fillStyle='#ffe4fa';ctx.textAlign='center';ctx.fillText('-25',684,278-(p-840)*.075);ctx.textAlign='left';}
