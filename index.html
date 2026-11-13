@@ -83,7 +83,7 @@ function contactShadow(a){
 }
 function actorReflection(pose,hop,p){
  if(C.only.checked||!C.aura.checked||!C.bounce.checked)return;
- const a=fade(p,140,490,1110,1550);
+ const a=fade(p,350,1050,2450,3570);
  if(a<=0)return;
  const light=getBounceLayer(pose);if(!light)return;
  ctx.save();ctx.globalCompositeOperation='screen';ctx.globalAlpha=.92*a;
@@ -139,45 +139,61 @@ function floorFrontRim(a,pulse){
 // Layer 1: FX that must be BEHIND the actor: the ground ring is foot-anchored.
 function effectBehind(t,p,hop){
  if(C.only.checked||!C.aura.checked)return;
- const a=fade(p,95,330,1180,1600);
+ const a=fade(p,0,420,2860,3700);
  if(a<=0)return;
  const pulse=1+.055*Math.sin(t*.0075);
  // Place the rear ellipse exactly on the floor horizon (y454), with the rest extending toward the camera.
  // The old ring sprite appeared suspended in front of the boots; use only a floor-plane sigil.
  // Projected ellipse sits on the ground, extending in front of the boots.
  floorSigil(a,pulse);
+ // Small drifting motes rise out of the sigil during the long incantation.
+ const motes=fade(p,260,920,2450,3440);
+ if(motes>0){
+  for(let i=0;i<9;i++){
+   const phase=(t*.00019+i*.137)%1;
+   const x=FLOOR.x+Math.sin(i*2.42+phase*5.4)*(26+(i%4)*23);
+   const y=FLOOR.y-14-phase*(88+i%3*28);
+   ctx.save();ctx.globalAlpha=motes*(.28+.47*Math.sin(Math.PI*phase));
+   ctx.fillStyle=i%2?'#f1bcff':'#bd68ff';ctx.shadowColor='#e7a1ff';ctx.shadowBlur=9;
+   ctx.beginPath();ctx.arc(x,y,1.4+(i%3)*.65,0,Math.PI*2);ctx.fill();ctx.restore();
+  }
+ }
  // Broader body aura so the character feels wrapped by power, not just sitting on a ring.
- pic('aura',ANCHOR.torsoX-150,ANCHOR.torsoY-152+hop*.5,300,282,a*.42,Math.sin(t*.002)*.03);
+ const body=fade(p,390,1270,2520,3460);
+ if(body>0)pic('aura',ANCHOR.torsoX-150,ANCHOR.torsoY-152+hop*.5,300,282,body*.50,Math.sin(t*.002)*.03);
 }
 // Layer 3: all foreground accents; circles belong at the raised hand, not the feet.
 function effectFront(t,p,hop){
  if(C.only.checked)return;
- const auraAlpha=fade(p,230,460,1110,1540);
+ const auraAlpha=fade(p,560,1240,2510,3440);
  if(C.aura.checked && auraAlpha>0){
   pic('sparks',ANCHOR.torsoX-46,ANCHOR.torsoY-112+hop,182,132,auraAlpha*.36);
  }
  if(C.circle.checked){
-  const c=fade(p,230,470,945,1240);
-  if(c>0){const sc=.84+.24*smooth((p-230)/255);
+  const c=fade(p,890,1510,2080,2890);
+  if(c>0){const sc=.72+.32*smooth((p-890)/620);
    pic('circle',ANCHOR.handX+18-57*sc,ANCHOR.handY-73*sc+hop,114*sc,154*sc,c*.96,Math.sin(t*.0024)*.085);
   }
  }
  if(C.butterfly.checked){
-  const b=fade(p,175,470,1110,1490);
+  const b=fade(p,500,1280,2840,3760);
   if(b>0){
    // Rising wrap: butterflies start around the lower body and travel upward around the silhouette.
-   for(let i=0;i<4;i++)butterflyStream(t,p,ANCHOR.torsoX-34,ANCHOR.torsoY-2+hop,i,b*(i<2?.86:.72));
+   for(let i=0;i<4;i++){
+    const stagger=smooth((p-520-i*145)/630);
+    butterflyStream(t,p,ANCHOR.torsoX-34,ANCHOR.torsoY-2+hop,i,b*stagger*(i<2?.90:.78));
+   }
   }
  }
  if(C.bullet.checked){
-  const b=fade(p,500,610,930,1080);
-  if(b>0){const progress=smooth((p-520)/455);
+  const b=fade(p,1650,1810,2180,2370);
+  if(b>0){const progress=smooth((p-1690)/495);
     const x=ANCHOR.handX+65+(ANCHOR.enemyX-(ANCHOR.handX+80))*progress;
     const y=ANCHOR.handY+hop+(ANCHOR.enemyY-ANCHOR.handY)*progress;
     pic('bullet',x-60,y-29,120,58,b*.97);
   }
-  const h=fade(p,880,960,1060,1380);
-  if(h>0){const sc=.8+.55*smooth((p-880)/260);
+  const h=fade(p,2110,2250,2450,2890);
+  if(h>0){const sc=.8+.55*smooth((p-2110)/540);
     pic('impact',ANCHOR.enemyX-79*sc,ANCHOR.enemyY-101*sc,158*sc,148*sc,h*.9);
   }
  }
@@ -185,23 +201,23 @@ function effectFront(t,p,hop){
 function draw(now){if(loaded<assetsCount()){ctx.fillStyle='#171024';ctx.fillRect(0,0,780,510);ctx.fillStyle='white';ctx.font='18px system-ui';ctx.fillText('画像を読み込み中…',25,80);return}
  const p=spell?now-started:0;
  background(now);enemy(now);
- const casting=spell&&p>130&&p<1320;
- const hop=casting?-6*Math.sin(Math.PI*clamp((p-150)/1200)):0;
+ const casting=spell&&p>840&&p<2650;
+ const hop=casting?-3*Math.sin(Math.PI*clamp((p-840)/1810)):0;
  if(spell)effectBehind(now,p,hop);
- contactShadow(spell&&!C.only.checked&&C.aura.checked?fade(p,95,330,1180,1600):0);
+ contactShadow(spell&&!C.only.checked&&C.aura.checked?fade(p,0,420,2860,3700):0);
  const pose=casting?'cast_clean':'idle';
  pic(pose,20+(casting?0:0),(casting?193:187)+hop,casting?242:228,276,1);
  if(spell)actorReflection(pose,hop,p);
- if(spell&&!C.only.checked&&C.aura.checked)floorFrontRim(fade(p,95,330,1180,1600),1+.055*Math.sin(now*.0075));
+ if(spell&&!C.only.checked&&C.aura.checked)floorFrontRim(fade(p,0,420,2860,3700),1+.055*Math.sin(now*.0075));
  if(spell)effectFront(now,p,hop);
- ctx.fillStyle='#e7c7ff';ctx.font='13px system-ui';ctx.fillText(casting?'CAST / 魔法発動':(hp===0?'WIN / 勝利':'IDLE / 待機'),22,494);
- if(spell&&p>840&&p<1310&&C.bullet.checked && !C.only.checked){ctx.font='bold 28px system-ui';ctx.fillStyle='#ffe4fa';ctx.textAlign='center';ctx.fillText('-25',684,278-(p-840)*.075);ctx.textAlign='left';}
- if(spell&&p>850&&!lastHit){lastHit=true;hp=Math.max(0,hp-25);status.textContent=hp>0?'魔法命中！ 足元オーラ・全身蝶・前面魔法陣の重なりを確認してね':'勝利！ もう一度押すと再戦';}
- if(spell&&p>1550){spell=false;fire.disabled=false;status.textContent=hp>0?'右向き待機中 • 足元オーラと全身を包む蝶々に調整済み':'勝利！ リセットで再戦';}
+ ctx.fillStyle='#e7c7ff';ctx.font='13px system-ui';ctx.fillText(spell?(p<820?'CHANT / 魔法陣展開':p<1670?'CHANNEL / 詠唱中':p<2380?'RELEASE / 魔力解放':'AFTERGLOW / 魔力の余韻'):(hp===0?'WIN / 勝利':'IDLE / 待機'),22,494);
+ if(spell&&p>2130&&p<2660&&C.bullet.checked && !C.only.checked){ctx.font='bold 28px system-ui';ctx.fillStyle='#ffe4fa';ctx.textAlign='center';ctx.fillText('-25',684,278-(p-2130)*.075);ctx.textAlign='left';}
+ if(spell&&p>2160&&!lastHit){lastHit=true;hp=Math.max(0,hp-25);status.textContent=hp>0?'魔法命中！ 足元オーラ・全身蝶・前面魔法陣の重なりを確認してね':'勝利！ もう一度押すと再戦';}
+ if(spell&&p>3800){spell=false;fire.disabled=false;status.textContent=hp>0?'右向き待機中 • 足元オーラと全身を包む蝶々に調整済み':'勝利！ リセットで再戦';}
 }
 function assetsCount(){return Object.keys(SRC).length}
 let qaElapsed=null;function tick(t){if(qaElapsed!==null){let os=started,op=spell,oh=lastHit;started=0;spell=true;lastHit=true;draw(qaElapsed);started=os;spell=op;lastHit=oh;}else draw(t);requestAnimationFrame(tick)}requestAnimationFrame(tick);
-document.getElementById('fire').addEventListener('click',()=>{if(spell)return;if(hp===0){hp=100;}lastHit=false;spell=true;started=performance.now();fire.disabled=true;status.textContent='キャラ本体・足元オーラ・全身を包む蝶・手前魔法陣を再生中';});
+document.getElementById('fire').addEventListener('click',()=>{if(spell)return;if(hp===0){hp=100;}lastHit=false;spell=true;started=performance.now();fire.disabled=true;status.textContent='魔法陣展開 → 詠唱 → 魔法発射 → 蝶とオーラの余韻';});
 document.getElementById('reset').addEventListener('click',()=>{hp=100;spell=false;lastHit=false;fire.disabled=false;status.textContent='右向き待機中 • オーラと蝶のサイズ感を見てみてね'});
 C.only.addEventListener('change',()=>{status.textContent=C.only.checked?'エフェクト非表示：ポーズ自体は変わるよ':'独立エフェクト表示中'});
 // deterministic frames for automated visual QA
