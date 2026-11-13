@@ -32,7 +32,7 @@ function butterflyStream(t,p,anchorX,anchorY,i,opacity){
  const keys=['butterfly_1','butterfly_2','butterfly_3','butterfly_4'];
  const phase=((t*.00024)+(i*.22)+((p||0)*.00022))%1;
  // Start near the lower body and rise past the shoulders/head.
- const startX=[-12,14,-18,10][i], driftX=[18,26,-14,22][i];
+ const startX=[-22,12,-9,18][i], driftX=[14,20,-12,17][i];
  const startY=[74,58,88,68][i], rise=170;
  const x=anchorX+startX+Math.sin(phase*6.283+i)*10 + driftX*(phase-.5);
  const y=anchorY+startY-rise*phase + Math.cos(phase*5.2+i*.8)*7;
@@ -62,7 +62,7 @@ function getBounceLayer(pose){
  bounceLayers[pose]=off;return off;
 }
 function contactShadow(a){
- const x=158,y=451;
+ const x=158,y=457;
  ctx.save();
  // Subtle dark center remains under the feet even at maximum brightness.
  ctx.translate(x,y);ctx.scale(1,.21);
@@ -71,7 +71,7 @@ function contactShadow(a){
  s.addColorStop(.52,'rgba(21,7,30,.40)');s.addColorStop(1,'rgba(16,9,25,0)');
  ctx.fillStyle=s;ctx.beginPath();ctx.arc(0,0,88,0,Math.PI*2);ctx.fill();ctx.restore();
  if(a>0){
-  ctx.save();ctx.translate(x,450);ctx.scale(1,.24);
+  ctx.save();ctx.translate(x,459);ctx.scale(1,.24);
   const g=ctx.createRadialGradient(0,0,8,0,0,122);
   g.addColorStop(0,'rgba(195,84,255,0)');
   g.addColorStop(.45,'rgba(158,64,255,'+(.10*a)+')');
@@ -89,24 +89,39 @@ function actorReflection(pose,hop,p){
 }
 // Real ground-plane projection: rear rim is under the character; front rim is drawn after the character.
 function floorSigil(a,pulse){
- const x=157,y=452,rx=119*pulse,ry=14;
+ const x=157,y=470,rx=116*pulse,ry=16;
  ctx.save();
  const halo=ctx.createRadialGradient(x,y,12,x,y,rx);
  halo.addColorStop(0,`rgba(165,58,232,${.18*a})`);
  halo.addColorStop(.6,`rgba(154,41,235,${.10*a})`);
  halo.addColorStop(1,'rgba(122,43,204,0)');
  ctx.save();ctx.translate(x,y);ctx.scale(1,.19);ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,rx,0,Math.PI*2);ctx.fill();ctx.restore();
- ctx.strokeStyle=`rgba(209,101,255,${.57*a})`;
- ctx.lineWidth=2.2;ctx.shadowColor='#b84cff';ctx.shadowBlur=13;
+ // The glyph is projected onto the floor, never rendered as an upright sprite.
+ ctx.save();ctx.translate(x,y);ctx.scale(1,ry/rx);
+ ctx.lineWidth=2.3;ctx.strokeStyle=`rgba(206,107,255,${.39*a})`;
+ ctx.shadowColor='#bd4cff';ctx.shadowBlur=9;
+ ctx.beginPath();ctx.arc(0,0,rx*.76,0,Math.PI*2);ctx.stroke();
+ ctx.strokeStyle=`rgba(230,134,255,${.30*a})`;
+ ctx.lineWidth=1.7;
+ ctx.beginPath();
+ for(let j=0;j<5;j++){
+  let th=-Math.PI/2+j*4*Math.PI/5;
+  let px=Math.cos(th)*rx*.70,py=Math.sin(th)*rx*.70;
+  if(j===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+ }
+ ctx.closePath();ctx.stroke();
+ ctx.restore();
+ ctx.strokeStyle=`rgba(209,101,255,${.68*a})`;
+ ctx.lineWidth=2;ctx.shadowColor='#b84cff';ctx.shadowBlur=12;
  ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,Math.PI,Math.PI*2);ctx.stroke();
  ctx.restore();
 }
 function floorFrontRim(a,pulse){
  if(a<=0)return;
- const x=157,y=452;
+ const x=157,y=470;
  ctx.save();ctx.lineWidth=2;ctx.strokeStyle=`rgba(229,123,255,${a*.48})`;
  ctx.shadowColor='#c05aff';ctx.shadowBlur=13;
- ctx.beginPath();ctx.ellipse(x,y,119*pulse,14,0,0,Math.PI);ctx.stroke();ctx.restore();
+ ctx.beginPath();ctx.ellipse(x,y,116*pulse,16,0,0,Math.PI);ctx.stroke();ctx.restore();
 }
 // Layer 1: FX that must be BEHIND the actor: the ground ring is foot-anchored.
 function effectBehind(t,p,hop){
@@ -115,9 +130,8 @@ function effectBehind(t,p,hop){
  if(a<=0)return;
  const gy=ANCHOR.groundY;
  const pulse=1+.055*Math.sin(t*.0075);
- // Ring aligned with the lowered character so boots meet the floor rather than hovering.
- // Drop the glowing ring onto the floor plane rather than raising the actor.
- pic('ground',ANCHOR.groundX-120*pulse,gy-65,240*pulse,108,a*.67);
+ // Place the rear ellipse exactly on the floor horizon (y454), with the rest extending toward the camera.
+ // The old ring sprite appeared suspended in front of the boots; use only a floor-plane sigil.
  // Projected ellipse sits on the ground, extending in front of the boots.
  floorSigil(a,pulse);
  // Broader body aura so the character feels wrapped by power, not just sitting on a ring.
@@ -140,7 +154,7 @@ function effectFront(t,p,hop){
   const b=fade(p,175,470,1110,1490);
   if(b>0){
    // Rising wrap: butterflies start around the lower body and travel upward around the silhouette.
-   for(let i=0;i<4;i++)butterflyStream(t,p,ANCHOR.torsoX+18,ANCHOR.torsoY-2+hop,i,b*(i<2?.86:.72));
+   for(let i=0;i<4;i++)butterflyStream(t,p,ANCHOR.torsoX-15,ANCHOR.torsoY-2+hop,i,b*(i<2?.86:.72));
   }
  }
  if(C.bullet.checked){
