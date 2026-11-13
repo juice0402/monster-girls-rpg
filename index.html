@@ -32,7 +32,7 @@ function butterflyStream(t,p,anchorX,anchorY,i,opacity){
  const keys=['butterfly_1','butterfly_2','butterfly_3','butterfly_4'];
  const phase=((t*.00024)+(i*.22)+((p||0)*.00022))%1;
  // Start near the lower body and rise past the shoulders/head.
- const startX=[-22,12,-9,18][i], driftX=[14,20,-12,17][i];
+ const startX=[-25,8,-16,17][i], driftX=[13,20,-14,15][i];
  const startY=[74,58,88,68][i], rise=170;
  const x=anchorX+startX+Math.sin(phase*6.283+i)*10 + driftX*(phase-.5);
  const y=anchorY+startY-rise*phase + Math.cos(phase*5.2+i*.8)*7;
@@ -62,21 +62,23 @@ function getBounceLayer(pose){
  bounceLayers[pose]=off;return off;
 }
 function contactShadow(a){
- const x=158,y=457;
- ctx.save();
- // Subtle dark center remains under the feet even at maximum brightness.
- ctx.translate(x,y);ctx.scale(1,.21);
- const s=ctx.createRadialGradient(0,0,4,0,0,88);
- s.addColorStop(0,'rgba(8,5,18,.67)');
- s.addColorStop(.52,'rgba(21,7,30,.40)');s.addColorStop(1,'rgba(16,9,25,0)');
- ctx.fillStyle=s;ctx.beginPath();ctx.arc(0,0,88,0,Math.PI*2);ctx.fill();ctx.restore();
+ // Actual grounded boots are at approximately x=94 and x=225 on the 780px canvas.
+ // Keep two distinct soft shadows under the soles instead of one between the legs.
+ for(const [x,y,rx] of [[94,455,30],[223,455,30]]){
+  ctx.save();ctx.translate(x,y);ctx.scale(1,.27);
+  const sh=ctx.createRadialGradient(0,0,1,0,0,rx);
+  sh.addColorStop(0,'rgba(8,4,14,.80)');
+  sh.addColorStop(.55,'rgba(16,8,23,.50)');
+  sh.addColorStop(1,'rgba(12,4,18,0)');
+  ctx.fillStyle=sh;ctx.beginPath();ctx.arc(0,0,rx,0,2*Math.PI);ctx.fill();ctx.restore();
+ }
  if(a>0){
-  ctx.save();ctx.translate(x,459);ctx.scale(1,.24);
-  const g=ctx.createRadialGradient(0,0,8,0,0,122);
-  g.addColorStop(0,'rgba(195,84,255,0)');
-  g.addColorStop(.45,'rgba(158,64,255,'+(.10*a)+')');
-  g.addColorStop(1,'rgba(150,71,255,0)');
-  ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,122,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.save();ctx.translate(FLOOR.x,464);ctx.scale(1,.18);
+  const g=ctx.createRadialGradient(0,0,12,0,0,142);
+  g.addColorStop(0,`rgba(215,100,255,${.18*a})`);
+  g.addColorStop(.65,`rgba(157,44,255,${.10*a})`);
+  g.addColorStop(1,'rgba(145,47,255,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,142,0,2*Math.PI);ctx.fill();ctx.restore();
  }
 }
 function actorReflection(pose,hop,p){
@@ -88,47 +90,57 @@ function actorReflection(pose,hop,p){
  ctx.drawImage(light,0,hop);ctx.restore();
 }
 // Real ground-plane projection: rear rim is under the character; front rim is drawn after the character.
+// Perspective-projected sigil.  The rear half is always behind both boots; the
+// near half is drawn in front of the actor so the glyph reads as floor, not a floating hoop.
+const FLOOR={x:158,y:468,rx:151,ry:23};
 function floorSigil(a,pulse){
- const x=157,y=470,rx=116*pulse,ry=16;
+ const {x,y,ry}=FLOOR, rx=FLOOR.rx*pulse;
  ctx.save();
- const halo=ctx.createRadialGradient(x,y,12,x,y,rx);
- halo.addColorStop(0,`rgba(165,58,232,${.18*a})`);
- halo.addColorStop(.6,`rgba(154,41,235,${.10*a})`);
- halo.addColorStop(1,'rgba(122,43,204,0)');
- ctx.save();ctx.translate(x,y);ctx.scale(1,.19);ctx.fillStyle=halo;ctx.beginPath();ctx.arc(0,0,rx,0,Math.PI*2);ctx.fill();ctx.restore();
- // The glyph is projected onto the floor, never rendered as an upright sprite.
- ctx.save();ctx.translate(x,y);ctx.scale(1,ry/rx);
- ctx.lineWidth=2.3;ctx.strokeStyle=`rgba(206,107,255,${.39*a})`;
- ctx.shadowColor='#bd4cff';ctx.shadowBlur=9;
- ctx.beginPath();ctx.arc(0,0,rx*.76,0,Math.PI*2);ctx.stroke();
- ctx.strokeStyle=`rgba(230,134,255,${.30*a})`;
- ctx.lineWidth=1.7;
- ctx.beginPath();
- for(let j=0;j<5;j++){
-  let th=-Math.PI/2+j*4*Math.PI/5;
-  let px=Math.cos(th)*rx*.70,py=Math.sin(th)*rx*.70;
-  if(j===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
- }
- ctx.closePath();ctx.stroke();
+ // Soft PURPLE light actually fills the floor underneath both boots.
+ ctx.translate(x,y);ctx.scale(1,.17);
+ const light=ctx.createRadialGradient(0,0,12,0,0,rx);
+ light.addColorStop(0,`rgba(186,74,255,${.32*a})`);
+ light.addColorStop(.45,`rgba(146,52,235,${.22*a})`);
+ light.addColorStop(.80,`rgba(131,43,212,${.12*a})`);
+ light.addColorStop(1,'rgba(128,53,220,0)');
+ ctx.fillStyle=light;ctx.beginPath();ctx.arc(0,0,rx,0,2*Math.PI);ctx.fill();
  ctx.restore();
- ctx.strokeStyle=`rgba(209,101,255,${.68*a})`;
- ctx.lineWidth=2;ctx.shadowColor='#b84cff';ctx.shadowBlur=12;
- ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,Math.PI,Math.PI*2);ctx.stroke();
+ // Draw the whole sigil under the actor: concentric rings, runes and central star.
+ ctx.save();ctx.translate(x,y);ctx.scale(1,ry/rx);
+ ctx.shadowColor='#dc72ff';ctx.shadowBlur=14;
+ ctx.lineWidth=3.1;ctx.strokeStyle=`rgba(230,137,255,${.83*a})`;
+ for(const rad of [1,.81,.53]){
+   ctx.beginPath();ctx.arc(0,0,rx*rad,0,2*Math.PI);ctx.stroke();
+ }
+ ctx.shadowBlur=5;ctx.lineWidth=2.1;
+ ctx.strokeStyle=`rgba(243,177,255,${.80*a})`;
+ ctx.beginPath();for(let i=0;i<5;i++){
+   const j=(i*2)%5, ang=-Math.PI/2+j*2*Math.PI/5;
+   const px=Math.cos(ang)*rx*.67,py=Math.sin(ang)*rx*.67;
+   if(i===0)ctx.moveTo(px,py);else ctx.lineTo(px,py);
+ }ctx.closePath();ctx.stroke();
+ ctx.strokeStyle=`rgba(230,131,255,${.70*a})`;
+ for(let i=0;i<12;i++){
+   const an=i*Math.PI/6;ctx.beginPath();ctx.moveTo(Math.cos(an)*rx*.85,Math.sin(an)*rx*.85);
+   ctx.lineTo(Math.cos(an)*rx*.96,Math.sin(an)*rx*.96);ctx.stroke();
+ }
  ctx.restore();
 }
 function floorFrontRim(a,pulse){
  if(a<=0)return;
- const x=157,y=470;
- ctx.save();ctx.lineWidth=2;ctx.strokeStyle=`rgba(229,123,255,${a*.48})`;
- ctx.shadowColor='#c05aff';ctx.shadowBlur=13;
- ctx.beginPath();ctx.ellipse(x,y,116*pulse,16,0,0,Math.PI);ctx.stroke();ctx.restore();
+ const {x,y,ry}=FLOOR, rx=FLOOR.rx*pulse;
+ // Only the near semicircle, placed well below the shoes.
+ ctx.save();ctx.lineWidth=2.5;
+ ctx.strokeStyle=`rgba(238,157,255,${a*.82})`;
+ ctx.shadowColor='#ca66ff';ctx.shadowBlur=15;
+ ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI);ctx.stroke();
+ ctx.restore();
 }
 // Layer 1: FX that must be BEHIND the actor: the ground ring is foot-anchored.
 function effectBehind(t,p,hop){
  if(C.only.checked||!C.aura.checked)return;
  const a=fade(p,95,330,1180,1600);
  if(a<=0)return;
- const gy=ANCHOR.groundY;
  const pulse=1+.055*Math.sin(t*.0075);
  // Place the rear ellipse exactly on the floor horizon (y454), with the rest extending toward the camera.
  // The old ring sprite appeared suspended in front of the boots; use only a floor-plane sigil.
@@ -154,7 +166,7 @@ function effectFront(t,p,hop){
   const b=fade(p,175,470,1110,1490);
   if(b>0){
    // Rising wrap: butterflies start around the lower body and travel upward around the silhouette.
-   for(let i=0;i<4;i++)butterflyStream(t,p,ANCHOR.torsoX-15,ANCHOR.torsoY-2+hop,i,b*(i<2?.86:.72));
+   for(let i=0;i<4;i++)butterflyStream(t,p,ANCHOR.torsoX-34,ANCHOR.torsoY-2+hop,i,b*(i<2?.86:.72));
   }
  }
  if(C.bullet.checked){
