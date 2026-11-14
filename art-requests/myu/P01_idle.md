@@ -2,9 +2,8 @@
 
 状態：依頼中
 依頼日：2026-11-14（1回目）
-保存先：ブランチ `gpt-art` の `assets/characters/myu/poses/myu_P01_idle.png`
-（画像を直接送れないときは `assets/characters/myu/poses/myu_P01_idle.png.webp.b64.txt` に base64 の文字で。やり方は README の 5）
-メモ：1回目（14:42）は絵は描けたが、画像のまま送れず保存できなかった → 2回目は base64 の文字で保存する
+保存先：`assets/characters/myu/poses/myu_P01_idle.png`（ChatGPT は PNG をチャットに出すだけ。保存は Claude）
+メモ：GitHub への保存は、画像のまま（14:42）も base64 の文字（14:47）もできなかった → チャットに出す形に変えた
 
 ## 見るもの
 - デザイン設定：`docs/characters/myu_design_master.md`（「変えてはいけない特徴」を全部守る）
