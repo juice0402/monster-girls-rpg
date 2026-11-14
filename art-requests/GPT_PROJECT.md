@@ -27,10 +27,10 @@
 ```
 
 ## 3. 情報源
-- ドライブのフォルダ **`monmusu-art/情報源_ChatGPT`** を1つだけ追加する（リンク：https://drive.google.com/drive/folders/1fn3TEU3BuaBHKyETVRHygRIL_FV82b35 ）
-- 中身は Claude が管理する：いま描いているキャラの合格ずみの見本の絵・そのキャラの設定・絵の決まり
+- **文章**：ドライブのフォルダ `monmusu-art/情報源_ChatGPT` を追加（リンク：https://drive.google.com/drive/folders/1fn3TEU3BuaBHKyETVRHygRIL_FV82b35 ）。キャラの設定と絵の決まりが入っている
+- **見本の絵**：ドライブのフォルダの同期は PNG に対応していない（2026-11-14 わかった）→ **画像は「情報源を追加する」からファイルとして直接アップロード**する（いまはミュウの `myu_big3.png`・`myu_big2.png`）
 - 古い試しの絵は `monmusu-art/古い試し` に入れる（情報源には入れない）
-- 中身が自動で新しくならないときは、Claude が知らせるので、しょーくんが情報源を入れ直す
+- 中身を変えたら Claude が知らせるので、しょーくんが入れ直す（画像は消して上げ直す）
 
 ## 4. 毎回のチャット（新しいチャットで、これだけ）
 
