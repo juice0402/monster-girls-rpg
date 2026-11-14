@@ -39,3 +39,5 @@
 ## 戦闘の背景と敵（試し用）
 - `assets/stage/battle_bg_moon.webp`・`assets/stage/enemy_moon_slime.png`：`lilith-motions.html` に埋めこまれていた背景と敵を、そのままファイルに出しただけ（中身は同じ）
 
+## エフェクトの絵（fx/）
+- GPT（A・ChatGPT・2026-11-14・`art-requests/fx/myu_gel1.md`）：`gel_ball_1`・`gel_splat_1`・`gel_puddle_1`・`gel_drops_1`。もとの絵は `source/fx_myu_gel1.png`

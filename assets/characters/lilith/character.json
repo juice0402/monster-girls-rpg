@@ -362,6 +362,42 @@
    "art": "前の lilith-motions.html から（11/14 より前の絵）",
    "date": "2026-11-14",
    "request": ""
+  },
+  "heart_glow_1": {
+   "file": "heart_glow_1.webp",
+   "w": 493,
+   "h": 474,
+   "blend": "screen",
+   "art": "A・ChatGPT",
+   "date": "2026-11-14",
+   "request": "fx/lilith_hearts1.md"
+  },
+  "heart_crystal_1": {
+   "file": "heart_crystal_1.webp",
+   "w": 512,
+   "h": 374,
+   "blend": "screen",
+   "art": "A・ChatGPT",
+   "date": "2026-11-14",
+   "request": "fx/lilith_hearts1.md"
+  },
+  "heart_burst_1": {
+   "file": "heart_burst_1.webp",
+   "w": 512,
+   "h": 408,
+   "blend": "screen",
+   "art": "A・ChatGPT",
+   "date": "2026-11-14",
+   "request": "fx/lilith_hearts1.md"
+  },
+  "heart_bits_1": {
+   "file": "heart_bits_1.webp",
+   "w": 502,
+   "h": 386,
+   "blend": "screen",
+   "art": "A・ChatGPT",
+   "date": "2026-11-14",
+   "request": "fx/lilith_hearts1.md"
   }
  }
 }

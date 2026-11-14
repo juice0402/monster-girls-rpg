@@ -1,6 +1,6 @@
 # リリス：まわりを舞うハート（エフェクト1）
 
-状態：依頼中
+状態：OK（2026-11-14 4つとも合格・取りこみ済み）
 依頼日：2026-11-14
 保存先：ドライブ `monmusu-art` のいちばん上に `fx_lilith_hearts1.png`
 背景：真っ黒 #000000（光るもの）
@@ -24,4 +24,5 @@ python3 tools/import_fx.py lilith assets/characters/lilith/source/fx_lilith_hear
 ```
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-14 21:36：背景は真っ黒・キャラと文字なし・2×2 で間もあいている。4つとも合格
+- 使い方：heart_glow・heart_crystal＝待機〜挑発・勝利・SP02 で舞うハート（コードのハートと入れかえ）／heart_bits＝P13・P14 でリリスのとなりにただよう／heart_burst＝SP01 の着弾のあとに魅了のハートがはじける

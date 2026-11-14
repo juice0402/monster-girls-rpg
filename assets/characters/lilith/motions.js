@@ -81,7 +81,7 @@ function effects(layer,m,t,p,X,es){if(layer!=='front')return;const id=m.id;
  case 'P07':case 'SP01':{const pw=smooth((p-.12)/.28)*(1-smooth((p-.91)/.09)),fin=id==='SP01';
   vfx('ultimate',hx,hy,fin?220:180,fin?186:157,pw*(fin?.63:.42),gt*.12);
   if(p>.33&&p<.86){const q=smooth((p-.33)/.48),bx=lerp(hx,748,q),by=lerp(hy,461,q);const size=(fin?125:104)+(fin?152:119)*smooth(q/.35),fade=1-smooth((p-.77)/.10);vfx('bolt',bx+size*.13,by,size,size*.67,fade,-.05)}
-  if(p>.59&&p<.95){const im=smooth((p-.59)/.16)*(1-smooth((p-.87)/.10));vfx('burst',748,474,fin?480:380,fin?385:300,im*.98,-.07);if(fin)vfx('ultimate',748,451,550,464,im*.62,gt*.07)}
+  if(p>.59&&p<.95){const im=smooth((p-.59)/.16)*(1-smooth((p-.87)/.10));vfx('burst',748,474,fin?480:380,fin?385:300,im*.98,-.07);if(fin){vfx('ultimate',748,451,550,464,im*.62,gt*.07);const hb=smooth((p-.80)/.08)*(1-smooth((p-.94)/.06));art('heart_burst',748,448,280+80*hb,224+64*hb,hb)}}// SP01 は魅了のハートがはじける（GPT の絵）
   hit=hitAt(p,.73,.22);break}
  case 'P08':{const pw=Math.sin(Math.PI*smooth(p));for(let i=0;i<5;i++){const x=180+i*35,y=440-Math.sin(p*TAU+i)*32;mglow(x,y,30,pw*.40,[112,252,206]);mstar(x,y,5,pw,'#c5ffe7')}
   if(p>.55&&p<.88){ctx.save();ctx.fillStyle=rgba(172,255,221,.76);ctx.font='bold 30px system-ui';ctx.fillText('+ 160',260,192-(p-.5)*85);ctx.restore()}break}
@@ -90,7 +90,9 @@ function effects(layer,m,t,p,X,es){if(layer!=='front')return;const id=m.id;
  case 'P11':{const pw=1-smooth((p-.2)/.6);for(let i=0;i<9;i++){const a=i*TAU/9;mglow(207+Math.cos(a)*80,552+Math.sin(a)*25,12,pw*.25)}break}
  case 'P12':{const pw=1-smooth((p-.17)/.72);castHand(hx,hy,pw*.55,t);for(let k=0;k<12;k++)mstar(hx+k*16,hy+Math.sin(k*1.2+t)*37,4,pw*.7);break}
  case 'P13':case 'P14':{const pw=.35+.65*smooth(p/.35);for(let k=0;k<7;k++){const x=340+Math.sin(gt*1.2+k*2)*105,y=300+(k*21)%155-((gt*17+k*33)%190);heart(x,y,7+k%3*2,pw*(.4+.4*Math.sin(gt*1.1+k)**2),Math.sin(gt+k)*.16,k)}
-  if(id==='P14')for(let k=0;k<9;k++){const a=k*TAU/9+gt*.18;mstar(290+Math.cos(a)*180,350+Math.sin(a)*160,5,.7)}break}
+  if(id==='P14')for(let k=0;k<9;k++){const a=k*TAU/9+gt*.18;mstar(290+Math.cos(a)*180,350+Math.sin(a)*160,5,.7)}
+  // まわりにただよう小さなハートの群れ（GPT の絵 heart_bits。なければ出さない）
+  art('heart_bits',id==='P13'?478:505,(id==='P13'?245:300)+Math.sin(gt*1.3)*6,200,154,pw*(id==='P13'?.8:.6),Math.sin(gt*.7)*.06);break}
  case 'SP02':{const pw=smooth((p-.13)/.28)*(1-smooth((p-.85)/.15));vfx('ultimate',hx,hy,196,182,pw*.44,gt*.065);
   if(p>.34){const surge=smooth((p-.34)/.19)*(1-smooth((p-.89)/.11));vfx('ultimate',740,453,540+Math.sin(gt*2)*14,454+Math.sin(gt*2)*9,surge*.93,-gt*.045);vfx('burst',747,478,380,285,surge*.56);
    if(surge>.4)for(let k=0;k<8;k++){const a=k*TAU/8+gt*.65;heart(744+Math.cos(a)*142,446+Math.sin(a)*115,9,surge*.55,a,k)}}break}}

@@ -376,5 +376,42 @@
    ]
   }
  },
- "fx": {}
+ "fx": {
+  "gel_ball_1": {
+   "file": "gel_ball_1.webp",
+   "w": 410,
+   "h": 408,
+   "blend": "source-over",
+   "art": "A・ChatGPT",
+   "date": "2026-11-14",
+   "request": "fx/myu_gel1.md"
+  },
+  "gel_splat_1": {
+   "file": "gel_splat_1.webp",
+   "w": 512,
+   "h": 379,
+   "blend": "source-over",
+   "art": "A・ChatGPT",
+   "date": "2026-11-14",
+   "request": "fx/myu_gel1.md"
+  },
+  "gel_puddle_1": {
+   "file": "gel_puddle_1.webp",
+   "w": 512,
+   "h": 208,
+   "blend": "source-over",
+   "art": "A・ChatGPT",
+   "date": "2026-11-14",
+   "request": "fx/myu_gel1.md"
+  },
+  "gel_drops_1": {
+   "file": "gel_drops_1.webp",
+   "w": 427,
+   "h": 347,
+   "blend": "source-over",
+   "art": "A・ChatGPT",
+   "date": "2026-11-14",
+   "request": "fx/myu_gel1.md"
+  }
+ }
 }

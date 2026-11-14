@@ -27,4 +27,4 @@
 ## エフェクトの絵（fx/）
 - 前のページから：`floor`（床の魔法陣）・`sigil`（手のひらの魔法陣）・`charge`・`impact`・`sparkles`・`smoke`・`halo`・`butterfly_1〜4`（蝶）。出どころはポーズと同じ
 - 描いた魔法の素材（ガード・魔弾・着弾・大技）は全キャラ共通の `assets/painted-vfx.js`
-- GPT に依頼中：ハート（`art-requests/fx/lilith_hearts1.md`）→ 届いたら `heart_glow_1` などで登録し、コードのハートと入れかわる
+- GPT（A・ChatGPT・2026-11-14・`art-requests/fx/lilith_hearts1.md`）：`heart_glow_1`・`heart_crystal_1`・`heart_bits_1`・`heart_burst_1`。もとの絵は `source/fx_lilith_hearts1.png`

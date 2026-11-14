@@ -9,10 +9,13 @@ function mstar(x,y,r,a,color='#f3caff'){star(x,y,r,a,color)}
 // 描いた魔法の素材：guard・bolt（魔弾）・burst（着弾）・ultimate（大技）
 function vfx(kind,x,y,w,h,a,rot=0){if(a>0&&typeof paintedFX==='function')paintedFX(ctx,kind,x,y,w,h,a,rot)}
 
+// GPT の絵を名前の頭で描く（heart_bits → heart_bits_1 など。なければ何もしない）
+function art(base,x,y,w,h,a,rot=0,seed=0){const n=painted(base,seed);return n?sprite(n,x,y,w,h,a,rot):false}
+
 // ===== ハート（GPT の絵 heart_glow・heart_crystal があればそれ、なければコードの単色）=====
 const HEART_ART=['heart_glow','heart_crystal'];
 function heart(x,y,r,a,rot=0,seed=0){if(a<=0)return;const list=HEART_ART.map(k=>painted(k,seed)).filter(Boolean);
- if(list.length){const name=list[Math.abs(seed|0)%list.length];sprite(name,x,y,r*3.4,r*3.4,a,rot);return}
+ if(list.length){const name=list[Math.abs(seed|0)%list.length];sprite(name,x,y,r*5,r*5,Math.min(1,a*1.3),rot);return}// GPT の絵はふちが光るので、コードのハートより少し大きく
  ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.globalAlpha=clamp(a,0,1);ctx.shadowColor='#fb7bcf';ctx.shadowBlur=14;ctx.fillStyle='#ff93dd';ctx.beginPath();ctx.moveTo(0,r);ctx.bezierCurveTo(-r*1.65,-r*.1,-r*1.1,-r*.9,0,-r*.22);ctx.bezierCurveTo(r*1.1,-r*.9,r*1.65,-r*.1,0,r);ctx.fill();ctx.restore()}
 
 // ===== 魔法陣 =====
