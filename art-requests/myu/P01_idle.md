@@ -1,6 +1,6 @@
 # ミュウ P01 待機／立ち絵
 
-状態：依頼中
+状態：取り下げ（2026-11-14 シート方式に変更。`sheet1.md` の 1 番で描く）
 依頼日：2026-11-14（1回目）
 保存先：`assets/characters/myu/poses/myu_P01_idle.png`（ChatGPT は Google ドライブの monmusu-art に PNG で保存。リポジトリへは Claude が入れる）
 メモ：GitHub への保存は、画像のまま（14:42）も base64 の文字（14:47）もできなかった → チャットに出す形に変えた
