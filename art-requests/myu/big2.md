@@ -4,10 +4,11 @@
 依頼日：2026-11-14
 保存先：Google ドライブのフォルダ `monmusu-art` に `myu_big2.png`（PNG・背景は本物の透明）
 
-## 見るもの（ドライブ `monmusu-art` の画像をチャットに添付して見る）
+## 見るもの（ドライブ `monmusu-art` から読みこむ）
 - **ポーズと服の見本：`myu_all16.png`**（16ポーズを1枚に描いた絵）。この絵の **2段目の4人を、そのまま大きく描き直す**
 - 顔・髪・服・小物・色・ポーズは `myu_all16.png` と同じ。変えない
 - デザインの正本：`myu_ref_B.png` と `docs/characters/myu_design_master.md`（状態：固定）
+- 画風の見本：`lilith_P01_idle.png`・`lilith_P05_attack.png`
 
 ## 描き方
 - 左から：P04 攻撃予備動作・P05 通常攻撃・P06 チャージ／詠唱・P07 必殺技
