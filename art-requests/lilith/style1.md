@@ -1,13 +1,13 @@
 # リリス 画風の見本（今の4ポーズを高画質に描き直す）
 
-状態：依頼中
+状態：依頼中（やり直し1回目）
 依頼日：2026-11-14
 元の絵：`lilith_style_src.png`（ドライブ `monmusu-art/情報源_ChatGPT`。今のリリスの4ポーズを横一列に並べた絵・2172×724）
-保存先：ドライブ `monmusu-art` のいちばん上に `lilith_style1.png`（PNG・背景は本物の透明。チェック柄が出るなら無地の緑 #00FF00）
+保存先：ドライブ `monmusu-art` のいちばん上に `lilith_style2.png`（PNG・背景は本物の透明。チェック柄が出るなら無地の緑 #00FF00）
 **大事：描けた絵のピクセル数（横×縦）を、返事に書く**
 
 ## ChatGPT へ
-- 新しく描かずに、元の絵を開いて **編集** する。4人とも、顔・髪・服・小物・色・ポーズ・並び・大きさはそのまま
+- 新しく描かずに、元の絵 `lilith_style_src.png` を開いて **編集** する（前に描いた `lilith_style1.png` は使わない）。4人とも、顔・髪・角・服・小物・色・ポーズ・並び・大きさはそのまま
 - 下の「画像への指示」を、そのまま（言いかえず・足さず）画像を作る AI に渡す
 - 元の絵と同じ横長のまま、できるだけ大きく
 - できた絵は、少しちがっても保存する（合否は Claude が決める）
@@ -15,7 +15,7 @@
 ## 画像への指示（このまま使う）
 
 ```
-Edit this image to redraw it with sharper, more detailed, high-quality anime lineart and shading. Keep everything else exactly the same.
+Edit this image to redraw it with sharper, more detailed, high-quality anime lineart and shading, keeping the dark curved horns, the faces, the books and everything else exactly the same.
 ```
 
 ## Claude のメモ
@@ -27,4 +27,7 @@ Edit this image to redraw it with sharper, more detailed, high-quality anime lin
 - だめだったとき：直す所を1か所ずつの指示にする／それでもだめなら2人ずつの紙にする
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 1回目 `lilith_style1.png`（2026-11-14・2172×724＝元の絵と同じ大きさ・背景は透明）：**やり直し**
+  - よかった所：線とレースがくっきり（くっきりさの目安が元の約2倍）・1人の縦 約710px・ポーズと並び・服・翼・しっぽのハート・靴はそのまま
+  - だめな所：①**4人とも角が消えて、黒い髪のうずに変わった**（いちばん大きい）②P01 の本が消えた（手ぶら）③P09 の目が閉じ、顔が正面寄りに・角の金の飾りがバラに ④顔が丸くやわらかくなった（目が大きく、別人寄り）
+  - 直し方：元の絵からもう一度。指示に「角・顔・本はそのまま」を足した（1文のまま）。これでもだめなら2人ずつの紙（P01+P02／P05+P09）にする
