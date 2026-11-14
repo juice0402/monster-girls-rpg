@@ -1,7 +1,7 @@
 # リリス｜デザイン設定（マスター）
 
 更新日: 2026-11-14 ／ **状態：固定**（デザインは前から決まっている）／ 攻撃手段の表・演技表：**固定**（2026-11-14 しょーくん OK）
-**画風の見本（全キャラの基準）**: `assets/characters/lilith/master/lilith_style_master.png`（高画質で描き直したら置く。ドライブ `monmusu-art/情報源_ChatGPT` にも）
+**画風の見本（全キャラの基準）**: `assets/characters/lilith/master/lilith_style_master.png`（2026-11-14 Codex で高画質に描き直し・しょーくん OK。編集の元の絵は `lilith_style_master_green.png`）
 いまの絵（仮の見本・360×446）: `assets/characters/lilith/poses/`
 要件定義: `docs/ART_REQUIREMENTS.md` ／ 制作仕様: `docs/CHARACTER_FX_MASTER_SPEC.md`
 
