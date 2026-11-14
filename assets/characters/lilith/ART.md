@@ -34,3 +34,4 @@
 |---|---|---|---|---|
 | `master/lilith_style_master_green.png` | A・Codex | 2026-11-14 | `art-requests/lilith/style1.md`（PR #3） | もとの PNG（2172×724・緑の背景）。元の絵 `source/lilith_style_src.png` を編集 |
 | `master/lilith_style_master.png` | A・Codex（Claude が緑の背景を抜いただけ） | 2026-11-14 | 同じ | 全キャラの画風の見本。【monmusu】が目で確かめ・しょーくん OK |
+- Codex にした理由：同じキャラのポーズちがい・立ち絵のシート（顔と画風をそろえるため・game-art-rule の使い分け）
