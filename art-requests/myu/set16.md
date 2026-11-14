@@ -1,6 +1,6 @@
 # スライム娘ミュウ（猫ではない）16ポーズ 4枚セット（新しいチャットで4枚続けて）
 
-状態：一部 OK（set1 は合格候補・set2/set3 は big2/big3 と同じ絵〈ChatGPT が合格の絵をそのまま保存〉で OK／set4 はやり直し → set4b.md）
+状態：取り下げ（2026-11-14 set2/set3＝big2/big3 は合格。set1/set4 は final14.md で描き直す）
 依頼日：2026-11-14
 描き方：**新しいチャットで、set1 → set2 → set3 → set4 の順に4枚続けて描く。** 1枚ごとにドライブに保存してから次へ（README の「まとめて描く」）
 保存先：Google ドライブのフォルダ `monmusu-art` に `myu_set1.png`〜`myu_set4.png`（PNG・背景は本物の透明、チェック柄なし。**`myu_big2.png`・`myu_big3.png` は上書きしない**）
