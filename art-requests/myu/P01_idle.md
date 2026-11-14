@@ -3,6 +3,8 @@
 状態：依頼中
 依頼日：2026-11-14（1回目）
 保存先：ブランチ `gpt-art` の `assets/characters/myu/poses/myu_P01_idle.png`
+（画像を直接送れないときは `assets/characters/myu/poses/myu_P01_idle.png.webp.b64.txt` に base64 の文字で。やり方は README の 5）
+メモ：1回目（14:42）は絵は描けたが、画像のまま送れず保存できなかった → 2回目は base64 の文字で保存する
 
 ## 見るもの
 - デザイン設定：`docs/characters/myu_design_master.md`（「変えてはいけない特徴」を全部守る）
