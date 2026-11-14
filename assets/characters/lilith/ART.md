@@ -28,3 +28,9 @@
 - 前のページから：`floor`（床の魔法陣）・`sigil`（手のひらの魔法陣）・`charge`・`impact`・`sparkles`・`smoke`・`halo`・`butterfly_1〜4`（蝶）。出どころはポーズと同じ
 - 描いた魔法の素材（ガード・魔弾・着弾・大技）は全キャラ共通の `assets/painted-vfx.js`
 - GPT（A・ChatGPT・2026-11-14・`art-requests/fx/lilith_hearts1.md`）：`heart_glow_1`・`heart_crystal_1`・`heart_bits_1`・`heart_burst_1`。もとの絵は `source/fx_lilith_hearts1.png`
+
+## 画風の見本（全キャラの基準・2026-11-14）
+| ファイル | 種類 | 作った日 | 依頼書 | メモ |
+|---|---|---|---|---|
+| `master/lilith_style_master_green.png` | A・Codex | 2026-11-14 | `art-requests/lilith/style1.md`（PR #3） | もとの PNG（2172×724・緑の背景）。元の絵 `source/lilith_style_src.png` を編集 |
+| `master/lilith_style_master.png` | A・Codex（Claude が緑の背景を抜いただけ） | 2026-11-14 | 同じ | 全キャラの画風の見本。【monmusu】が目で確かめ・しょーくん OK |
