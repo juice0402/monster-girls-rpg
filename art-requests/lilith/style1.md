@@ -5,6 +5,9 @@
 元の絵：`lilith_style_src.png`（ドライブ `monmusu-art/情報源_ChatGPT`。今のリリスの4ポーズを横一列に並べた絵・2172×724）
 保存先：ドライブ `monmusu-art` のいちばん上に `lilith_style2.png`（PNG・背景は本物の透明。チェック柄が出るなら無地の緑 #00FF00）
 **大事：描けた絵のピクセル数（横×縦）を、返事に書く**
+元の絵（リポジトリ）：`assets/characters/lilith/source/lilith_style_src.png`（Codex 用）
+保存先（リポジトリ）：`art-requests/lilith/out/lilith_style2.png`（Codex 用・背景は無地の緑 #00FF00）
+点検：4人とも、黒く曲がった2本の角・顔（目の形と向き・表情）・本（4人とも持つ）・服・翼・しっぽのハートが元の絵と同じか
 
 ## ChatGPT へ
 - 新しく描かずに、元の絵 `lilith_style_src.png` を開いて **編集** する（前に描いた `lilith_style1.png` は使わない）。4人とも、顔・髪・角・服・小物・色・ポーズ・並び・大きさはそのまま
