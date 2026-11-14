@@ -181,7 +181,7 @@ case 'P09':{
   const power=smooth(p/.19)*(1-smooth((p-.78)/.22));
   if(power>.005){
     const pulse=1+Math.sin(globalTime*7)*.024;
-    paintedFX(ctx,'guard',280,336,455*pulse,545*pulse,power*.94,Math.sin(globalTime*.8)*.018);
+    paintedFX(ctx,'guard',470,342,190*pulse,300*pulse,power*.94,Math.sin(globalTime*.8)*.018);
     glow(275,340,166,power*.18);
     for(let k=0;k<9;k++){const a=k*TAU/9+globalTime*.12;star(275+Math.cos(a)*145,341+Math.sin(a)*187,3.3,power*.55,'#ffdcff');}
   }
