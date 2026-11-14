@@ -32,8 +32,9 @@
 - 正は `poses/` の PNG。PNG を直したら WebP も作り直す
 
 ## エフェクト（すべて C：コードで描いた絵）
-- `myu-motions.html` の中でコードで描く：ゲル弾・ゲルのひも・しずく・スライムだまり・ガードの膜・のびる腕（SP01）・ゲルバインド（SP02）・泡・はじけたゲル
-- アンカー（足元・手のひら・指先・ガード・被弾点・髪の毛先）は、同じファイルの `POSE` の表（もとの PNG のピクセル座標）
+- `assets/engine/fx-gel.js` と `assets/characters/myu/motions.js` でコードで描く：ゲル弾・ゲルのひも・しずく・スライムだまり・ガードの膜・のびる腕（SP01）・ゲルバインド（SP02）・泡・はじけたゲル
+- アンカー（足元・手のひら・指先・ガード・被弾点・髪の毛先）は `character.json`（もとの PNG のピクセル座標）
+- GPT が描いたエフェクトの絵が届いたら `fx/` に入り、コードの絵の代わりに使われる（`art-requests/fx/myu_gel1.md`）
 
 ## 戦闘の背景と敵（試し用）
 - `assets/stage/battle_bg_moon.webp`・`assets/stage/enemy_moon_slime.png`：`lilith-motions.html` に埋めこまれていた背景と敵を、そのままファイルに出しただけ（中身は同じ）

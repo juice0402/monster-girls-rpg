@@ -1,0 +1,6 @@
+{
+ "id": "lilith",
+ "name": "リリス",
+ "note": "エフェクトの絵（fx）だけ先に登録。ポーズとアンカーはまだ（lilith-motions.html は前の作りのまま。新しいエンジンへ移すときに tools/import_sheet.py・anchors.py で入れる）",
+ "fx": {}
+}
