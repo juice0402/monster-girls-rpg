@@ -44,8 +44,10 @@ python3 tools/anchors.py <id>
 
 ## 3. 動きの試しページ
 - 共通のエンジン：`assets/engine/motion-engine.js`（絵の切りかえ・アンカー・背景・敵・操作・点検用の `?m=&t=`）と `assets/engine/motion-page.css`
-- 種類ごとのエフェクトの道具：`assets/engine/fx-gel.js`（ゲル・しずく・スライムだまり・膜）。光や魔法のキャラは `fx-magic.js` を同じ形で作る
+- 種類ごとのエフェクトの道具：`assets/engine/fx-gel.js`（ゲル・しずく・スライムだまり・膜。ミュウ）・`assets/engine/fx-magic.js`（魔法の光・魔法陣・床の魔法陣・光の粒・ハート。リリス。描いた魔法の素材 `assets/painted-vfx.js` も読む）
 - キャラごと：`assets/characters/<id>/character.json`（アンカー・エフェクトの絵）と `assets/characters/<id>/motions.js`（16の動き・タイミング・エフェクト）
+  - character.json の `scale`：絵が小さいキャラの拡大（ふつうは書かない＝1。リリスは 360×446 の絵なので 1.5735）
+  - motions.js の CHAR に `background(flash)` を書くと、そのキャラの背景になる（リリスのむらさきの夜）。ページの色は `assets/characters/<id>/theme.css`
 - ページ：`myu-motions.html` をコピーして `<id>-motions.html`。変えるのは名前・説明・`<script>` の3行
 - 動きの作り方（仕様書10章）：準備（P04）→ ため（P06）→ 発動（P05/P07）→ 飛ぶ・当たる → 余韻（P12）→ 待機（P01）。`seq` に「何割の時刻でどのポーズか」を書く
 - エフェクトは必ずアンカーから出す（空中から出さない）。しずく・粘液は「体から伸びる → ふくらむ → ちぎれる → 落ちる → 床に残る」

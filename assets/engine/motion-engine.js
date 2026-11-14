@@ -6,7 +6,7 @@ const canvas=document.querySelector('#scene'),ctx=canvas.getContext('2d');
 const W=960,H=700,G=568,BX=282,S=0.68,TAU=Math.PI*2;
 const EN={x:748,y:547},TARGET=[742,468];
 const rc=document.createElement('canvas');rc.width=W;rc.height=H;const rctx=rc.getContext('2d');
-let POSE={},motions=[],FXDEF={};
+let POSE={},motions=[],FXDEF={},KS=1;// KS＝character.json の scale（絵が小さいキャラの拡大。ふつうは1）
 const images={},FX={},FXLIST={};let loaded=0,totalImg=1e9;
 const ok=im=>im&&im.complete&&im.naturalWidth>0;
 let selected=0,time=0,last=performance.now(),paused=false,playAll=false,speed=1,gt=0,debug=false;
@@ -17,7 +17,7 @@ function rgba(r,g,b,a){return `rgba(${r},${g},${b},${clamp(a,0,1).toFixed(3)})`}
 function rng(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 
 // ===== キャラの変換（アンカーも同じ変換で動く）=====
-function xf(pose,o){return {pose,bx:BX+o.dx,by:G+o.dy,rot:o.tilt,sx:S*o.sx,sy:S*o.sy}}
+function xf(pose,o){return {pose,bx:BX+o.dx,by:G+o.dy,rot:o.tilt,sx:S*KS*o.sx,sy:S*KS*o.sy}}
 function pt(X,a){const r=POSE[X.pose].root;const x=(a[0]-r[0])*X.sx,y=(a[1]-r[1])*X.sy,c=Math.cos(X.rot),s=Math.sin(X.rot);return [X.bx+x*c-y*s,X.by+x*s+y*c]}
 function anchor(X,name){const P=POSE[X.pose];const a=P[name]||P.palm||[P.w*.82,P.h*.45];return pt(X,a)}
 function drawActorOn(c,X,alpha=1){const img=images[X.pose];if(!ok(img)||alpha<=0)return;const P=POSE[X.pose];c.save();c.globalAlpha=clamp(alpha,0,1);c.translate(X.bx,X.by);c.rotate(X.rot);c.scale(X.sx,X.sy);c.drawImage(img,-P.root[0],-P.root[1],P.w,P.h);c.restore()}
@@ -58,7 +58,7 @@ function render(dt){const m=motions[selected],t=time,p=clamp(t/m.duration,0,1);
  document.querySelector('#enemyBar').style.width=enemyHP+'%';document.querySelector('#playerBar').style.width=playerHP+'%';
  if(dt>0){emitClock+=dt;CHAR.step&&CHAR.step(m,t,p,X,A,dt);stepFloaters(dt)}
  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,W,H);if(es.shake>0)ctx.translate((Math.random()-.5)*es.shake,(Math.random()-.5)*es.shake);
- background(es.flash);
+ CHAR.background?CHAR.background(es.flash):background(es.flash);
  CHAR.floor&&CHAR.floor(m,t,p,X);
  ctx.save();ctx.globalAlpha=.5;ctx.fillStyle='#050a14';ctx.beginPath();ctx.ellipse(BX+o.dx,G+6,105,13,0,0,TAU);ctx.fill();ctx.restore();
  CHAR.effects('back',m,t,p,X,es);enemy(es);
@@ -67,7 +67,7 @@ function render(dt){const m=motions[selected],t=time,p=clamp(t/m.duration,0,1);
  CHAR.body&&CHAR.body(m,t,p,X,A);
  CHAR.effects('front',m,t,p,X,es);drawFloaters();
  if(debug)drawAnchors(X)}
-function drawAnchors(X){const P=POSE[X.pose];const dot=(a,c)=>{const [x,y]=pt(X,a);ctx.save();ctx.fillStyle=c;ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x,y,5,0,TAU);ctx.fill();ctx.stroke();ctx.restore()};dot(P.root,'#3f6');['palm','palm2','tip','guard','hit'].forEach(k=>P[k]&&dot(P[k],'#f33'));P.drips.forEach(a=>dot(a,'#ff3'));ctx.save();ctx.strokeStyle='rgba(80,255,120,.6)';ctx.beginPath();ctx.moveTo(0,G);ctx.lineTo(W,G);ctx.stroke();ctx.restore()}
+function drawAnchors(X){const P=POSE[X.pose];const dot=(a,c)=>{const [x,y]=pt(X,a);ctx.save();ctx.fillStyle=c;ctx.strokeStyle='#000';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x,y,5,0,TAU);ctx.fill();ctx.stroke();ctx.restore()};dot(P.root,'#3f6');['palm','palm2','tip','guard','hit'].forEach(k=>P[k]&&dot(P[k],'#f33'));(P.drips||[]).forEach(a=>dot(a,'#ff3'));ctx.save();ctx.strokeStyle='rgba(80,255,120,.6)';ctx.beginPath();ctx.moveTo(0,G);ctx.lineTo(W,G);ctx.stroke();ctx.restore()}
 
 // ===== 操作 =====
 function buildButtons(){const g1=document.querySelector('#motionGrid'),g2=document.querySelector('#specialGrid');motions.forEach((m,i)=>{const el=document.createElement('button');el.className='motion';el.dataset.index=i;el.innerHTML=`<span class="num">${m.id}</span><b>${m.name}</b><small>${m.short}</small>`;el.addEventListener('click',()=>select(i));(m.id.startsWith('SP')?g2:g1).appendChild(el)})}
@@ -76,7 +76,7 @@ function select(i){selected=i;time=0;floaters.length=0;setActive()}
 function frame(ts){let dt=Math.min(.06,(ts-last)/1000);last=ts;if(paused)dt=0;else{dt*=speed;gt+=dt;time+=dt;const m=motions[selected];if(time>=m.duration){if(playAll)select((selected+1)%motions.length);else{time=0;floaters.length=0}}}render(dt);requestAnimationFrame(frame)}
 function loadImage(key,src,store){const im=new Image();im.decoding='async';im.onload=im.onerror=()=>{loaded++;if(loaded>=totalImg)document.querySelector('#loading').classList.add('done')};im.src=src;store[key]=im}
 async function startMotionPage(){
- const data=await fetch(CHAR.data).then(r=>r.json());POSE=data.poses;FXDEF=data.fx||{};motions=CHAR.motions;
+ const data=await fetch(CHAR.data).then(r=>r.json());POSE=data.poses;FXDEF=data.fx||{};KS=data.scale||1;motions=CHAR.motions;
  const dir=CHAR.data.replace(/[^/]*$/,'');const web=data.webFile;
  const list=[['bg','./assets/stage/battle_bg_moon.webp'],['enemy','./assets/stage/enemy_moon_slime.png']];
  Object.keys(POSE).forEach(k=>list.push([k,dir+web.replace('{id}',k)]));

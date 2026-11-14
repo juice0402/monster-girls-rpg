@@ -1,6 +1,367 @@
 {
  "id": "lilith",
  "name": "リリス",
- "note": "エフェクトの絵（fx）だけ先に登録。ポーズとアンカーはまだ（lilith-motions.html は前の作りのまま。新しいエンジンへ移すときに tools/import_sheet.py・anchors.py で入れる）",
- "fx": {}
+ "note": "アンカーはもとの PNG（poses/・360×446）のピクセル座標。16ポーズは前の lilith-motions.html で同じ接地位置にそろえてあるので、root は全部 [180,442.26]（絵の下から4px＝前のページと同じ）。palm は前のページの HAND_ANCHORS。scale は絵が小さい分の拡大（0.68×1.5735＝前と同じ 1.07倍）。web/ は前のページに埋めこまれていた WebP（ロスレス）をそのまま使う（make_web.py は使わない）",
+ "poseFile": "poses/lilith_{id}_{name}.png",
+ "webFile": "web/lilith_{id}.webp",
+ "scale": 1.5735,
+ "names": {
+  "P01": "idle",
+  "P02": "walk_a",
+  "P03": "walk_b",
+  "P04": "windup",
+  "P05": "attack",
+  "P06": "charge",
+  "P07": "special",
+  "P08": "support",
+  "P09": "guard",
+  "P10": "hurt",
+  "P11": "down",
+  "P12": "after",
+  "P13": "taunt",
+  "P14": "sexy",
+  "SP01": "eclipse",
+  "SP02": "drain"
+ },
+ "manual": {
+  "P01": [
+   "root",
+   "palm"
+  ],
+  "P02": [
+   "root",
+   "palm"
+  ],
+  "P03": [
+   "root",
+   "palm"
+  ],
+  "P04": [
+   "root",
+   "palm"
+  ],
+  "P05": [
+   "root",
+   "palm"
+  ],
+  "P06": [
+   "root",
+   "palm"
+  ],
+  "P07": [
+   "root",
+   "palm"
+  ],
+  "P08": [
+   "root",
+   "palm"
+  ],
+  "P09": [
+   "root",
+   "palm"
+  ],
+  "P10": [
+   "root",
+   "palm"
+  ],
+  "P11": [
+   "root",
+   "palm"
+  ],
+  "P12": [
+   "root",
+   "palm"
+  ],
+  "P13": [
+   "root",
+   "palm"
+  ],
+  "P14": [
+   "root",
+   "palm"
+  ],
+  "SP01": [
+   "root",
+   "palm"
+  ],
+  "SP02": [
+   "root",
+   "palm"
+  ]
+ },
+ "poses": {
+  "P01": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "P02": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "P03": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "P04": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": [],
+   "palm": [
+    328,
+    88
+   ]
+  },
+  "P05": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": [],
+   "palm": [
+    331,
+    96
+   ]
+  },
+  "P06": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": [],
+   "palm": [
+    322,
+    89
+   ]
+  },
+  "P07": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": [],
+   "palm": [
+    317,
+    75
+   ]
+  },
+  "P08": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "P09": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "P10": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "P11": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "P12": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": [],
+   "palm": [
+    339,
+    107
+   ]
+  },
+  "P13": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "P14": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": []
+  },
+  "SP01": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": [],
+   "palm": [
+    332,
+    82
+   ]
+  },
+  "SP02": {
+   "w": 360,
+   "h": 446,
+   "root": [
+    180,
+    442.26
+   ],
+   "drips": [],
+   "palm": [
+    257,
+    100
+   ]
+  }
+ },
+ "fx": {
+  "floor": {
+   "file": "lilith_floor.webp",
+   "w": 563,
+   "h": 214,
+   "blend": "screen",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "sigil": {
+   "file": "lilith_sigil.webp",
+   "w": 447,
+   "h": 390,
+   "blend": "screen",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "charge": {
+   "file": "lilith_charge.webp",
+   "w": 284,
+   "h": 233,
+   "blend": "screen",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "impact": {
+   "file": "lilith_impact.webp",
+   "w": 340,
+   "h": 232,
+   "blend": "screen",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "sparkles": {
+   "file": "lilith_sparkles.webp",
+   "w": 580,
+   "h": 176,
+   "blend": "screen",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "smoke": {
+   "file": "lilith_smoke.webp",
+   "w": 580,
+   "h": 193,
+   "blend": "screen",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "halo": {
+   "file": "lilith_halo.webp",
+   "w": 580,
+   "h": 247,
+   "blend": "screen",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "butterfly_1": {
+   "file": "lilith_butterfly_1.webp",
+   "w": 56,
+   "h": 63,
+   "blend": "source-over",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "butterfly_2": {
+   "file": "lilith_butterfly_2.webp",
+   "w": 54,
+   "h": 59,
+   "blend": "source-over",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "butterfly_3": {
+   "file": "lilith_butterfly_3.webp",
+   "w": 64,
+   "h": 62,
+   "blend": "source-over",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  },
+  "butterfly_4": {
+   "file": "lilith_butterfly_4.webp",
+   "w": 40,
+   "h": 47,
+   "blend": "source-over",
+   "art": "前の lilith-motions.html から（11/14 より前の絵）",
+   "date": "2026-11-14",
+   "request": ""
+  }
+ }
 }

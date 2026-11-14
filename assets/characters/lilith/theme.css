@@ -1,0 +1,13 @@
+/* リリスのページの色（assets/engine/motion-page.css の色だけをむらさきに置きかえる） */
+:root{color:#f6ecff;background:#0d0718}
+body{background:radial-gradient(ellipse at 50% 5%,#382049 0,#100a1d 48%,#0a0712 100%)}a{color:#f4cbff}
+.brand{color:#e1bea2}.top h1{color:#f5d7ff;text-shadow:0 0 12px #b24dcd70}.top h1 span{color:#d2a3df}.chip{border-color:#a978c56b;background:#241430b0;color:#dcb6f2}
+.stage{border-color:#b780ba99;box-shadow:0 10px 42px #000b,0 0 30px #7a35a822;background:#13091e}.stage:after{border-color:#e3a7c84d}
+.heroStat,.enemyStat{background:#170b27bd;border-color:#ce9ca85c}.heroStat small,.enemyStat small{color:#e3bde2}.meter{background:#2d1a3f}.meter span{background:linear-gradient(90deg,#cc55d2,#ffb3ed)}
+.loading{color:#f0d1ff;background:#13091e}
+.phasebar{border-color:#dbabca77;background:#160c24d9}.phasebar small{color:#e9c0f6}.stageid{color:#f0d1ff}
+.primary,.secondary{border-color:#aa6cbf;background:#2a1538}.primary{background:linear-gradient(125deg,#7c389e,#a35ace);border-color:#e0aaf0;box-shadow:0 0 12px #b361dc55}.secondary.on{background:#5c3378;border-color:#e2a8ed}
+.speed{color:#c7a7d5}.speed button{border-color:#5c3d70;color:#d4bfe4;background:#1f152a}.speed button.active{background:#694282;border-color:#b891d2}
+.notice{color:#ceb1d6}.notice b{color:#f3c4fa}.sectiontop{border-bottom-color:#a171a458}.sectiontop small{color:#b99cc8}
+.motion{border-color:#754d8b;background:linear-gradient(150deg,#21132e,#130d1d);color:#f3d9ff}.motion.selected{border-color:#e8a0ff;background:linear-gradient(140deg,#7c3e9c,#39204f);box-shadow:0 0 0 1px #bf79d3,0 0 13px #c464ea70}.motion .num{color:#dfb28f}.motion small{color:#c4aaca}.motion.selected small{color:#f1d7fa}
+.footer{color:#c8accf;border-top-color:#68456d}.footer a{border-bottom-color:#9f6eac}
