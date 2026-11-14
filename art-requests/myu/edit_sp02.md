@@ -1,16 +1,22 @@
-# スライム娘ミュウ（猫ではない）編集方式：final4 の4人目だけ描きかえる
+# ミュウ SP02（2回目・短い指示の試し）
 
 状態：依頼中
-依頼日：2026-11-14
-元の絵：**`myu_final4.png`**（ドライブ `monmusu-art` のいちばん上）。この絵を開いて **編集** する。1〜3人目はそのまま残す
+依頼日：2026-11-14（2回目）
+元の絵：`myu_final4.png`（ドライブ `monmusu-art` のいちばん上）
+保存先：ドライブ `monmusu-art` のいちばん上に `myu_final4b.png`
 
-## 変えること
-- **4人目だけ** を、次のポーズに描きかえる：**SP02 固有技・分裂と拘束**：右向きに足を開いて踏んばり、**両手を右前へ突き出して手のひらを開き、指を広げる**。不敵な笑み。**ゲルのひも・しずく・光は描かない**（Claude がエフェクトで足す）
-- 4人とも、**胸元の開いた所は体と同じ水色**（肌色・ピンクにしない）
-- そのほか（顔・髪・服・小物・色・塗り・大きさ・並び方・本物の透明の背景）は元の絵のまま。猫耳・しっぽは描かない
+## ChatGPT へ
+- 元の絵を開いて、**下の「画像への指示」を、そのまま（言いかえず・足さず）画像を作る AI に渡して** 編集する
+- できた絵は、少しちがっても保存する（合否は Claude が決める）
 
-## 保存
-- Google ドライブの `monmusu-art`（いちばん上）に `myu_final4b.png` で保存（PNG・本物の透明）
+## 画像への指示（このまま使う）
+
+```
+Edit this image. Replace the 4th (rightmost) character with an exact copy of the 3rd character, but with both arms stretched straight forward to the right, palms open and fingers spread. Keep everything else exactly the same.
+```
+
+## 前の回のメモ
+- 1回目：決まりを長く書いたら、ChatGPT が「4人目の腕を変えると顔や服がくずれる」と言って保存しなかった → 画像への指示を短く1つにした
 
 ## Claude の確認（ここは Claude が書く）
 - まだ
