@@ -1,6 +1,6 @@
 # 敵 デザイン案（ザコ3・ボス1）
 
-状態：依頼中
+状態：済（Codex PR #15・画風は合格・デザインは直す → sheet2）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`assets/characters/lilith/master/lilith_style_master_green.png`（画風の見本。この絵の線・塗り・明暗・つやだけを使う）
 保存先（リポジトリ）：`art-requests/enemy/out/enemy_sheet1.png`（背景は無地の緑 #00FF00）
@@ -24,4 +24,6 @@ Edit this image. Replace the four characters with four fantasy monsters facing t
 - 1〜3がザコ、4がボス
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #15・2172×724・緑の背景・1回目）：画風（線・明暗・つや）はリリスと同じで合格。4体の形もちがい、ゴーレムがいちばん大きい。左を向いているのは小悪魔とおばけ（スライムとゴーレムは正面）
+- だめな所：4体ともリリスのバラ・角・フリル・金の飾りがうつった（見本の服がまざるくせ・要件定義 2章）→ `sheet2.md` で外す
+- 仮に `assets/enemies/*_v1.png` として取りこみ（PR #18・試作の画面で使用）
