@@ -1,6 +1,6 @@
 # ミュウ v2 16ポーズ 4枚目（P10・P03・P11・P06 の描き直し）
 
-状態：準備中（3枚目のあと、Claude が依頼中にする）
+状態：依頼中
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/myu/base/myu_v2_master_green.png`（ミュウの正式な画風の見本 v2・2172×724・左から P01・P02・P05・P09・背景は緑）
 保存先（リポジトリ）：`art-requests/myu/out/myu_v2_sheetD.png`（背景は無地の緑 #00FF00）

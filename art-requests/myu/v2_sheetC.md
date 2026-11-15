@@ -1,6 +1,6 @@
 # ミュウ v2 16ポーズ 3枚目（P01・P02・P05・P09 を演技表どおりに）
 
-状態：依頼中
+状態：済（Codex PR #25。4つとも合格）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/myu/base/myu_v2_master_green.png`（ミュウの正式な画風の見本 v2・2172×724・左から P01・P02・P05・P09・背景は緑）
 保存先（リポジトリ）：`art-requests/myu/out/myu_v2_sheetC.png`（背景は無地の緑 #00FF00）
@@ -38,3 +38,5 @@ Edit this image. Change only the pose of the 4th character: curling her body up 
 - 届いたら、各段から変えた1人だけを取り、色を見本 v2 に合わせる → 切り分け・足元そろえ（`docs/ART_PIPELINE.md`）
 
 ## Claude の確認（ここは Claude が書く）
+- 2026-11-15 Codex（PR #25・2172×724・緑の背景）：P01 待機（あごに指・首かしげ）・P02 歩行A（スキップ）・P05 通常攻撃（投げ終わり・ウィンク）・P09 ガード（丸まって腕を交差）、4つとも合格。P09 はしゃがんだ形で、ほかより背が低い（縦556px）
+- 取りこみ：`tools/import_codex.py`（色を見本 v2 に合わせた）・ブランチ myu/poses-v2
