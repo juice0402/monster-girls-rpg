@@ -379,7 +379,7 @@ for(const c of Object.keys(POSE))for(const p of Object.keys(POSE[c]))if(p!=='ks'
 const LF='assets/characters/lilith/fx/',MF='assets/characters/myu/fx/';
 [['heart',LF+'heart_glow_1.webp'],['burst',LF+'heart_burst_1.webp'],['bits',LF+'heart_bits_1.webp'],['impact',LF+'lilith_impact.webp'],['sigil',LF+'lilith_sigil.webp'],['bfly',LF+'lilith_butterfly_1.webp'],
  ['gel',MF+'gel_ball_1.webp'],['splat',MF+'gel_splat_1.webp'],['puddle',MF+'gel_puddle_1.webp'],
- ['slime','assets/enemies/web/slime_v3.webp'],['imp','assets/enemies/web/imp_v3.webp'],['ghost','assets/enemies/web/ghost_v3.webp'],['golem','assets/enemies/web/golem_v3.webp']].forEach(([k,s])=>load(k,s));
+ ['slime','assets/enemies/web/slime_v3.webp'],['imp','assets/enemies/web/imp_v3.webp'],['ghost','assets/enemies/web/ghost_v3.webp'],['golem','assets/enemies/web/golem_v3.webp'],['golemqueen','assets/enemies/web/golemqueen_v1.webp']].forEach(([k,s])=>load(k,s));
 const ok=im=>im&&im.complete&&im.naturalWidth>0;
 const icon=id=>ROSTER[id].art?`game/img/icon_${id}.webp`:null;
 const cardSrc=R=>R.card||`assets/characters/${R.art}/web/${R.art}_P14.webp`;
@@ -452,8 +452,8 @@ $('#h-reset').addEventListener('click',e=>{if(Date.now()-resetArm<3000){S=fresh(
 // ===== 戦闘 =====
 const SLOT=[[.2,.58],[.245,.74],[.29,.9],[.56,.66],[.52,.82]];// 後衛3（左の列）・前衛2（右の列）。足の位置（画面の割合）
 const EPOS=[[.82,.63],[.88,.81],[.76,.48]],BOSSPOS=[.79,.8];
-const WAVES=[[{k:'slime',hp:3000},{k:'slime',hp:3000}],[{k:'imp',hp:3500},{k:'slime',hp:3500},{k:'ghost',hp:3500}],[{k:'golem',hp:30000,boss:true},{k:'imp',hp:3500}]];
-const EW={slime:112,imp:112,ghost:98,golem:236};// 画面での幅（px）
+const WAVES=[[{k:'slime',hp:3000},{k:'slime',hp:3000}],[{k:'imp',hp:3500},{k:'slime',hp:3500},{k:'ghost',hp:3500}],[{k:'golemqueen',hp:30000,boss:true},{k:'imp',hp:3500}]];
+const EW={slime:112,imp:112,ghost:98,golem:236,golemqueen:205};// 画面での幅（px）
 const BASE=.24;// キャラの縦 約170px
 const cv=$('#b-cv'),ctx=cv.getContext('2d');
 let FW=390,FH=600,B=null,raf=0,last=0;
