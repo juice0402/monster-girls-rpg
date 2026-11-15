@@ -1,6 +1,6 @@
 # リリス 必殺技のカットインの絵
 
-状態：依頼中
+状態：済（Codex PR #16・合格・PR #18 に取りこみ）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/lilith/base/lilith_cutin1_base.png`（1536×1024・合格した SP01 の腰から上を拡大・背景は緑）
 保存先（リポジトリ）：`art-requests/lilith/out/lilith_cutin1.png`（1536×1024・背景は無地の緑 #00FF00）
@@ -24,4 +24,5 @@ Edit this image. Redraw it as a detailed close-up illustration in the same pose,
 - 届いたら緑を消して `assets/characters/lilith/cutin/lilith_cutin.png`（＋ web）にする
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #16・1536×1024・緑の背景・1回目）：合格。髪と翼が風でうしろへ流れ、目は右・強気の笑顔。角・バラ・目の形・本・服・翼は同じ（バラの下のリボンの金が少し増えた）。本を掲げた手と右へ向けた手のひらも見える
+- 取りこみ：`assets/characters/lilith/cutin/lilith_cutin.png`（表示用 `web/lilith_cutin.webp`）・PR #18。試作のカットインで使っている

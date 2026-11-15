@@ -1,6 +1,6 @@
 # リリス ガチャ・図鑑の1枚絵（P14 を高画質に）
 
-状態：依頼中
+状態：済（Codex PR #14・合格・PR #18 に取りこみ）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/lilith/base/lilith_card1_base.png`（1024×1536・合格した P14 を縦1280px に拡大して上下に余白・背景は緑）
 保存先（リポジトリ）：`art-requests/lilith/out/lilith_card1.png`（1024×1536・背景は無地の緑 #00FF00）
@@ -24,4 +24,5 @@ Edit this image. Redraw this character with sharper and finer detail in her face
 - 届いたら緑を消して `assets/characters/lilith/card/lilith_card.png`（＋ web）にする
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #14・1024×1536・緑の背景・1回目）：合格。ポーズ・大きさ・位置・上下の余白が元の絵と同じ。角・バラとリボン・目の形・本・服・翼・しっぽのハートも同じで、顔・レース・金の飾りがくっきりした（顔を等倍でくらべた）
+- 取りこみ：`assets/characters/lilith/card/lilith_card.png`（表示用 `web/lilith_card.webp`）・PR #18。ガチャのバナー・結果・キャラ詳細で使っている
