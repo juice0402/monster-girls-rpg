@@ -1,6 +1,6 @@
 # リリス 16ポーズ 1枚目（P04・P03・P07・P06）
 
-状態：確認済（Codex PR #6。合格 P07・P06／描き直し P04・P03 → sheetD）
+状態：済（PR #11 に取りこみ・Codex PR #6。合格 P07・P06／描き直し P04・P03 → sheetD）
 依頼日：2026-11-14
 元の絵（リポジトリ）：`assets/characters/lilith/master/lilith_style_master_green.png`（画風の見本・左から P01・P02・P05・P09）
 保存先（リポジトリ）：`art-requests/lilith/out/lilith_sheetA.png`（背景は無地の緑 #00FF00）

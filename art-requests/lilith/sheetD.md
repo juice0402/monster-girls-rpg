@@ -1,6 +1,6 @@
 # リリス 16ポーズ 描き直し（P04・P03・SP01）
 
-状態：依頼中
+状態：済（Codex PR #10。3つとも合格・PR #11 に取りこみ）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`assets/characters/lilith/master/lilith_style_master_green.png`（画風の見本・左から P01・P02・P05・P09）
 保存先（リポジトリ）：`art-requests/lilith/out/lilith_sheetD.png`（背景は無地の緑 #00FF00）
@@ -34,4 +34,8 @@ Edit this image. Change only the pose of the 4th character: raise the open book 
 - 届いたら、各段から変えた1人だけを取り、色を見本に合わせる（Claude）
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #10・2172×724・緑の背景・各段1回目）：はじめて Claude が @codex で呼び、Codex がカギ（GH_TOKEN）で自分で push して PR を作った（しょーくんの操作なし）
+  - P04 攻撃予備：合格（手のひらが上・指を少し曲げる・目を細める）
+  - SP01 月蝕：合格（本を同じ手で高く掲げる・反対の手のひらは右・翼がいちばん大きい）
+  - P03 歩行B：足の入れかえではなく、後ろ足が地面をけって上がる形。歩きの2コマ目として使う（動きで変なら描き直す）
+  - どの段も元の絵から編集したので、鮮やかさの差は見本と1〜11（順に編集した sheetA は +23 まで）

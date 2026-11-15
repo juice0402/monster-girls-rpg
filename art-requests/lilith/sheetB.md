@@ -1,6 +1,6 @@
 # リリス 16ポーズ 2枚目（P08・P12・P13・P10）
 
-状態：確認済（Codex PR #7。4つとも合格）
+状態：済（PR #11 に取りこみ・Codex PR #7。4つとも合格）
 依頼日：2026-11-14
 元の絵（リポジトリ）：`assets/characters/lilith/master/lilith_style_master_green.png`（画風の見本・左から P01・P02・P05・P09）
 保存先（リポジトリ）：`art-requests/lilith/out/lilith_sheetB.png`（背景は無地の緑 #00FF00）
