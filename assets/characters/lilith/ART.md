@@ -37,4 +37,6 @@
 |---|---|---|---|---|
 | `master/lilith_style_master_green.png` | A・Codex | 2026-11-14 | `art-requests/lilith/style1.md`（PR #3） | もとの PNG（2172×724・緑の背景）。元の絵 `source/lilith_style_src.png` を編集 |
 | `master/lilith_style_master.png` | A・Codex（Claude が緑の背景を抜いただけ） | 2026-11-14 | 同じ | 全キャラの画風の見本。【monmusu】が目で確かめ・しょーくん OK |
+| `card/lilith_card.png`（表示用 `web/lilith_card.webp`） | A・Codex（Claude が緑の背景を抜いただけ） | 2026-11-15 | `art-requests/lilith/card1.md`（PR #14・もとの PNG はブランチ `art/lilith-card1`） | ガチャ・図鑑の1枚絵（1024×1536・上下に余白）。合格した P14 を高画質に編集 |
+| `cutin/lilith_cutin.png`（表示用 `web/lilith_cutin.webp`） | A・Codex（Claude が緑の背景を抜いただけ） | 2026-11-15 | `art-requests/lilith/cutin1.md`（PR #16・もとの PNG はブランチ `art/lilith-cutin1`） | 必殺技のカットイン（1536×1024・腰から上）。SP01 を編集 |
 - Codex にした理由：同じキャラのポーズちがい・立ち絵のシート（顔と画風をそろえるため・game-art-rule の使い分け）
