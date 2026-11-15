@@ -1,6 +1,6 @@
 # ミュウ ガチャ・図鑑の1枚絵（P14 を高画質に・新しい画風で）
 
-状態：依頼中
+状態：済（Codex PR #21・合格・PR #18 に取りこみ）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/myu/base/myu_card1_base.png`（1024×1536・いまの P14 を縦1280px に拡大して上下に余白・背景は緑）
 保存先（リポジトリ）：`art-requests/myu/out/myu_card1.png`（1024×1536・背景は無地の緑 #00FF00）
@@ -24,4 +24,5 @@ Edit this image. Redraw this character with sharper and finer detail in her face
 - 使う所：キャラ画面（呼吸のアニメ）・ガチャの結果・図鑑
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #21・1024×1536・緑の背景・1回目）：合格。ポーズ・大きさ・位置・余白は同じ。顔・ティアラ・耳・服・金の飾り・ヒールも同じで、線と明暗がリリスに近くなった。袖のすける布にレースの柄が入った（正式な見本 v2 と同じ）。髪と体がむらさき寄りになったので、色をいまの P14 に合わせた
+- 取りこみ：`assets/characters/myu/card/myu_card.png`（表示用 `web/myu_card.webp`）・PR #18
