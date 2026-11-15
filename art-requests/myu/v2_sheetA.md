@@ -1,6 +1,6 @@
 # ミュウ v2 16ポーズ 1枚目（P04・P12・SP01・SP02）
 
-状態：依頼中
+状態：済（断られた：step3 SP01 が画像生成の安全のしくみで断られ、全部描かれなかった。言いかえて出し直さない）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/myu/base/myu_v2_master_green.png`（ミュウの正式な画風の見本 v2・2172×724・左から P01・P02・P05・P09・背景は緑）
 保存先（リポジトリ）：`art-requests/myu/out/myu_v2_sheetA.png`（背景は無地の緑 #00FF00）
@@ -37,3 +37,4 @@ Edit this image. Change only the pose of the 4th character: hold both hands forw
 - 届いたら、各段から変えた1人だけを取り、色を見本 v2 に合わせる → 切り分け・足元そろえ（`docs/ART_PIPELINE.md`）
 
 ## Claude の確認（ここは Claude が書く）
+- 2026-11-15 Codex（1回目の作業）：step3（SP01 のびる腕）が画像生成の安全のしくみで断られ、決まりどおり全部描かなかった（PR なし）。SP01 は出し直さず、P05（腕を前へ振り抜く形）を使ってエフェクトで腕をのばす。断られていない段（P04・P12・SP02）は v2_sheetE・v2_sheetF にそのままの英文で入れた
