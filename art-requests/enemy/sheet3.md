@@ -1,6 +1,6 @@
 # 敵 デザイン案（もう少しかわいく）
 
-状態：保留（しょーくん 11/15「敵も女の子に」→ sheet4。この依頼はもう描かなくてよい）
+状態：済（Codex PR #22・合格・PR #18 に取りこみ）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/enemy/base/enemy_sheet2_src.png`（sheet2 の Codex の絵そのまま・2172×724・背景は緑）
 保存先（リポジトリ）：`art-requests/enemy/out/enemy_sheet3.png`（背景は無地の緑 #00FF00）
@@ -23,4 +23,5 @@ Edit this image. Make all four monsters cuter, with rounder and softer shapes, b
 - 取りこみ：`python3 tools/import_single.py split <png> assets/enemies assets/enemies/web slime_v3 imp_v3 ghost_v3 golem_v3`
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #22・2172×724・緑の背景・1回目）：合格。4体ともまるい形・大きなつやのある目・笑顔になり、色・大きさ・位置・向き・画風は同じ（保留にする前に描きはじめていた）
+- 取りこみ：`assets/enemies/*_v3.png`（PR #18・試作の敵を v3 に入れかえ）
