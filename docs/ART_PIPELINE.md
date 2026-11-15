@@ -1,18 +1,21 @@
 # 絵とエフェクトを作るしくみ（再現できる手順）
 
-更新日：2026-11-15（Codex のスケジュールは使えない → 画面から1行）
+更新日：2026-11-15（Codex は Claude が @codex で呼び、カギで PR まで自動）
 **いちばん強い決まりは要件定義 `docs/ART_REQUIREMENTS.md`**（作画はリリス基準・ブレない・エフェクトが入る前提・大きさ・性格と演技表・エフェクトは全部 GPT・GPT の癖の対策）。この手順はそのやり方。制作仕様は `docs/CHARACTER_FX_MASTER_SPEC.md`、ChatGPT の決まりは `art-requests/README.md`
 
 ## 0. だれが何をするか（2026-11-14 夜おそくから Codex・11/15 頼み方を直した）
 | | やること |
 |---|---|
-| しょーくん | ぽぽち（Claude）に1文で頼む → 朝に「見て」と言う（絵の運びはしない） |
-| Codex（ChatGPT Plus の中・追加料金なし） | しょーくんが Codex の画面（環境 monster-girls-rpg）で1行送ると、`art-requests/` の `状態：依頼中`（ブランチがまだない物・多くて3つ）を描き、リポジトリに PNG を置いて PR を出す。決まりは `AGENTS.md`。元の絵を編集・自分で見比べて各段3回までやり直す |
+| しょーくん | ぽぽち（Claude）に1文で頼むだけ（絵の運び・Codex への送信はしない） |
+| Codex（ChatGPT Plus の中・追加料金なし） | Claude が依頼書の PR に `@codex` でコメントすると、`art-requests/` の `状態：依頼中`（ブランチがまだない物・多くて3つ）を描き、カギ（`GH_TOKEN`）で自分で push して PR を出す。決まりは `AGENTS.md`。元の絵を編集・自分で見比べて各段3回までやり直す |
 | Claude | 依頼書を書く・PR から取りこむ・合否・緑の背景を抜く・切り分け・色の直し・アンカー・エフェクト・動きのページ・点検・GitHub・公開 |
 
 - Codex の依頼書には「元の絵（リポジトリ）」「保存先（リポジトリ）」「ブランチ」「点検」を書く。シートは「画像への指示」を番号つきで1人ずつ（例：`art-requests/lilith/sheetA.md`）
-- 頼み方：しょーくんが Codex の画面で環境 monster-girls-rpg を選び「AGENTS.md の決まりで、art-requests/ の「状態：依頼中」を描いて、PR を作って」と送る。画面から頼むと PR まで自動。Claude は依頼書を用意したら「送って」と伝える
-- Codex のスケジュールは使えない（11/15）：ChatGPT のタスクとして動き、Codex の環境（リポジトリ）に入れない。GitHub をつなぎ機能で外から見るだけで、依頼書の一覧も見られず、絵も PR も作れなかった。Codex のクラウドには毎晩自動の機能がまだない
+- 頼み方（11/15 から）：Claude が依頼書を PR にして、その PR に `@codex` でコメントする（AGENTS.md の決まりで依頼中を描いて、カギで送って PR を作って）。Codex は旧 Codex Cloud の環境で PR のブランチを読み、描いて、`art/<名前>` のブランチに push し、PR を自分で作る。しょーくんの操作なし（11/15 の PR #9 → #10 で動いた）
+- カギ：GitHub の fine-grained token `codex-monmusu`（monster-girls-rpg だけ・Contents と Pull requests の書きこみ・90日＝2026-11-15 作成で 2027-02-13 ごろ切れる → しょーくんが作り直して貼りかえる）。旧 Codex Cloud の環境 juice0402/monster-girls-rpg の「環境変数」`GH_TOKEN`（シークレットは作業中に消えるので使わない）。インターネットはカスタムドメイン `github.com, api.github.com` だけ・読み取り専用はオフ
+- 予備の頼み方：@codex が動かないときは、しょーくんが Codex の画面で環境 monster-girls-rpg を選んで「AGENTS.md の決まりで、art-requests/ の「状態：依頼中」を描いて、PR を作って」と送る（画面から頼むと PR まで自動）
+- 取りこみ：`python3 tools/import_codex.py <id> --master <見本の緑の絵> <ポーズ>=<絵>:<何人目> …`（緑を抜く・人を切り分ける・色を見本の同じ人に合わせる・体ぴったりで切る）。root は体の真下の床にそろえる（足のまん中だと、足を広げたポーズで体が横にずれる）
+- Codex のスケジュールは使えない（11/15 0:20 に試した）：ChatGPT のタスクとして動き、Codex の環境（リポジトリ）に入れない。GitHub をつなぎ機能で外から見るだけで、依頼書の一覧も見られず、絵も PR も作れなかった。Codex のクラウドには毎晩自動の機能がまだない
 - GitHub のコメントの `@codex` でも動くが、旧Codex Cloud の作業になり、PR にするには Codex の画面でボタンが要る（使わない）
 - 決まり（game-art-rule 11/14）：依頼書に作品名・キャラ名・「〇〇風」を書かない／断られたら出し直さず PR に理由を書いて止める／Codex は PR まで（マージしない）／絵の PR には【monmusu】が目で確かめた一言を書く／絵の一覧（ART.md）に「A・Codex・作った日・依頼書」ともとの PNG
 - 道具の使い分け（game-art-rule 11/15）：キャラの絵（ポーズ・表情・立ち絵のシート）とエフェクトは Codex。背景・アイテム・UI の飾りなど1枚で完結する絵は、まず Canva の AI（だめなら Codex・理由を絵の一覧に1行）
