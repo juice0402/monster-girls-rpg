@@ -1,6 +1,6 @@
 # ミュウ v2 16ポーズ 2枚目（P06・P08・P07・P13）
 
-状態：依頼中
+状態：済（Codex PR #24。合格 P08・P07・P13／描き直し P06 → v2_sheetD）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/myu/base/myu_v2_master_green.png`（ミュウの正式な画風の見本 v2・2172×724・左から P01・P02・P05・P09・背景は緑）
 保存先（リポジトリ）：`art-requests/myu/out/myu_v2_sheetB.png`（背景は無地の緑 #00FF00）
@@ -37,3 +37,5 @@ Edit this image. Change only the pose of the 4th character: playfully sticking o
 - 届いたら、各段から変えた1人だけを取り、色を見本 v2 に合わせる → 切り分け・足元そろえ（`docs/ART_PIPELINE.md`）
 
 ## Claude の確認（ここは Claude が書く）
+- 2026-11-15 Codex（PR #24・2172×724・緑の背景・各段1回目）：P08 支援・P07 必殺技・P13 挑発は合格（顔・髪・服・飾りは見本 v2 と同じ）。P06 チャージは、ひざを曲げてわくわく顔は合っているが、片手が胸に当たり、もう片手が上がって、手のひらが向かい合わない → v2_sheetD の4段目で描き直し
+- 取りこみ：`tools/import_codex.py`（色を見本 v2 に合わせた）・ブランチ myu/poses-v2
