@@ -1,6 +1,6 @@
 # ミュウ 画風をリリスに合わせる（1枚だけ試す）
 
-状態：済（Codex PR #17・しょーくんの OK 待ち）
+状態：済（Codex PR #17・しょーくん OK：③ Codex＋色をいまのミュウに合わせた版＝正式な見本）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/myu/base/myu_style1_base.png`（2172×724・いまのミュウの P01・P02・P05・P09 を緑の背景に並べた）
 保存先（リポジトリ）：`art-requests/myu/out/myu_style1.png`（背景は無地の緑 #00FF00）
@@ -26,3 +26,4 @@ Edit this image. Redraw all four characters in a crisper anime game illustration
 - 2026-11-15 Codex（PR #17・2172×724・緑の背景・1回目）：線が細く濃くなり、明暗と白いつやが強くなった（リリスの見本に近い）。顔・髪・ティアラ・耳・服・すける袖・金の飾り・ヒール・ポーズは同じ
 - 全体の色がむらさき寄りに暗くなった（体の平均で R−25・G−37・B−37）。色は Claude のコードでいまのミュウに合わせられる（要件定義 2章）
 - しょーくんに「いま／Codex／Codex＋色合わせ／リリス」を並べた1枚で見てもらう → OK なら正式な見本（要件定義 8章の②）
+- 2026-11-15 しょーくん：③「Codex＋色をいまに合わせた」に決定 → `assets/characters/myu/master/myu_style_master_v2.png`（PR #18）。次は ミュウの card（#21 済）→ 残り12ポーズ → cutin
