@@ -370,7 +370,7 @@ for(const c of Object.keys(POSE))for(const p of Object.keys(POSE[c]))if(p!=='ks'
 const LF='assets/characters/lilith/fx/',MF='assets/characters/myu/fx/';
 [['heart',LF+'heart_glow_1.webp'],['burst',LF+'heart_burst_1.webp'],['bits',LF+'heart_bits_1.webp'],['impact',LF+'lilith_impact.webp'],['sigil',LF+'lilith_sigil.webp'],['bfly',LF+'lilith_butterfly_1.webp'],
  ['gel',MF+'gel_ball_1.webp'],['splat',MF+'gel_splat_1.webp'],['puddle',MF+'gel_puddle_1.webp'],
- ['slime','assets/enemies/web/slime_v2.webp'],['imp','assets/enemies/web/imp_v2.webp'],['ghost','assets/enemies/web/ghost_v2.webp'],['golem','assets/enemies/web/golem_v2.webp']].forEach(([k,s])=>load(k,s));
+ ['slime','assets/enemies/web/slime_v3.webp'],['imp','assets/enemies/web/imp_v3.webp'],['ghost','assets/enemies/web/ghost_v3.webp'],['golem','assets/enemies/web/golem_v3.webp']].forEach(([k,s])=>load(k,s));
 const ok=im=>im&&im.complete&&im.naturalWidth>0;
 const icon=id=>ROSTER[id].art?`game/img/icon_${id}.webp`:null;
 const cardSrc=R=>R.card||`assets/characters/${R.art}/web/${R.art}_P14.webp`;
