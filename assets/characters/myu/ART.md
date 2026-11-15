@@ -41,3 +41,8 @@
 
 ## エフェクトの絵（fx/）
 - GPT（A・ChatGPT・2026-11-14・`art-requests/fx/myu_gel1.md`）：`gel_ball_1`・`gel_splat_1`・`gel_puddle_1`・`gel_drops_1`。もとの絵は `source/fx_myu_gel1.png`
+
+## v2（2026-11-15〜・リリスの画風に合わせる）
+- 画風：しょーくんが `art-requests/myu/style1.md` の「Codex＋色をいまのミュウに合わせた版」に決めた（11/15）→ 正式な見本 `master/myu_style_master_v2.png`（緑の背景つきは `_green`）。A・Codex（PR #17・ブランチ `art/myu-style1`）、Claude がしたのは緑を抜く・1人ずつ色をいまのミュウに合わせる（tools/import_codex.py の match_color）だけ
+- ガチャ・図鑑の1枚絵 `card/myu_card.png`（表示用 `web/myu_card.webp`・1024×1536）：A・Codex・2026-11-15・`art-requests/myu/card1.md`（PR #21・ブランチ `art/myu-card1`）。緑を抜いて、色をいまの P14 に合わせた
+- 16ポーズはまだ v1（このあと v2 の見本から編集で描き直す）
