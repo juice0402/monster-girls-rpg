@@ -50,8 +50,8 @@ button:disabled{opacity:.45;cursor:default}
 .who b{font-family:var(--display);font-size:16px}
 .who small{font-size:10px;color:var(--sub)}
 .stage{position:relative;flex:1;min-height:0}
-#h-chara{position:absolute;left:50%;bottom:0;height:96%;max-width:none;transform-origin:50% 100%;transform:translateX(-50%);animation:breathe 3.2s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 10px 18px rgba(0,0,0,.55))}
-@keyframes breathe{0%,100%{transform:translateX(-50%) scaleY(1)}50%{transform:translateX(-50%) scaleY(1.012)}}
+#h-chara{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+.stage::before{content:"";position:absolute;left:18%;right:18%;bottom:0;height:46px;border-radius:50%;background:radial-gradient(closest-side,rgba(224,85,155,.35),rgba(224,85,155,0))}
 .bubble{position:absolute;left:14px;right:14px;top:14px;z-index:3;padding:12px 14px;border-radius:14px;background:rgba(244,239,251,.95);color:#2a1c44;font-size:14px;font-weight:700;line-height:1.6}
 .bubble::after{content:"";position:absolute;left:58%;bottom:-9px;border:9px solid transparent;border-bottom:0;border-top-color:rgba(244,239,251,.95)}
 .h-name{position:absolute;left:14px;bottom:12px;z-index:2;display:flex;flex-direction:column;text-shadow:0 2px 6px #000}
@@ -160,11 +160,9 @@ button:disabled{opacity:.45;cursor:default}
 @keyframes pop{from{transform:scale(.4);opacity:0}}
 .card{position:absolute;inset:0;z-index:25;display:flex;flex-direction:column;background:var(--bg)}
 .card .glow{position:absolute;inset:0;background:radial-gradient(90% 60% at 50% 45%,var(--c,#5a2a6e),#120c1e 72%)}
-.card .cimg{position:absolute;left:50%;bottom:110px;height:min(76%,640px);max-width:none;transform:translateX(-50%);animation:cardin .6s ease-out}
-.card .cimg.full{bottom:auto;top:50%;width:112%;height:auto;transform:translate(-50%,-50%);animation:cardin2 .6s ease-out}
-@keyframes cardin2{from{opacity:0;transform:translate(-50%,-46%) scale(.94)}}
+.card .cimg{position:absolute;inset:0;width:100%;height:100%;animation:cardin .6s ease-out}
 .card .csil{position:absolute;left:50%;bottom:130px;width:200px;height:440px;transform:translateX(-50%);border-radius:48% 48% 18% 18%;opacity:.8;display:grid;place-items:center;font-size:13px;color:#fff;font-weight:700}
-@keyframes cardin{from{opacity:0;transform:translateX(-50%) translateY(30px) scale(.94)}}
+@keyframes cardin{from{opacity:0;transform:translateY(30px) scale(.96)}}
 .ctop{position:relative;z-index:1;padding:16px max(16px,env(safe-area-inset-left,0px)) 0 max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:2px;text-shadow:0 2px 8px #000}
 .ctop .cst{font-size:16px;color:var(--gold);letter-spacing:2px}
 .ctop b{font-family:var(--display);font-size:34px}
@@ -191,7 +189,7 @@ button:disabled{opacity:.45;cursor:default}
 .note{margin:0;font-size:11px;color:var(--sub);line-height:1.6}
 .teamgo{flex:none;margin:0 max(16px,env(safe-area-inset-left,0px)) 10px max(16px,env(safe-area-inset-right,0px));height:56px;border-radius:16px;background:var(--pink);box-shadow:0 4px 0 #8f2a5e;font-family:var(--display);font-size:19px;letter-spacing:2px;color:#fff}
 .cd-top{position:relative;height:380px;flex:none;border-radius:16px;overflow:hidden;background:radial-gradient(100% 80% at 60% 40%,#3a2257,#160f24 75%)}
-.cd-top img{position:absolute;right:0;top:20px;height:420px;max-width:none}
+.cd-top canvas{position:absolute;inset:0;width:100%;height:100%}
 .cd-top .csil{position:absolute;right:40px;top:40px;width:160px;height:340px;border-radius:48% 48% 18% 18%;opacity:.8;display:grid;place-items:center;font-size:12px;font-weight:700}
 .cd-name{position:absolute;left:12px;top:12px;width:48%;display:flex;flex-direction:column;gap:3px;text-shadow:0 2px 6px #000}
 .cd-name b{font-family:var(--display);font-size:28px}
@@ -205,7 +203,7 @@ button:disabled{opacity:.45;cursor:default}
 .skill small{font-size:11px;color:var(--sub)}
 .skill b{font-size:14px}
 .skill span{font-size:12px;color:var(--sub);line-height:1.5}
-@media (prefers-reduced-motion: reduce){#h-chara,.face.ready .fimg,.circle,.circle::after,.ci-band::before{animation:none}}
+@media (prefers-reduced-motion: reduce){.face.ready .fimg,.circle,.circle::after,.ci-band::before{animation:none}}
 </style>
 
 <div id="app">
@@ -217,7 +215,7 @@ button:disabled{opacity:.45;cursor:default}
       <span class="stone"><i class="gem"></i><span id="h-stone"></span></span>
     </header>
     <div class="stage">
-      <img id="h-chara" alt="">
+      <canvas id="h-chara" role="img" aria-label=""></canvas>
       <div class="bubble" id="h-bubble" hidden></div>
       <div class="h-name"><b id="h-name"></b><span>タップで話す</span></div>
     </div>
@@ -299,7 +297,7 @@ button:disabled{opacity:.45;cursor:default}
     <div class="ovl" id="g-grid" hidden><div class="endttl" style="font-size:24px">10回の結果</div><div class="grid10" id="g-tiles"></div><p class="endsub">カードをタップで大きく見る</p><div class="row"><button class="btn main" id="g-again10" type="button">もう10回</button><button class="btn sub" id="g-close10" type="button">とじる</button></div></div>
     <div class="card" id="g-card" hidden>
       <div class="glow" id="gc-glow"></div>
-      <img class="cimg" id="gc-img" alt="">
+      <canvas class="cimg" id="gc-img" role="img"></canvas>
       <div class="csil" id="gc-sil" hidden>絵はまだ</div>
       <div class="ctop"><span class="cst" id="gc-st"></span><b id="gc-name"></b><span id="gc-kind"></span><span class="ctag" id="gc-tag"></span></div>
       <div class="cbot" id="gc-bot"></div>
@@ -412,12 +410,38 @@ function faceHTML(id,extra=''){
 }
 const stars=n=>'★'.repeat(n);
 
+// ===== 1枚絵の呼吸（ホーム・キャラ・ガチャの結果）=====
+// 足は動かさず、胸より上を少し持ち上げる（腰〜胸のあいだを細い帯にして少しずつずらす）。絵は1枚のまま
+const LIVE=new Map(),BOX={};
+function figBox(im){const k=im.src;if(BOX[k])return BOX[k];const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d');x.drawImage(im,0,0);
+  let b=[0,0,c.width,c.height];try{const d=x.getImageData(0,0,c.width,c.height).data;let x0=c.width,y0=c.height,x1=0,y1=0;for(let y=0;y<c.height;y+=2)for(let i=0;i<c.width;i+=2){if(d[(y*c.width+i)*4+3]>12){if(i<x0)x0=i;if(i>x1)x1=i;if(y<y0)y0=y;if(y>y1)y1=y}}if(x1>x0)b=[x0,y0,x1-x0,y1-y0]}catch(e){}
+  return BOX[k]=b}
+function setLive(key,cv,src,opt={}){const old=LIVE.get(key);if(old&&old.cv===cv&&old.src===src){old.opt=opt;return}const im=new Image();im.src=src;LIVE.set(key,{cv,src,im,opt,ph:Math.random()*6})}
+const sm=t=>{t=clamp(t,0,1);return t*t*(3-2*t)};
+function drawLive(st,t){
+  const {cv,im,opt}=st;if(!ok(im))return;const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;
+  const d=Math.min(2,devicePixelRatio||1);if(cv.width!==Math.round(w*d)||cv.height!==Math.round(h*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d)}
+  const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,w,h);
+  const [bx,by,bw,bh]=figBox(im),W=im.naturalWidth,H=im.naturalHeight;
+  const s=Math.min(h*(opt.h||.96)/bh,w*(opt.w||1.15)/bw),dx=w*(opt.cx||.5)-(bx+bw/2)*s,dy=h*(opt.foot||.99)-(by+bh)*s;
+  const amp=REDUCED?0:1,b=(1-Math.cos(t*2*Math.PI/3.8+st.ph))/2;
+  const A=.0065*bh*b*amp,X=.0022*bh*Math.sin(t*2*Math.PI/6.4+st.ph)*amp;// 持ち上げ・ゆれ（絵のピクセル）
+  const yc=by+bh*(opt.chest||.3),yh=by+bh*(opt.hip||.54),step=3;
+  c.imageSmoothingQuality='high';
+  c.drawImage(im,0,yh,W,H-yh,dx,dy+yh*s,W*s,(H-yh)*s);
+  for(let y=yh-step;y>=yc;y-=step){const k=sm((yh-y)/(yh-yc));c.drawImage(im,0,y,W,step,dx+X*k*s,dy+(y-A*k)*s,W*s,step*s+1)}
+  c.drawImage(im,0,0,W,yc,dx+X*s,dy+(-A)*s,W*s,yc*s+1);
+  if(opt.bfly&&ok(IMG.bfly)){for(let i=0;i<2;i++){const a=t*.55+i*Math.PI+st.ph,fx=dx+(bx+bw/2)*s+Math.cos(a)*bw*s*.5,fy=dy+(by+bh*(.3+.12*i))*s+Math.sin(t*.9+i*2)*18,f=.4+.6*Math.abs(Math.sin(t*9+i));
+    c.save();c.globalAlpha=.9;c.translate(fx,fy);c.scale(f*(Math.cos(a)>0?-1:1),1);c.drawImage(IMG.bfly,-11,-12,22,25);c.restore()}}
+}
+(function liveLoop(now){if(!document.hidden)for(const st of LIVE.values())if(st.cv.isConnected&&st.cv.offsetParent!==null)drawLive(st,now/1000);requestAnimationFrame(liveLoop)})(performance.now());
+
 // ===== ホーム =====
 function leader(){return S.party.find(id=>id&&ROSTER[id].art)||'lilith'}
 let bubbleT=0;
 function renderHome(){
   const id=leader(),R=ROSTER[id];
-  $('#h-chara').src=`assets/characters/${R.art}/web/${R.art}_P01.webp`;$('#h-chara').alt=R.name;
+  setLive('home',$('#h-chara'),R.card||`assets/characters/${R.art}/web/${R.art}_P01.webp`,{h:.97,foot:.995,bfly:id==='lilith'});$('#h-chara').setAttribute('aria-label',R.name);
   $('#h-name').textContent=R.name;$('#h-stone').innerHTML=stoneText();$('#h-bubble').hidden=true;
 }
 $('#h-chara').addEventListener('click',()=>{const R=ROSTER[leader()],b=$('#h-bubble');b.textContent=R.lines[Math.floor(Math.random()*R.lines.length)];b.hidden=false;clearTimeout(bubbleT);bubbleT=setTimeout(()=>b.hidden=true,3200)});
@@ -722,7 +746,7 @@ function showGrid(){
 function showCard(r,mode){
   const R=ROSTER[r.id],c=$('#g-card');
   $('#gc-glow').style.setProperty('--c',R.rar===5?'#6b4a1e':R.rar===4?'#4b2a7a':'#24344f');
-  const img=$('#gc-img');img.hidden=!R.art;img.classList.toggle('full',!!R.card);if(R.art){img.src=cardSrc(R);img.alt=R.name}
+  const img=$('#gc-img');img.hidden=!R.art;if(R.art){setLive('gcard',img,cardSrc(R),{h:.74,foot:.87});img.setAttribute('aria-label',R.name)}
   const sil=$('#gc-sil');sil.hidden=!!R.art;sil.style.background=`linear-gradient(160deg,${R.color},#241a3a 80%)`;
   $('#gc-st').textContent=stars(R.rar);$('#gc-name').textContent=R.name;$('#gc-kind').textContent=`${R.kind}・${R.role}・${R.el}`;
   const [tag,cls]=tagFor(r);const tg=$('#gc-tag');tg.textContent=tag;tg.className='ctag '+cls;
@@ -767,8 +791,9 @@ let csel='lilith';
 function renderChara(){
   if(!(csel in S.owned))csel=Object.keys(S.owned)[0];
   const R=ROSTER[csel],lb=S.owned[csel],m=1+lb*.05;
-  $('#c-top').innerHTML=(R.art?`<img src="${cardSrc(R)}" alt="${R.name}"${R.card?' style="height:470px;top:-12px;right:-60px"':''}>`:`<div class="csil" style="background:linear-gradient(160deg,${R.color},#241a3a 80%)">絵はまだ</div>`)+
+  $('#c-top').innerHTML=(R.art?`<canvas role="img" aria-label="${R.name}"></canvas>`:`<div class="csil" style="background:linear-gradient(160deg,${R.color},#241a3a 80%)">絵はまだ</div>`)+
     `<div class="cd-name"><span class="cst">${stars(R.rar)}</span><b>${R.name}</b><span>${R.kind}<br>${R.role} ／ ${R.el}</span><span style="color:var(--pink)">限界突破 ${'◆'.repeat(lb)}${'<span style="color:#5a4380">'+'◆'.repeat(5-lb)+'</span>'}</span></div>`;
+  if(R.art)setLive('chara',$('#c-top canvas'),cardSrc(R),{h:.97,cx:.64,foot:.985});else LIVE.delete('chara');
   $('#c-info').innerHTML=`<div class="stats"><div><span>HP</span><b>${fmt(R.hp*m)}</b></div><div><span>攻撃</span><b>${fmt(R.atk*m)}</b></div><div><span>攻撃の間</span><b>${R.iv} 秒</b></div><div><span>持っている数</span><b>${lb+1}</b></div></div>
     <div class="skill"><small>ふつうの攻撃</small><b>${R.atkName}</b><span>${R.atkText}</span></div>
     <div class="skill spk"><small>必殺技（金のふちでタップ）</small><b>${R.sp}</b><span>${R.spText}</span></div>
