@@ -1,6 +1,6 @@
 # 敵 デザイン案（もう少しかわいく）
 
-状態：依頼中
+状態：保留（しょーくん 11/15「敵も女の子に」→ sheet4。この依頼はもう描かなくてよい）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/enemy/base/enemy_sheet2_src.png`（sheet2 の Codex の絵そのまま・2172×724・背景は緑）
 保存先（リポジトリ）：`art-requests/enemy/out/enemy_sheet3.png`（背景は無地の緑 #00FF00）
