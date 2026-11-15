@@ -1,6 +1,6 @@
 # ミュウ v2 16ポーズ 5枚目（P04・SP02・P10・P06）
 
-状態：依頼中
+状態：済（断られた：step3 P10 が画像生成の安全のしくみ〔sexual〕で断られ、全部描かれなかった。言いかえて出し直さない）
 依頼日：2026-11-15
 元の絵（リポジトリ）：`art-requests/myu/base/myu_v2_master_green.png`（ミュウの正式な画風の見本 v2・2172×724・左から P01・P02・P05・P09・背景は緑）
 保存先（リポジトリ）：`art-requests/myu/out/myu_v2_sheetE.png`（背景は無地の緑 #00FF00）
@@ -39,3 +39,4 @@ Edit this image. Change only the pose of the 4th character: bend her knees sligh
 - 届いたら、各段から変えた1人だけを取り、色を見本 v2 に合わせる（`tools/import_codex.py`）
 
 ## Claude の確認（ここは Claude が書く）
+- 2026-11-15 Codex：step3（P10 被ダメージ・v2_sheetD の step1 と同じ英文）が安全のしくみ（sexual）で断られ、全部描かなかった（PR なし）。同じ英文が前は通ったので、断られ方はゆらぐ。11/15 の断りはこれで4回目（敵 sheet4・v2_sheetA・v2_sheetD・v2_sheetE）→ ミュウの Codex の依頼はいったん止めて、しょーくんと司令塔に相談（v2_sheetF・G は準備中のまま）
