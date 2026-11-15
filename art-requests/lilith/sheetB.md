@@ -1,6 +1,6 @@
 # リリス 16ポーズ 2枚目（P08・P12・P13・P10）
 
-状態：依頼中
+状態：済（PR #11 に取りこみ・Codex PR #7。4つとも合格）
 依頼日：2026-11-14
 元の絵（リポジトリ）：`assets/characters/lilith/master/lilith_style_master_green.png`（画風の見本・左から P01・P02・P05・P09）
 保存先（リポジトリ）：`art-requests/lilith/out/lilith_sheetB.png`（背景は無地の緑 #00FF00）
@@ -36,4 +36,4 @@ Edit this image. Change only the pose of the 4th character to: leaning her upper
 - 届いたら画風の見本と並べてブレ点検 → 切り分け・足元そろえ
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #7・2172×724・緑の背景）：P08 支援・P12 余韻・P13 挑発（指さし寄り）・P10 被ダメージ、4つとも合格。人ごとに描いた段から取り、色を見本に合わせる。髪のふちの黒い線は緑の抜き方で直す
