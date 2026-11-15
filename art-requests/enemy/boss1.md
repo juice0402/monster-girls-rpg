@@ -27,3 +27,4 @@ Edit this image. Turn this golem into a fearsome boss: a towering stone golem qu
 - 届いたら、緑を抜いて golem_v3 と並べ、しょーくんに見せる。OK なら `python3 tools/import_single.py` で `assets/enemies/golemqueen_v1.png`（＋ web）にして、試作のボスに使う
 
 ## Claude の確認（ここは Claude が書く）
+- 2026-11-15 Codex（PR #27・1024×1024・緑の背景）：断られずに描けた。体はぜんぶ岩・むらさきに光るひび・岩の王冠・金と宝石の飾り・人らしいのは石の顔（大人のきりっとした顔・光る目）だけ。露出や色っぽさはない。いまの v3 と同じ色と画風で、ひとまわり大きい → しょーくんの合否待ち
