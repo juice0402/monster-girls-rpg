@@ -1,6 +1,6 @@
 # リリス 16ポーズ 1枚目（P04・P03・P07・P06）
 
-状態：依頼中
+状態：確認済（Codex PR #6。合格 P07・P06／描き直し P04・P03 → sheetD）
 依頼日：2026-11-14
 元の絵（リポジトリ）：`assets/characters/lilith/master/lilith_style_master_green.png`（画風の見本・左から P01・P02・P05・P09）
 保存先（リポジトリ）：`art-requests/lilith/out/lilith_sheetA.png`（背景は無地の緑 #00FF00）
@@ -36,4 +36,5 @@ Edit this image. Change only the pose of the 4th character to: holding the open 
 - 届いたら画風の見本と並べてブレ点検 → 切り分け・足元そろえ（`docs/ART_PIPELINE.md`）
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #6・2172×724・緑の背景・各段1回目）：P07 必殺技・P06 チャージは合格。P04 は手のひらが胸向き（演技表は上向き）、P03 は足が入れかわらず P02 と同じ → sheetD で描き直し
+  - 1人ずつ順に編集したので、1回ごとに鮮やかさが5〜8上がり、ほかの人も少しずつ変わった（2人目の差は step1 で10.7 → step4 で31.5）。人ごとに「その人を描いた段」から取り、色を見本に合わせた

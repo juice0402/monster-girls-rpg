@@ -1,6 +1,6 @@
 # リリス 16ポーズ 3枚目（P14・P11・SP02・SP01）
 
-状態：依頼中
+状態：確認済（Codex PR #8。合格 P14・P11・SP02／描き直し SP01 → sheetD）
 依頼日：2026-11-14
 元の絵（リポジトリ）：`assets/characters/lilith/master/lilith_style_master_green.png`（画風の見本・左から P01・P02・P05・P09）
 保存先（リポジトリ）：`art-requests/lilith/out/lilith_sheetC.png`（背景は無地の緑 #00FF00）
@@ -37,4 +37,4 @@ Edit this image. Change only the pose of the 4th character to: raising the open 
 - 届いたら画風の見本と並べてブレ点検 → 切り分け・足元そろえ
 
 ## Claude の確認（ここは Claude が書く）
-- まだ
+- 2026-11-15 Codex（PR #8・2172×724・緑の背景・step4 は3回目）：P14 セクシー・P11 戦闘不能・SP02 吸収は合格。SP01 は本が逆の手で、前の手のひらが手前（画面のこちら）を向いた → sheetD で描き直し。step4 は3人目と4人目の翼がふれているので、切り分けは間の細い所で切る
