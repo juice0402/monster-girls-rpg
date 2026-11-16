@@ -20,18 +20,19 @@
 | src/dialogue.js | 13 | DLG の最小版と loadDLG（台詞は src/data/dialogue.json） |
 | src/data/chars.js | 60 | CHARS：人の絵の表（16×32・前／後ろ／横・足3コマ・pal＝[色, 部分, つや]）・着せかえの部品 items（帽子など）と wear（いま身につけている物） |
 | src/art/people.js | 40 | charFrame（絵の枠は24×36＝体16×32のまわりに横4・上4のゆとり。身につけた物を重ねてから、部分ごとの面の向き）・makeSprites（着せかえたらもう一度）・SPR。描く所は sp.ox・sp.oy だけずらす |
-| src/art/pixel.js | 138 | ドット絵の道具（mk・grid）・面の向きの道具（NBuf・nput・nrect・bumpLum・nHouse）・草・道・木・さく・池 |
-| src/art/town.js | 248 | 街の3枚組：Surf3・stamp3・PS（色の段）・makeBld（家）・街灯・ベンチ・金床・材木・たる・袋・噴水（makeFountain・fountainWater）・石だたみ（drawTownGround）・置き場所（drawTownThings） |
-| src/art/farm.js | 186 | 牧場の家の部品（roof・wall・door・win・shipBox）・土・作物・岩・花・道具の絵・drawBuildings・renderBase（地図ごとの土台＝色・面の向き・高さ/かげ/つや・影の形） |
+| src/art/pixel.js | 89 | ドット絵の道具（mk・grid）・面の向きの道具（NBuf・nput・nrect・bumpLum）・草・道・池 |
+| src/art/town.js | 249 | 街の3枚組：Surf3・stamp3・PS（色の段）・makeBld（家。wallP＝板の壁の色・窓の4つめ＝カーテンの色）・街灯・ベンチ・金床・材木・たる・袋・噴水（makeFountain・fountainWater）・石だたみ（drawTownGround）・置き場所（drawTownThings） |
+| src/art/scenery.js | 200 | 牧場と森の景色（3枚組）：PS に色の段を足す（葉の色 leafD・leaf・leafF・leafY・草 grass）・windAt（風：日ごと×時間＋通りぬける強い風）・木は全部広葉樹＝oakModel（形4つ：まるい・片がわに広がった・横に広い・かたまりが分かれた×大きさ3つ×葉の色4つ・枝 limb）と低木・treeModel（実のなる木は畑に植える木用に残す）・treeFrame（風でかたむいた絵。新しい絵は1コマ2枚まで＝TFB）・TREES/treeAt（葉の色は近くの木どうしで似せる）/treeNow・drawForestFloor・drawFence（新しい板・古い板・欠け・つた・きのこ）・rockSprite（6つの形×4色・どれも下重心＝底がいちばん広く上へ丸くせまい形・足もとに暗い草と草のふさ。影は足もとの奥 foot から）・sprite3 |
+| src/art/farm.js | 163 | 出荷箱（makeShipBox）・増築の工事中（makeScaffold）・土・作物（pillow3＝部分ごとにふくらんだ面の向き・cropSprite(key,lean)・cropLean）・花・道具の絵・drawBuildings（家と増築は makeBld）・renderBase（地図ごとの土台＝色・面の向き・高さ/かげ/つや・影の形。木は描かず TREES に） |
 | src/state.js | 61 | newState・fixRocks・save/loadSave・addPts・P（自分）・RT（住人）・Q（予約）・moveAlong・bfs |
 | src/npc.js | 68 | schedule（住人の1日）・updNpc・DBGN（試す用に人を立たせる） |
 | src/player.js | 106 | canAct・queueField・updPlayer・doField・BLD・STAND・onTap・interact |
 | src/talk.js | 110 | openNpc・talk・gift・invite・runVisits（同居の朝）・renovate・sleep（1日のおわり） |
 | src/light/layers.js | 34 | LIT（光の画質）・5枚の絵（LN・LD・LS・LE）・BASE3・sprN・blit3 |
 | src/data/light.js | 11 | KEYS：時間ごとの光（日の向き・色・空・霧・ランプ・窓・色の調子） |
-| src/light/gl.js | 123 | paramsAt・シェーダー（GFS_LIT＝1ドットずつの光、GFS_FINAL＝ぼかし・光の筋・霧・にじむ光）・initGL・renderGL・applyLight（光ボタン）・watchSpeed（重いとき1段かるく） |
+| src/light/gl.js | 126 | paramsAt・シェーダー（GFS_LIT＝1ドットずつの光、GFS_FINAL＝ぼかし・光の筋・霧・にじむ光）・initGL・upT（同じ大きさなら中身だけ入れかえ）・renderGL・applyLight（光ボタン）・watchSpeed（重いとき1段かるく） |
 | src/light/particles.js | 42 | 花びら・光のちり・ほたる（drawLP）・LAMPS・lightsFor（夜のあかりの一覧） |
-| src/render.js | 123 | resize・カメラ（clampCam・setFree）・粒・toast・render（毎コマ：土台→畑→人→影→光） |
+| src/render.js | 150 | resize・カメラ（clampCam・setFree）・粒・toast・rockLayer（岩は地図の大きさの絵にまとめ、岩が変わったときだけ描きなおす。足もとのかげもここ）・staticShadow（家・さく・出荷箱・岩の影は、日の向きが少し変わったときだけ描きなおす）・render（毎コマ：土台→畑→岩の層→人と木（奥から）→影→光。画面の外の木は、影がとどくときだけ影を落とす） |
 | src/ui.js | 130 | updHud・ふきだし（say・scene・choose）・まど（openShop・openShip・openBag・openMap・openFriends）・warp・dayCard・seasonEnd |
 | src/main.js | 66 | update・loop・initRT・begin・boot・`window.__game`（試す用の debug） |
 
@@ -42,9 +43,12 @@
 - 人の見た目 → src/data/chars.js（色と部分は pal、形は rows と legs）。体は何も身につけない形で描き、帽子や服は items に重ねる部品で（着せかえできる）
 - 時間ごとの光 → src/data/light.js
 - 街の建物の形・色 → src/art/town.js の drawTownThings（makeBld に渡す数字）と PS
+- 牧場の家の形 → src/art/farm.js の drawBuildings（makeBld に渡す数字）
+- 木の形・大きさ・葉の色の割合・風の強さ → src/art/scenery.js の treeAt・oakModel・windDay・windAt
 
 ## 試す
 - `window.__game.debug({time:分, map:'farm'|'town', cam:[x,y], light:0〜3, pos:[x,y], npc:{id:[map,x,y,向き]}})`・`__game.fps()`
+- 状態を変えて土台を描きなおす：`__game.S.reno.state=2;__game.renderBase('farm')`（増築・岩など）。風の強い日は `__game.S.day` を変えて試す
 - ふきだし・まどを出す：`__game.ui.say(id,文)`・`choose(id,文,[選択肢],true)`・`openShop()`・`openShip()`・`openBag()`・`openMap()`・`openFriends()`・`bubble(id,文)`
 - 確かめはビルド → スクショ（牧場と街・朝昼夕夜）。読み直して確かめない
 

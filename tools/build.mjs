@@ -22,6 +22,7 @@ const JS=[
   'src/art/people.js',      // 人の絵を作る（部分ごとの面の向き）
   'src/art/pixel.js',       // ドット絵の道具・面の向きの道具・草・道・木・さく・池
   'src/art/town.js',        // 街の絵（3枚組）：石だたみ・建物・噴水・街灯・小物
+  'src/art/scenery.js',     // 牧場と森の景色（3枚組）：木4種類と風・さく・岩
   'src/art/farm.js',        // 牧場の建物・土・作物・岩・花／地図ごとの土台
   'src/state.js',           // 状態・セーブ・動くもの・道さがし
   'src/npc.js',             // 住人の1日

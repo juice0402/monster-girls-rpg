@@ -24,7 +24,31 @@ function hint(k,t){if(S.flags.hints[k])return;S.flags.hints[k]=1;toast(t);}
 const pick=a=>a[(Math.random()*a.length)|0];
 const shopTitle=()=>DLG.shop.shopName?`種屋「${DLG.shop.shopName}」`:`${DLG.shop.name}の種屋`;
 
-function castSh(sil,X,Y,ay,kx,ky){shg.setTransform(1,0,-kx,-ky,kx*ay,ay*(1+ky));shg.drawImage(sil,X,Y);}
+function castOn(g,sil,X,Y,ay,kx,ky){g.setTransform(1,0,-kx,-ky,kx*ay,ay*(1+ky));g.drawImage(sil,X,Y);}
+function castSh(sil,X,Y,ay,kx,ky){castOn(shg,sil,X,Y,ay,kx,ky);}
+const mapCanvas=()=>{const c=document.createElement('canvas');c.width=MW*TS;c.height=MH*TS;return c;};
+/* 岩は動かないので、地図の大きさの絵（色・面の向き・高さ/かげ/つや・足もとのかげ・形）にまとめておき、毎コマはそれを写すだけ。
+   岩が変わったとき（くだいた・生えた）だけ描きなおす */
+const RL={key:-1,list:[]};
+function rockKey(F){let k=7;for(let i=0;i<F.rock.length;i++)if(F.rock[i])k=(k*31+i+1)%2147483647;return k;}
+function rockLayer(F){const key=rockKey(F);if(RL.key===key)return RL;
+  if(!RL.c){RL.c=mapCanvas();RL.n=mapCanvas();RL.d=mapCanvas();RL.ao=mapCanvas();RL.sil=mapCanvas();}
+  const W=MW*TS,H=MH*TS,gc=RL.c.getContext('2d'),gn=RL.n.getContext('2d'),gd=RL.d.getContext('2d'),ga=RL.ao.getContext('2d'),gs=RL.sil.getContext('2d');
+  for(const g of[gc,gn,gd,gs])g.clearRect(0,0,W,H);ga.fillStyle='#fff';ga.fillRect(0,0,W,H);RL.list=[];
+  for(let y=0;y<MH;y++)for(let x=0;x<MW;x++){if(!F.rock[I(x,y)])continue;const X=x*TS,Y=y*TS,rs=rockSprite(x,y),o=rs.nd,fx=o.fx,fw=fx[1]-fx[0]+3,fX=X+fx[0]-1;
+    // 足もとのかげ：地面を少し暗く（色）・光の演出の「かげ」も暗く（ao はかけ算で重ねる）
+    [[2,-4,.2],[1,-2,.3],[0,0,.34],[1,-2,.22]].forEach(([a,dw,k],j)=>{const w=fw+dw;if(w<1)return;
+      gc.fillStyle=`rgba(16,34,12,${k})`;gc.fillRect(fX+a,Y+12+j,w,1);ga.fillStyle=`rgb(255,${Math.round(255*(1-k*1.6))},255)`;ga.fillRect(fX+a,Y+12+j,w,1);});
+    gc.drawImage(rs,X,Y);gn.drawImage(o.n,X,Y);gd.drawImage(o.d,X,Y);gs.drawImage(o.sil,X,Y);
+    RL.list.push({sil:o.sil,x:X,y:Y,ay:Y+o.by-(o.foot||0)});}
+  RL.key=key;return RL;}
+// 動かない物の影（土台の家・さく・出荷箱と岩）：日の向きが少し変わったとき・岩が変わったときだけ、地図の大きさの絵に描きなおす
+function staticShadow(B3,R,kx,ky){const q=v=>Math.round(v*25)/25,qx=q(kx),qy=q(ky),key=qx+','+qy+','+(R?R.key:'-'),SH=B3.sh||(B3.sh={});
+  if(SH.key===key)return SH.c;if(!SH.c)SH.c=mapCanvas();
+  const g=SH.c.getContext('2d');g.setTransform(1,0,0,1,0,0);g.globalCompositeOperation='source-over';g.clearRect(0,0,SH.c.width,SH.c.height);
+  for(const c of B3.casters)castOn(g,c.sil,c.x,c.y,c.ay,qx,qy);
+  if(R){for(const r of R.list)castOn(g,r.sil,r.x,r.y,r.ay,qx,qy);g.setTransform(1,0,0,1,0,0);g.globalCompositeOperation='destination-out';g.drawImage(R.sil,0,0);g.globalCompositeOperation='source-over';}   // 岩の上には自分の影を落とさない
+  g.setTransform(1,0,0,1,0,0);SH.key=key;return SH.c;}
 let lpLast=0;
 function render(){
   const pm=S?S.map:'farm';
@@ -55,11 +79,12 @@ function render(){
       if(F.soil[i])blit3(SOILC[F.wet[i]?1:0][soilMask(x,y)],'flat',X,Y);
       const c=F.crop[i];if(c){const cd=CROPS[c.id];const stg=c.ready?3:c.d===0?0:c.d<cd.days/2?1:2;
         if(stg>=1){ctx.fillStyle='rgba(40,20,10,.25)';ctx.fillRect(X+4,Y+13,8,2);}
-        const o=blit3(cropSprite(stg===3?c.id:'s'+stg),'round',X,Y);if(o&&stg>=2)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});
+        const o=blit3(cropSprite(stg===3?c.id:'s'+stg,stg>=1?cropLean(x,y,now):0),'round',X,Y);if(o&&stg>=2)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});
         if(c.ready&&((now*2+x+y)|0)%5===0){E.fillStyle='#fffbe0';E.fillRect(X+12,Y+2,1,1);E.fillRect(X+11,Y+3,3,1);E.fillRect(X+12,Y+4,1,1);}}
-      if(F.rock[i]){const o=blit3(ROCK,'round',X,Y);if(o)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});}
       if(F.flower[i])blit3(FLOWERC[(x+y)%3],'round',X,Y);
     }
+    const R=rockLayer(F);ctx.drawImage(R.c,-cx,-cy);
+    if(L){nctx.drawImage(R.n,-cx,-cy);dctx.globalCompositeOperation='multiply';dctx.drawImage(R.ao,-cx,-cy);dctx.globalCompositeOperation='source-over';dctx.drawImage(R.d,-cx,-cy);}
     // 池のきらめき（光の演出のときは水のつやで光る）
     if(!L){ctx.fillStyle='#bfe8fb';for(let k=0;k<3;k++){ctx.fillRect(11*TS+4+k*13-cx,21*TS+6+((k*7)%14)-cy,3,1);}}
   }else if(TOWN_OBJ.fountain){
@@ -76,8 +101,16 @@ function render(){
   const ents=[];
   ents.push({id:'player',x:P.x,y:P.y,dir:P.dir,act:P.act,mov:P.path.length>0,anim:P.anim});
   for(const id in RT){const r=RT[id];if(!r.hidden&&r.map===pm)ents.push({id,x:r.x,y:r.y,dir:r.dir,act:r.act,mov:r.path.length>0,anim:r.anim});}
+  // 木（風でゆれる）：画面に入る木は人といっしょに奥から描く。画面の外の木も、光の演出のときは影だけ落とす
+  const PP=L?paramsAt(S.time/60):null,tm=L&&PP.shA>.01?Math.ceil(Math.max(Math.abs(PP.shK[0]),Math.abs(PP.shK[1]))*TAY)+6:0;
+  TFB=2;
+  for(const t of TREES[pm]){const X=t.X-cx,Y=t.Y-cy;if(X>view.w+tm||Y>view.h+tm||X+TW<-tm||Y+TH<-tm)continue;
+    const f=treeNow(t,now);if(X>view.w||Y>view.h||X+TW<0||Y+TH<0){dyn.push({sil:f.sil,X,Y,ay:Y+TAY});continue;}
+    ents.push({tree:f,X,Y,y:t.y-.02});}
   ents.sort((a,b)=>a.y-b.y);
-  for(const e of ents){const X=Math.round(e.x*TS)-cx,Y=Math.round(e.y*TS)-cy;
+  for(const e of ents){
+    if(e.tree){const f=e.tree;ctx.drawImage(f.c,e.X,e.Y);if(L){nctx.drawImage(f.n,e.X,e.Y);dctx.drawImage(f.d,e.X,e.Y);}dyn.push({sil:f.sil,X:e.X,Y:e.Y,ay:e.Y+TAY});continue;}
+    const X=Math.round(e.x*TS)-cx,Y=Math.round(e.y*TS)-cy;
     ctx.fillStyle=L?'rgba(0,0,0,.16)':'rgba(0,0,0,.22)';ctx.fillRect(X+3,Y+14,10,2);ctx.fillRect(X+4,Y+13,8,4);
     const fr=e.act?3:e.mov?[1,0,2,0][((e.anim*8)|0)%4]:0;
     const bob=e.id==='luu'&&!e.mov?((now*3)|0)%2:0;
@@ -90,14 +123,13 @@ function render(){
   // 粒
   for(const p of parts){ctx.fillStyle=p.c;ctx.fillRect(Math.round(p.x-cx),Math.round(p.y-cy),p.s,p.s);}
   if(L){
-    const PP=paramsAt(S.time/60),vw=view.w,vh=view.h;
+    const vw=view.w,vh=view.h;
     // 日の影：動く物 → 自分には落とさない → 土台の木・家・さく → 物の上はぬきとる（地面だけに落とす）
     shg.setTransform(1,0,0,1,0,0);shg.globalCompositeOperation='source-over';shg.clearRect(0,0,vw,vh);
     if(PP.shA>.01){const kx=PP.shK[0],ky=PP.shK[1];
       for(const d of dyn)castSh(d.sil,d.X,d.Y,d.ay,kx,ky);
       shg.setTransform(1,0,0,1,0,0);shg.globalCompositeOperation='destination-out';for(const d of dyn)shg.drawImage(d.sil,d.X,d.Y);shg.globalCompositeOperation='source-over';
-      for(const c of B3.casters){const X=c.x-cx,Y=c.y-cy,ay=c.ay-cy,hh=ay-Y,rx=Math.abs(kx)*hh+2,ry=Math.abs(ky)*hh+2;
-        if(X+c.sil.width+rx<0||X-rx>vw||Y-ry>vh||ay+ry<0)continue;castSh(c.sil,X,Y,ay,kx,ky);}
+      shg.drawImage(staticShadow(B3,pm==='farm'?RL:null,kx,ky),-cx,-cy);
       shg.setTransform(1,0,0,1,0,0);shg.globalCompositeOperation='destination-out';shg.drawImage(B3.mask,-cx,-cy);shg.globalCompositeOperation='source-over';}
     // 夜の窓とランプ
     if(PP.win>.01){eg.globalAlpha=Math.min(1,PP.win);for(const w of WINDOWS[pm]){const X=w[0]-cx,Y=w[1]-cy;if(X<-12||Y<-12||X>vw||Y>vh)continue;
