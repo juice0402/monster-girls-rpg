@@ -271,6 +271,7 @@ let DLG={
   banter:[[{who:'chloe',text:'…ぬれてる。'},{who:'luu',text:'えへへ、スライムだもん！'}]],
 };
 async function loadDLG(){
+  if(window.__DLG){DLG=Object.assign(DLG,window.__DLG);return;}   // 試すページ（1ファイル）用
   try{const r=await fetch('data/dialogue.json',{cache:'no-store'});if(r.ok){const j=await r.json();DLG=Object.assign(DLG,j);}}catch(e){}
 }
 
@@ -1129,7 +1130,7 @@ function onTap(cx,cy){
   const wx=cx/view.sc+cam.x,wy=cy/view.sc+cam.y;const tx=Math.floor(wx/TS),ty=Math.floor(wy/TS);
   // 住人
   for(const id of Object.keys(RT)){const r=RT[id];if(r.hidden||r.map!==S.map)continue;
-    if(wx>=r.x*TS-2&&wx<=r.x*TS+18&&wy>=r.y*TS-10&&wy<=r.y*TS+16){Q.length=0;interrupt();Q.push({kind:'npc',id});return;}}
+    if(wx>=r.x*TS-2&&wx<=r.x*TS+18&&wy>=r.y*TS-18&&wy<=r.y*TS+16){Q.length=0;interrupt();Q.push({kind:'npc',id});return;}}
   if(tx<0||ty<0||tx>=MW||ty>=MH)return;
   if(S.map==='farm'&&queueField(tx,ty)){mark(tx,ty);return;}
   const t=tile(S.map,tx,ty);const b=BLD[t];
