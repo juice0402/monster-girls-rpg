@@ -34,23 +34,23 @@ html,body{height:100%;margin:0;background:var(--ground)}
 body{font-family:var(--font);color:var(--paper);overscroll-behavior:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 button{font-family:var(--font);color:inherit;cursor:pointer;touch-action:manipulation}
 button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
-#app{position:relative;height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:var(--ground)}
+#app{position:relative;height:100%;max-width:480px;margin:0 auto;overflow:hidden;background:var(--ground)}
 
-/* 上の板 */
-#hud{flex:none;background:var(--wood);border-bottom:3px solid var(--wood-d);padding:6px max(10px,env(safe-area-inset-left,0px)) 6px max(10px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:1fr auto;gap:4px 8px;align-items:center}
-#hud .when{display:flex;gap:10px;align-items:baseline;font-size:15px;white-space:nowrap}
-#clock{font-size:20px;color:var(--sun);font-variant-numeric:tabular-nums}
-#money{justify-self:end;font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap}
-#money::after{content:"G";margin-left:2px;color:var(--sun)}
-.st{display:flex;align-items:center;gap:6px;font-size:12px}
-.st .bar{width:120px;height:10px;background:var(--wood-d);border:2px solid #2c1a10;position:relative}
-.st .bar i{position:absolute;inset:0;width:100%;background:var(--leaf);transition:width .2s}
-.hudbtns{justify-self:end;display:flex;gap:6px}
-.hb{background:var(--wood-d);border:2px solid #2c1a10;padding:3px 8px;font-size:12px;line-height:1.2}
-.hb[aria-pressed="true"]{background:var(--sun);color:var(--ink)}
+/* 上：枠をつくらず地図に重ねる。文字が読めるように、上だけうすく暗く */
+#hud{position:absolute;left:0;right:0;top:0;z-index:12;pointer-events:none;padding:8px max(12px,env(safe-area-inset-left,0px)) 24px max(12px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:1fr auto;gap:5px 8px;align-items:center;background:linear-gradient(rgba(8,10,16,.6),rgba(8,10,16,.26) 58%,rgba(8,10,16,0));text-shadow:0 1px 0 rgba(0,0,0,.75),0 0 6px rgba(0,0,0,.5)}
+#hud .when{display:flex;gap:10px;align-items:baseline;font-size:14px;white-space:nowrap;color:var(--paper)}
+#clock{font-size:22px;color:var(--sun);font-variant-numeric:tabular-nums;letter-spacing:.5px}
+#money{justify-self:end;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--paper)}
+#money::after{content:"G";margin-left:3px;color:var(--sun)}
+.st{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--paper)}
+.st .bar{width:110px;height:6px;border-radius:3px;background:rgba(0,0,0,.45);box-shadow:inset 0 0 0 1px rgba(255,240,210,.25);position:relative;overflow:hidden}
+.st .bar i{position:absolute;inset:0;width:100%;border-radius:3px;background:linear-gradient(90deg,#6fbf55,#b7e27a);box-shadow:0 0 6px rgba(160,230,110,.55);transition:width .2s}
+.hudbtns{justify-self:end;display:flex;gap:6px;pointer-events:auto}
+.hb{background:rgba(12,14,22,.46);border:1px solid rgba(255,236,200,.3);border-radius:999px;padding:4px 10px;font-size:12px;line-height:1.2;color:var(--paper);text-shadow:none}
+.hb[aria-pressed="true"]{background:rgba(255,210,94,.9);border-color:#fff2c4;color:var(--ink)}
 
 /* まん中 */
-#stage{position:relative;flex:1;min-height:0;overflow:hidden;background:#24351f}
+#stage{position:absolute;inset:0;overflow:hidden;background:#24351f}
 #cv{position:absolute;left:0;top:0;image-rendering:pixelated;image-rendering:crisp-edges;touch-action:none}
 #gl,#pfx{position:absolute;left:0;top:0;pointer-events:none;image-rendering:pixelated;image-rendering:crisp-edges}
 #fx{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -60,22 +60,23 @@ button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
 @keyframes up{to{transform:translate(-50%,-180%);opacity:0}}
 .bub{position:absolute;transform:translate(-50%,-100%);background:var(--paper);color:var(--ink);border:2px solid var(--ink);padding:3px 7px;font-size:12px;white-space:nowrap;max-width:220px}
 .bub::after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-4px;border:4px solid transparent;border-top-color:var(--ink)}
-#toast{position:absolute;left:50%;top:10px;transform:translateX(-50%);background:rgba(43,26,16,.92);border:2px solid var(--wood-l);padding:6px 12px;font-size:13px;max-width:92%;text-align:center;pointer-events:none;transition:opacity .25s}
+#toast{position:absolute;left:50%;top:66px;z-index:13;transform:translateX(-50%);background:rgba(12,14,22,.7);border:1px solid rgba(255,236,200,.3);border-radius:10px;padding:6px 12px;font-size:13px;max-width:92%;text-align:center;pointer-events:none;transition:opacity .25s}
 #toast.off{opacity:0}
 
-/* 下の板 */
-#bar{flex:none;background:var(--wood);border-top:3px solid var(--wood-d);padding:6px max(8px,env(safe-area-inset-left,0px)) 8px max(8px,env(safe-area-inset-right,0px));display:flex;gap:6px;align-items:stretch}
-#hotbar{flex:1;display:flex;gap:4px;min-width:0;overflow-x:auto;scrollbar-width:none}
+/* 下：道具の列も枠なしで地図に重ねる。下だけうすく暗く */
+#bar{position:absolute;left:0;right:0;bottom:0;z-index:12;pointer-events:none;padding:24px max(10px,env(safe-area-inset-left,0px)) 10px max(10px,env(safe-area-inset-right,0px));display:flex;gap:6px;align-items:flex-end;background:linear-gradient(rgba(8,10,16,0),rgba(8,10,16,.3) 40%,rgba(8,10,16,.66))}
+#bar>*{pointer-events:auto}
+#hotbar{flex:1;display:flex;gap:5px;min-width:0;overflow-x:auto;scrollbar-width:none;padding:3px 2px}
 #hotbar::-webkit-scrollbar{display:none}
-.slot{flex:none;position:relative;white-space:nowrap;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:52px;padding:4px 3px 3px;background:var(--wood-d);border:2px solid #2c1a10;font-size:10px;line-height:1.1}
-.slot img{width:28px;height:28px;image-rendering:pixelated}
-.slot b{position:absolute;right:2px;top:1px;font-weight:normal;font-size:10px;font-variant-numeric:tabular-nums;text-shadow:1px 1px 0 #2c1a10}
+.slot{flex:none;position:relative;white-space:nowrap;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:50px;padding:5px 3px 3px;background:rgba(12,14,22,.52);border:1px solid rgba(255,236,200,.22);border-radius:10px;font-size:10px;line-height:1.1;color:var(--paper)}
+.slot img{width:28px;height:28px;image-rendering:pixelated;filter:drop-shadow(0 1px 0 rgba(0,0,0,.5))}
+.slot b{position:absolute;right:4px;top:2px;font-weight:normal;font-size:10px;font-variant-numeric:tabular-nums;text-shadow:0 1px 0 #000}
 .slot.empty img{opacity:.4}
-.slot[aria-pressed="true"]{background:var(--sun);border-color:#fff6d0;color:var(--ink)}
-.slot[aria-pressed="true"] b{text-shadow:none}
-.slot.gap{margin-left:6px}
-#recenter{position:absolute;right:8px;bottom:8px;z-index:5;background:var(--wood);border:2px solid #2c1a10;color:var(--paper);padding:5px 10px;font-size:13px}
-.big{flex:none;min-width:58px;background:var(--wood-l);border:2px solid #2c1a10;font-size:13px;padding:4px 6px}
+.slot[aria-pressed="true"]{background:rgba(255,210,94,.22);border-color:#ffd25e;box-shadow:0 0 0 1px #ffd25e,0 0 12px rgba(255,210,94,.5);color:#fff3cc}
+.slot[aria-pressed="true"] b{text-shadow:0 1px 0 #000}
+.slot.gap{margin-left:8px}
+#recenter{position:absolute;right:max(10px,env(safe-area-inset-right,0px));bottom:94px;z-index:13;background:rgba(12,14,22,.6);border:1px solid rgba(255,236,200,.3);border-radius:999px;color:var(--paper);padding:6px 12px;font-size:13px}
+.big{flex:none;min-width:54px;align-self:stretch;background:rgba(12,14,22,.52);border:1px solid rgba(255,236,200,.3);border-radius:10px;font-size:13px;padding:4px 6px;color:var(--paper)}
 
 /* ふきだし */
 #dlg{position:absolute;left:8px;right:8px;bottom:8px;background:var(--paper);color:var(--ink);border:3px solid var(--ink);box-shadow:0 3px 0 rgba(0,0,0,.35);padding:10px 12px 10px 12px;display:grid;grid-template-columns:auto 1fr;gap:8px 10px;z-index:20}
@@ -284,60 +285,77 @@ async function loadDLG(){
    wg＝つばさ・tl＝しっぽ・em＝光る所（ルゥの核）・ol＝線（となりの面の向きを外へ少しひらく） */
 const CHARS={
  // ミノリ
- player:{head:[7.5, 13, 6.4],faceY:7,
-  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15]},
+ player:{head:[7.5, 13, 6.4],faceY:7,hatC:[8, 7.5, 6.5],wear:{"hat": "straw"},
+  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15],"q":["#efcb72","hc",0.12],"Q":["#cfa650","hc",0.1],"u":["#fbe39c","hc",0.15]},
   views:{
-   front:{rows:["................","................","......oooo......",".....ohhhho.....","....ohhhhhho....","....oBbbbbBo....","..oooHhhhhHooo..",".ohhhhhhhhhhhho.","ojHHHHHHHHHHHHjo",".oorRRRRRRRRroo.","..orlRrrrrrRlro.","..orrsrrrrsrro..","..orssssssssro..","..orsessssesro..","..orcessssecro..","..orsssmmsssro..","..rroSssssSorr..","...oRowsswoRo...","..ottwwwwwwtto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
+   front:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlRrrrrrRlro.","..orrsrrrrsrro..","..orssssssssro..","..orsessssesro..","..orcessssecro..","..orsssmmsssro..","..rroSssssSorr..","...oRowsswoRo...","..ottwwwwwwtto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
     legs:[["....oso..oso....","....oSo..oSo....","...offo..offo...","...oooo..oooo..."],["....oso..oso....","....oSo..offo...","...offo..oooo...","...oooo........."],["....oso..oso....","...offo..oSo....","...oooo..offo...",".........oooo..."]]},
-   back:{rows:["................","................","......oooo......",".....ohhhho.....","....ohhhhhho....","....oBbbbbBo....","..oooHhhhhHooo..",".ohhhhhhhhhhhho.","ojHHHHHHHHHHHHjo",".oorRRRRRRRRroo.","..orlrrrrrrlro..","..orrrrrrrrrro..","..orrrrrrrrrro..","..oRrrrrrrrrRo..","..oRRrrrrrrRRo..","..orRRRRRRRRro..","...oRRRRRRRRo...","....oossssoo....","..otttttttttto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
+   back:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlrrrrrrlro..","..orrrrrrrrrro..","..orrrrrrrrrro..","..oRrrrrrrrrRo..","..oRRrrrrrrRRo..","..orRRRRRRRRro..","...oRRRRRRRRo...","....oossssoo....","..otttttttttto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
     legs:[["....oso..oso....","....oSo..oSo....","...offo..offo...","...oooo..oooo..."],["....oso..oso....","....oSo..offo...","...offo..oooo...","...oooo........."],["....oso..oso....","...offo..oSo....","...oooo..offo...",".........oooo..."]]},
-   side:{rows:["................","................","......oooo......",".....ohhhho.....","....ohhhhhho....","....oBbbbbBo....","..oooHhhhhHooo..",".ohhhhhhhhhhhho.","ojHHHHHHHHHHHHjo",".oorRRRRRRRRroo.","..orlrrrrrrrRro.","..orrrrrrrRssro.","..oRrrrrrRsssso.","..oRrrrrrRsesso.","..oRRrrrRssecso.","..oRRRrrRsssmo..","..orRRRroSsso...","...oRRRoowwo....","....ottttwwo....","....otttttttto..","....otyTttttto..","....otyTttttto..","....ottsotttto..","....okkkkkkkko..","...oknkkkkkkKo..","...oknkkkkkKKo..","..oknkkkkkkKKKo.","..ooooooooooooo."],
-    legs:[["......oso.......","......oSo.......","......offFo.....","......ooooo....."],[".....oso.oso....","....oso...oSo...","....offo..offFo.","....oooo..ooooo."],[".....oSo.oso....","....oso...oso...","....offo..offFo.","....oooo..ooooo."]]},
-  }},
+   side:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlrrrrrrrRro.","..orrrrrrrRssro.","..oRrrrrrRsssso.","..oRrrrrrRsesso.","..oRRrrrRssecso.","..oRRRrrRsssmo..","..orRRRroSsso...","...oRRRoowwo....",".....otwwto.....",".....ottttto....",".....oyTttto....",".....oyTttto....",".....otsotto....",".....okkkkko....","....oknkkkkKo...","....oknkkkKKo...","...oknkkkkKKKo..","...ooooooooooo.."],
+    legs:[[".......oso......",".......oSo......",".......offFo....",".......ooooo...."],["......oso.oso...",".....oso...oSo..",".....offo..offFo",".....oooo..ooooo"],["......oSo.oso...",".....oso...oso..",".....offo..offFo",".....oooo..ooooo"]]},
+  },
+  // 着せかえの部品（views ごとに y 段目から重ねる・'.' はすける）
+  items:{
+   straw:{name:"麦わら帽子",views:{
+    front:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
+    back:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
+    side:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
+   }},
+  },
+ },
  // クロエ（ドラゴン娘）
  chloe:{head:[7.5, 11.5, 7.2],faceY:5,
-  pal:{"o":["#2a1a30","ol"],"h":["#3d2856","hd",0.25],"j":["#6a4c92","hd",0.3],"H":["#281a3a","hd",0.2],"k":["#eee2c6","hn",0.3],"K":["#b8a684","hn",0.2],"s":["#f3d8ca","hd"],"S":["#dbb3a3","hd"],"e":["#e8b030","hd",0.5],"E":["#7a4c12","hd",0.3],"m":["#c27a70","hd"],"c":["#7a58a8","hd",0.3],"w":["#efe6d2","tr"],"W":["#c9bba0","tr"],"a":["#8a5a34","tr",0.15],"A":["#62402a","tr",0.1],"n":["#ad7a4c","tr",0.2],"b":["#3a2a22","tr",0.1],"y":["#d9b25a","tr",0.6],"q":["#efe6d2","ar"],"Q":["#c9bba0","ar"],"r":["#f3d8ca","ar"],"R":["#7a58a8","ar",0.3],"g":["#6e4428","ar",0.15],"G":["#4a2c18","ar",0.1],"p":["#4f4560","lg"],"P":["#3a3248","lg"],"f":["#2e2428","lg",0.25],"F":["#4c3c40","lg",0.3],"v":["#5b3a8c","wg",0.2],"V":["#3f2766","wg",0.15],"x":["#5b3a8c","tl",0.3],"X":["#3f2766","tl",0.2]},
+  pal:{"o":["#2a1a30","ol"],"h":["#3d2856","hd",0.25],"j":["#6a4c92","hd",0.3],"H":["#281a3a","hd",0.2],"k":["#eee2c6","hn",0.3],"K":["#b8a684","hn",0.2],"s":["#f3d8ca","hd"],"S":["#dbb3a3","hd"],"e":["#f2b632","hd",0.5],"E":["#2a1830","hd",0.4],"m":["#c27a70","hd"],"c":["#7a58a8","hd",0.3],"w":["#efe6d2","tr"],"W":["#c9bba0","tr"],"a":["#8a5a34","tr",0.15],"A":["#62402a","tr",0.1],"n":["#ad7a4c","tr",0.2],"b":["#3a2a22","tr",0.1],"y":["#d9b25a","tr",0.6],"q":["#efe6d2","ar"],"Q":["#c9bba0","ar"],"r":["#f3d8ca","ar"],"R":["#7a58a8","ar",0.3],"g":["#6e4428","ar",0.15],"G":["#4a2c18","ar",0.1],"p":["#4f4560","lg"],"P":["#3a3248","lg"],"f":["#2e2428","lg",0.25],"F":["#4c3c40","lg",0.3],"v":["#5b3a8c","wg",0.2],"V":["#3f2766","wg",0.15],"x":["#5b3a8c","tl",0.3],"X":["#3f2766","tl",0.2]},
   views:{
-   front:{rows:["................","................","................","................","..oo........oo..",".oKkooooooooKko.",".ohhjjhhhhhhhho.",".ohjjhhhhhhhhHo.",".ohhhhhhhhhhhHo.",".ohhhhhhhhhhHHo.",".ohhhshhhhshHHo.",".ohhssssssssHHo.",".ohhssssssssHHo.",".ohhsessssesHHo.",".ohhcEssssEcHHo.",".ohhsssmsssHHHo.",".ohhoSssssSoHHo.","..ohHowsswoHho..",".oqwwwaaaawwwQo.",".oqwwwanaawwwQo.",".oqowwaaaawwoQo.",".orowaaaaaawoRo.",".oRobybbbbbboro.",".ogoaaaaaaaaogo.",".oGoanaaaaAaoGo.","..opaaaaaaAApo..","..opAAAAAAAApo..","..oppppPPpppPo.."],
+   front:{rows:["................","................","................","................","..oo........oo..",".oKkooooooooKko.",".ohhjjhhhhhhhho.",".ohjjhhhhhhhhHo.",".ohhhhhhhhhhhHo.",".ohhhhhhhhhhHHo.",".ohhhshhhhshHHo.",".ohhssssssssHHo.",".ohhssssssssHHo.",".ohhsEssssEsHHo.",".ohhcEssssEcHHo.",".ohhsssmmsssHHo.",".ohhoSssssSoHHo.","..ohHowsswoHho..",".oqwwwaaaawwwQo.",".oqwwwanaawwwQo.",".oqowwaaaawwoQo.",".orowaaaaaawoRo.",".oRobybbbbbboro.",".ogoaaaaaaaaogo.",".oGoanaaaaAaoGo.","..opaaaaaaAApo..","..opAAAAAAAApo..","..oppppPPpppPo.."],
     legs:[["...oppo..oPPo...","...oppo..oPPo...","...oFfo..oFfo...","...oooo..oooo..."],["...oppo..oPPo...","...oppo..oFfo...","...oFfo..oooo...","...oooo........."],["...oppo..oPPo...","...oFfo..oPPo...","...oooo..oFfo...",".........oooo..."]]},
    back:{rows:["................","................","................","................","..oo........oo..",".oKkooooooooKko.",".ohhjjhhhhhhhho.",".ohjjhhhhhhhhHo.",".ohhhhhhhhhhhHo.",".ohhhhhhhhhhHHo.",".ohhhhhbbhhhHHo.",".ohhhhojjohhHHo.",".oHhhhohhohhHHo.",".oHHhhohhohHHHo.",".oHHHhohhoHHHHo.","..oHHhohhoHHHo..","..ooHHohHoHHoo..","..oVvoohhoovVo..",".oqVvvoHHovvVQo.",".oqoVvvwwvvVoQo.",".oqowVvwwvVwoQo.",".orowwVwwVwwoRo.",".oRobbbbbbbboro.",".ogoppoxxoppogo.",".oGoppoxXopPoGo.","..oppPoxXoPPpo..","..opppoxXoPPpo..","..oppppoxoPPPo.."],
     legs:[["...oppoxXoPPo...","...oppoxooPPo...","...oFfo..oFfo...","...oooo..oooo..."],["...oppoxXoPPo...","...oppoxooFfo...","...oFfo..oooo...","...oooo........."],["...oppoxXoPPo...","...oFfoxooPPo...","...oooo..oFfo...",".........oooo..."]]},
-   side:{rows:["................","................","................","ok..............","oKkk............",".ooKkoooooo.....","..oKhhhhjjjo....",".ohhhhhhhjjho...",".ohhhhhhhhhhho..",".ohhhhhhhhhhho..",".oHhhhhhhhhsso..","ooHHhhhhhsssso..","oHHHhhhhhsessso.","oHHoHhhhhsEssso.","oHHooHhhssscsso.",".oHo.oHhSsssmo..",".oHo..oHoSsso...","..o..oovwwoo....",".....oVvqwaao...","....oVvoqwanao..","....oVoqqwaaao..",".....oorrwaaao..",".....oRrybbbbo..",".....ogowaaaao..","...ooGoppaaAao..","..oxXooppaaAAo..",".oxXo.oppAAAAo..",".oXo..opppppPo.."],
-    legs:[[".oo...oppPPo....","......oppPPo....","......oFffFoo...","......ooooooo..."],["......opo.oPo...",".....opo..oPPo..","....oFffo.oFffo.","....ooooo.ooooo."],["......oPo.opo...",".....oPPo.oppo..","....oFffo.oFffo.","....ooooo.ooooo."]]},
-  }},
+   side:{rows:["................","................","................","ok..............","oKkk............",".ooKkoooooo.....","..oKhhhhjjjo....",".ohhhhhhhjjho...",".ohhhhhhhhhhho..",".ohhhhhhhhhhho..",".oHhhhhhhhhsso..","ooHHhhhhhsssso..","oHHHhhhhhssssso.","oHHoHhhhhssEsso.","oHHooHhhsssEcso.",".oHo.oHhSsssmo..",".oHo..oHoSsso...","..o..oovwwoo....",".....oVvqwao....","....oVvoqwaao...","....oVoqqwnao...",".....oorrwaao...",".....oRrybbbo...",".....ogowaaao...","...ooGoppaAao...","..oxXooppaAAo...",".oxXo.oppAAAo...",".oXo..oppppPo..."],
+    legs:[[".oo....opPo.....",".......opPo.....",".......oFfFoo...",".......oooooo..."],[".oo...opo.oPo...",".....opo..oPPo..","....oFffo.oFffo.","....ooooo.ooooo."],[".oo...oPo.opo...",".....oPPo.oppo..","....oFffo.oFffo.","....ooooo.ooooo."]]},
+  },
+ },
  // ルゥ（スライム娘）
  luu:{head:[7.5, 10.5, 7.4],faceY:4,
-  pal:{"o":["#1e4a2a","ol"],"g":["#a4e478","hd",0.55],"G":["#6fbf4a","hd",0.5],"l":["#dcf9c0","hd",0.7],"e":["#1f3a1c","hd",0.6],"E":["#ffffff","hd",0.6],"m":["#2f5a24","hd"],"c":["#f7a6a6","hd",0.4],"k":["#fff2a0","em"],"u":["#a4e478","tr",0.55],"U":["#6fbf4a","tr",0.5],"d":["#4a6fa5","tr",0.08],"D":["#36558a","tr",0.05],"z":["#6c90c8","tr",0.1],"y":["#e8c64a","tr",0.6],"a":["#a4e478","ar",0.55],"A":["#6fbf4a","ar",0.5],"b":["#a8743f","ar",0.15],"B":["#7a5030","ar",0.1],"p":["#4a6fa5","lg",0.08],"P":["#36558a","lg",0.05],"f":["#f4c430","lg",0.5],"F":["#c99a1a","lg",0.4],"n":["#c9f29c","hd",0.55],"N":["#a9dc7e","hd",0.5],"w":["#ffffff","hd",0.6]},
+  pal:{"o":["#1b3a5a","ol"],"g":["#94d6f2","hd",0.55],"G":["#5aaed6","hd",0.5],"l":["#e2f7ff","hd",0.7],"e":["#16304c","hd",0.6],"E":["#ffffff","hd",0.6],"m":["#244a6e","hd"],"c":["#f7a6a6","hd",0.4],"k":["#fff2a0","em"],"u":["#94d6f2","tr",0.55],"U":["#5aaed6","tr",0.5],"d":["#4a6fa5","tr",0.08],"D":["#36558a","tr",0.05],"z":["#6c90c8","tr",0.1],"y":["#e8c64a","tr",0.6],"a":["#94d6f2","ar",0.55],"A":["#5aaed6","ar",0.5],"b":["#a8743f","ar",0.15],"B":["#7a5030","ar",0.1],"p":["#4a6fa5","lg",0.08],"P":["#36558a","lg",0.05],"f":["#f4c430","lg",0.5],"F":["#c99a1a","lg",0.4],"n":["#bfe9fb","hd",0.55],"N":["#9ad4ee","hd",0.5],"w":["#ffffff","hd",0.6]},
   views:{
-   front:{rows:["................","................","................","......oooo......","....oolllgoo....","...olggggggGo...","..olgggggggggo..",".olgggggggggGGo.",".oggggggggggGGo.",".ogglgGggGggGGo.",".oGgGnnnnnnGgGo.",".oGgnnnnnnnnGGo.",".oGgnwnnnnwnGGo.",".oGgnennnnenGGo.",".oGGcennnnecGGo.",".oGGnnnmmnnnGGo.","oGlGoNnnnnNoGlGo","olGGooonnoooGGlo",".ooouuuukuuuooo.",".oauDuuuuuuDuAo.",".oaoddddddddoAo.",".oaodyzddzydoAo.",".oaoddddddddoAo.",".obodddzzdddoUo.",".oBoddDzzDddoAo.","..odddddddddDo..","..oddDdddddDDo..","..odddDooDddDo.."],
+   front:{rows:["................","................","................","......oooo......","....oolllgoo....","...olggggggGo...","..olgggggggggo..",".olgggggggggGGo.",".oggggggggggGGo.",".ogglgGggGggGGo.",".oGgGnnnnnnGgGo.",".oGgnnnnnnnnGGo.",".oGgnnnnnnnnGGo.",".oGgnennnnenGGo.",".oGGcennnnecGGo.",".oGGnnnmmnnnGGo.","oGlGoNnnnnNoGlGo","olGGooonnoooGGlo",".ooouuuukuuuooo.",".oauDuuuuuuDuAo.",".oaoddddddddoAo.",".oaodyzddzydoAo.",".oaoddddddddoAo.",".obodddzzdddoUo.",".oBoddDzzDddoAo.","..odddddddddDo..","..oddDdddddDDo..","..odddDooDddDo.."],
     legs:[["...oppo..oPPo...","...offo..oFFo...","...offo..oFFo...","...oooo..oooo..."],["...oppo..oPPo...","...offo..oFFo...","...offo..oooo...","...oooo........."],["...oppo..oPPo...","...offo..oFFo...","...oooo..oFFo...",".........oooo..."]]},
    back:{rows:["................","................","................","......oooo......","....oolllgoo....","...olggggggGo...","..olgggggggggo..",".olgggggggggGGo.",".ogglggggggggGo.",".oggggggggggGGo.",".oGggggggggGGGo.",".oGGgggggggGGGo.",".oGGGgggggGGGGo.",".oGGGGggggGGGGo.",".oGGGGGGGGGGGGo.",".ooGGGGGGGGGGoo.","oGlGoGGGGGGoGlGo","olGGoouuuuuoGGlo",".ooouuuuuuuuooo.",".oauDuuuuuuDuAo.",".oaouDuuuuDuoAo.",".oaouuDuuDuuoAo.",".oaouuuDDuuuoAo.",".oboddddddddoUo.",".oBodddddddDoAo.","..odzzddddzzDo..","..odzzddddzzDo..","..odddDooDddDo.."],
     legs:[["...oppo..oPPo...","...offo..oFFo...","...offo..oFFo...","...oooo..oooo..."],["...oppo..oPPo...","...offo..oFFo...","...offo..oooo...","...oooo........."],["...oppo..oPPo...","...offo..oFFo...","...oooo..oFFo...",".........oooo..."]]},
-   side:{rows:["................","................","................",".....oooo.......","...oolllgoo.....","..olggggggGo....",".olggggggggGo...",".ogglggggggggo..",".oggggggggggggo.",".oGgggggGggGnno.",".oGGgggggGnnnno.",".oGGGgggGnnnnwo.",".oGGGggggnnnneno",".oGGGGgggnnncnno","oGlGGGgggnnnnmo.","olGGooGGgNnnno..",".ooo..oounnoo...",".ooo..oouuuoo...","......ouuuuko...",".....oaaDuuuuo..",".....oaAoddddo..",".....oaAoydddzo.",".....oaAodddddo.",".....oubodzzddo.",".....oBBodzzddo.",".....odddddddDo.",".....oddddddDDo.",".....odddddddDo."],
-    legs:[["......oppPPo....","......offFFo....","......offFFFo...","......ooooooo..."],[".....opo.oPo....","....offo.oFFo...","....offfooFFFo..","....ooooo.oooo.."],[".....oPo.opo....","....oFFo.offo...","....oFFFooffo...","....oooo.ooooo.."]]},
-  }},
+   side:{rows:["................","................","................",".....oooo.......","...oolllgoo.....","..olggggggGo....",".olggggggggGo...",".ogglggggggggo..",".oggggggggggggo.",".oGgggggGggGnno.",".oGGgggggGnnnno.",".oGGGgggGnnnnno.",".oGGGggggnnnnnno",".oGGGGgggnnennno","oGlGGGgggnnecno.","olGGooGGgNnnmo..",".ooo..oounnoo...",".ooo..oouuuoo...","......ouuuko....",".....oaDuuuuo...",".....oaAodddo...",".....oaAoydzo...",".....oaAodddo...",".....oubodzdo...",".....oBBodzdo...",".....odddddDo...",".....oddddDDo...",".....odddddDo..."],
+    legs:[["......oppPo.....","......offFo.....","......offFFo....","......oooooo...."],[".....opo.oPo....","....offo.oFFo...","....offfooFFFo..","....ooooo.oooo.."],[".....oPo.opo....","....oFFo.offo...","....oFFFooffo...","....oooo.ooooo.."]]},
+  },
+ },
  // ネリネ（アルラウネ・種屋）
  shop:{head:[7.5, 11, 7.4],faceY:5,
   pal:{"o":["#3a2430","ol"],"h":["#f4c3d0","hd",0.2],"H":["#d995ab","hd",0.15],"j":["#ffe3ea","hd",0.3],"f":["#ff7fae","hd",0.25],"F":["#d9578a","hd",0.2],"Y":["#ffe066","hd",0.3],"L":["#5fae58","hd",0.15],"s":["#f8dccc","hd"],"S":["#e2b8a4","hd"],"e":["#4f8a3a","hd",0.4],"E":["#22301a","hd",0.3],"m":["#c46a72","hd"],"v":["#7cc46a","hd",0.2],"w":["#f3ead6","tr"],"W":["#d6c8ab","tr"],"a":["#2f6a45","tr",0.1],"A":["#22503a","tr",0.08],"n":["#4a8a5c","tr",0.12],"q":["#f3ead6","ar"],"Q":["#d6c8ab","ar"],"r":["#f8dccc","ar"],"R":["#7cc46a","ar",0.2],"x":["#f3ead6","lg"],"X":["#d6c8ab","lg"],"t":["#9a7448","lg",0.1],"T":["#6a4c2c","lg",0.08]},
   views:{
-   front:{rows:["................","................","..........ooo...",".........offfo..","....oooooFYfFo..","...ohjhjhoffoLo.","..ohjhjhhhoLLho.",".ohjjhhjjhhhjHo.",".ohhhHhhhhHhhHo.",".oHhhsHssHssHHo.",".ohHsHssHssHsHo.",".ohhssssssssHHo.",".ohhsessssesHHo.",".ohhvEssssEvHHo.",".ohhssssmsssHHo.",".oHhoSssssSoHHo.",".oHjHowsswoHjHo.",".oHoHqwwwwqHoHo.",".oo.qwwwwwwwqoo.","...oqwaaaaawQo..","...oqwanaaawQo..","..oqwaaaaaawQo..","..orwaaaaaawRo..","..oRwaaaaaaAro..","..orwaaaaaaAro..","..owwAaaaaAAWo..",".owwwwAAAAWWWWo.",".owwwwwwwwwWWWo."],
+   front:{rows:["................","................","..........ooo...",".........offfo..","....oooooFYfFo..","...ohjhjhoffoLo.","..ohjhjhhhoLLho.",".ohjjhhjjhhhjHo.",".ohhhHhhhhHhhHo.",".oHhhsHssHssHHo.",".ohHsHssHssHsHo.",".ohhssssssssHHo.",".ohhssssssssHHo.",".ohhsEssssEsHHo.",".ohhvEssssEvHHo.",".ohhsssmmsssHHo.",".oHhoSssssSoHHo.",".oHjHowsswoHjHo.",".oo.qwwwwwwwqoo.","...oqwaaaaawQo..","...oqwanaaawQo..","..oqwaaaaaawQo..","..orwaaaaaawRo..","..oRwaaaaaaAro..","..orwaaaaaaAro..","..owwAaaaaAAWo..",".owwwwAAAAWWWWo.",".owwwwwwwwwWWWo."],
     legs:[[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ootTo..oTtoo..","...oooo..oooo..."],[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ootTo..ooooo..","...oooo........."],[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ooooo..oTtoo..",".........oooo..."]]},
    back:{rows:["................","................","..........ooo...",".........offfo..","....oooooFFfFo..","...ohjhjhoffoLo.","..ohjhjhhhoLLho.",".ohjjhhjjhhjjHo.",".ohhhHhhhHhhhHo.",".oHhjjhhjjhhjHo.",".oHhhhHhhhHhhHo.",".ohjjhhjjhhjjHo.",".oHhhHhhhHhhHHo.",".oHhjjhhjjhhHHo.",".oHHhhHhhhHhHHo.",".oHjjhhjjhhjHHo.",".oHhhHHhhHHhHHo.",".oHoHoHoHoHoHHo.",".oo.qwwaawwwqoo.","...oqwwwwwwwQo..",".ooqwwwaawwwQoo.","..oqwwwwwwwwQo..","..orwwwaawwwRo..","..oRwwanaawwro..","..orwwwaawwwro..","..owwwwaawwwWo..",".owwwwwwwwWWWWo.",".owwwwwwwwwWWWo."],
     legs:[[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ootTo..oTtoo..","...oooo..oooo..."],[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ootTo..ooooo..","...oooo........."],[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ooooo..oTtoo..",".........oooo..."]]},
-   side:{rows:["................","................","......ooo.......",".....offfo......","...oooFYfFo.....","..ohjhoffoLo....",".ohjhjhoLLhho...",".ohjjhhjjhhhho..",".oHhhHhhhHhsso..",".oHjjhhjhssssso.",".oHhhHhhhsesso..",".oHjjhhjhsEvsso.",".oHhhHhhhssssso.",".oHjjhhjSsssmo..",".oHhhHhhoSsso...",".oHjHoHoowwo....",".oHjHoHoowwo....","..oHoo.oqqwaao..","..oHHHoqqwaao...","...ooHoqqwanao..",".....oQqwwaaao..",".....orrwwaaao..",".....oRrwwaaao..",".....owwwwaaAo..","....owwwwwaAAo..","....owwwwwwWWWo.","...owwwwwwwWWWo.","...owwwwwwwwWWo."],
-    legs:[["...owwwwwwwwWWo.","...oXwwXwwXwWo..","....ootTttoo....",".....oooooo....."],["...owwwwwwwwWWo.","...oXwwXwwXwWo..","...ootToottoo...","...ooooo.ooooo.."],["...owwwwwwwwWWo.","...oXwwXwwXwWo..","...oottoootToo..","...ooooo.ooooo.."]]},
-  }},
+   side:{rows:["................","................","......ooo.......",".....offfo......","...oooFYfFo.....","..ohjhoffoLo....",".ohjhjhoLLhho...",".ohjjhhjjhhhho..",".oHhhHhhhHhsso..",".oHjjhhjhssssso.",".oHhhHhhhsEsso..",".oHjjhhjhsEvsso.",".oHhhHhhhssssso.",".oHjjhhjSsssmo..",".oHhhHhhoSsso...",".oHjHoHoowwo....",".oHjHoHoowwo....","..oHoo.oqqwaao..","..oHHHoqqwaao...","...ooHoqqwnao...",".....oQqwwaao...",".....orrwwaao...",".....oRrwwaao...",".....owwwwaAo...","....owwwwwaAo...","....owwwwwwWo...","...owwwwwwwWo...","...owwwwwwwWo..."],
+    legs:[["...owwwwwwwWo...","...oXwwXwwXWo...","....ootTttoo....",".....oooooo....."],["...owwwwwwwWo...","...oXwwXwwXWo...","...ootToottoo...","...ooooo.ooooo.."],["...owwwwwwwWo...","...oXwwXwwXWo...","...oottoootToo..","...ooooo.ooooo.."]]},
+  },
+ },
 };
-function charFrame(id,view,f,flip){
+function charFrame(id,view,f,flip,wear){
   const C=CHARS[id],v=C.views[view],pal=C.pal,W=16,H=32;
-  let rows=v.rows.concat(v.legs[f]);if(flip)rows=rows.map(r=>[...r].reverse().join(''));
+  let rows=v.rows.concat(v.legs[f]);
+  // 着せかえ：身につけた物（帽子など）を上に重ねる。'.' はすけて下の体が見える
+  for(const k in(wear||{})){const it=wear[k]&&C.items&&C.items[wear[k]],L=it&&it.views[view];if(!L)continue;
+    rows=rows.map((r,y)=>{const o=L.rows[y-L.y];if(!o)return r;let t='';for(let x=0;x<W;x++)t+=o[x]!=='.'?o[x]:r[x];return t;});}
+  if(flip)rows=rows.map(r=>[...r].reverse().join(''));
   const col=new Uint8ClampedArray(W*H*4),n=new Uint8ClampedArray(W*H*4),d=new Uint8ClampedArray(W*H*4),em=new Uint8ClampedArray(W*H*4),NN=[];
   const at=(x,y)=>x<0||y<0||x>=W||y>=H||rows[y][x]==='.'?null:pal[rows[y][x]];
   const hx=flip?15-C.head[0]:C.head[0],hy=C.head[1],hr=C.head[2];let hasEm=false;
   const cl=v=>Math.max(-.98,Math.min(.98,v));
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const p=at(x,y);if(!p)continue;const i=y*W+x,c=hexRGB(p[0]);
     col[i*4]=c[0];col[i*4+1]=c[1];col[i*4+2]=c[2];col[i*4+3]=255;const pt=p[1];let N=null;
-    if(pt==='hd'||pt==='hc')N=sphereN(cl((x+.5-hx)/hr),cl((y+.5-hy)/hr));
+    if(pt==='hc'&&C.hatC){const c=C.hatC,cx=flip?15-c[0]:c[0];N=sphereN(cl((x+.5-cx)/c[2]),cl((y+.5-c[1])/c[2]));}   // 帽子のふくらみは帽子の丸で
+    else if(pt==='hd'||pt==='hc')N=sphereN(cl((x+.5-hx)/hr),cl((y+.5-hy)/hr));
     else if(pt==='hn')N=sphereN(cl((x+.5-hx)/hr),-.75);
     else if(pt==='hb')N=[(x+.5-8)/8*.35,.32,.9];
     else if(pt==='em'){N=NF;hasEm=true;em[i*4]=255;em[i*4+1]=240;em[i*4+2]=150;em[i*4+3]=170;}
@@ -356,7 +374,8 @@ function charFrame(id,view,f,flip){
   c.nd={n:bufCanvas(W,H,nb),d:bufCanvas(W,H,d),sil:silOf(c),by:H};if(hasEm)c.em=bufCanvas(W,H,em);
   return c;}
 const SPR={};
-function makeSprites(id){const fr=(d,f)=>d===0?charFrame(id,'front',f):d===1?charFrame(id,'back',f):charFrame(id,'side',f,d===2);
+// wear：身につける物（例 {hat:'straw'}）。着せかえたら makeSprites(id) をもう一度
+function makeSprites(id){const w=CHARS[id].wear,fr=(d,f)=>d===0?charFrame(id,'front',f,false,w):d===1?charFrame(id,'back',f,false,w):charFrame(id,'side',f,d===2,w);
   SPR[id]=[0,1,2,3].map(d=>{const a=[0,1,2].map(f=>fr(d,f));a[3]=a[0];return a;});SPR[id].faceY=CHARS[id].faceY;}
 
 /* ---------- 作物・小物の絵 ---------- */
@@ -929,7 +948,7 @@ function renderBase(m){
   NB=null;CAST=null;
   BASE[m]=c;
 }
-const ROOM_COLOR={chloe:'#7a56a8',luu:'#9adb6e'};
+const ROOM_COLOR={chloe:'#7a56a8',luu:'#8fd3f5'};
 
 /* ---------- 状態 ---------- */
 let S=null;
@@ -1114,7 +1133,7 @@ function doField(x,y,item){
   const tool=TOOLS[item]&&(k==='till'||k==='water'||k==='rock')?item:null;
   P.act={t:0,dur:k==='rock'?.5:.28,tool,done:()=>{
     S.stamina-=need;
-    if(k==='till'){S.farm.soil[i]=1;dust(x*TS+8,y*TS+10,'#8a5a35',5);hint('till','つぎは下の板で種をえらんで、耕したマスをタップ');}
+    if(k==='till'){S.farm.soil[i]=1;dust(x*TS+8,y*TS+10,'#8a5a35',5);hint('till','つぎは下の道具から種をえらんで、耕したマスをタップ');}
     else if(k==='plant'){S.seeds[item]--;S.farm.crop[i]={id:item,d:0,ready:false};hint('plant','じょうろに持ちかえて水やり。毎日やると育つよ');}
     else if(k==='water'){S.farm.wet[i]=1;splash(x*TS+8,y*TS+8);}
     else if(k==='harvest'){const c=S.farm.crop[i];S.inv[c.id]++;fxText(x*TS+8,y*TS,'+1 '+CROPS[c.id].name);const cd=CROPS[c.id];if(cd.regrow){c.d=cd.days-cd.regrow;c.ready=false;}else{S.farm.crop[i]=null;}hint('harvest','とれた作物は出荷箱へ。あげると喜ぶ住人もいるよ');}
@@ -1609,7 +1628,7 @@ function render(){
   for(const id in bubs){const e=bubs[id],r=RT[id];if(!r||r.hidden||r.map!==pm||!(r.bub>0)){e.hidden=true;continue;}e.hidden=false;const[sx,sy]=w2s(r.x*TS+8,r.y*TS-11);e.style.left=sx+'px';e.style.top=sy+'px';}
 }
 
-/* ---------- 上と下の板 ---------- */
+/* ---------- 上の文字と下の道具の列 ---------- */
 const el={date:$('#date'),clock:$('#clock'),money:$('#money'),st:$('#stbar'),hot:$('#hotbar')};
 let lastClock='';
 function clockStr(t){const m=Math.floor(t/10)*10;const h=Math.floor(m/60)%24,mi=m%60;return`${h}:${String(mi).padStart(2,'0')}`;}
@@ -1687,7 +1706,7 @@ function openShip(){
 }
 function openBag(){
   openPanel('かばん','',(list)=>{
-    for(const k in TOOLS){const lv=(S.tools&&S.tools[k])||1;row(list,HICON[k],`${TOOLS[k].name}　${TOOL_LV[lv]||'Lv'+lv}`,'下の板でえらんで使う。あとで強くできる（次の試作から）');}
+    for(const k in TOOLS){const lv=(S.tools&&S.tools[k])||1;row(list,HICON[k],`${TOOLS[k].name}　${TOOL_LV[lv]||'Lv'+lv}`,'下の道具の列でえらんで使う。あとで強くできる（次の試作から）');}
     for(const k in ITEM_NAMES){if(!S.inv[k])continue;row(list,ICON[k],`${ITEM_NAMES[k]}　×${S.inv[k]}`,k==='stone'?'改築の材料（クロエの工房）':k==='flower'?'畑のまわりに毎朝さく':'出荷するか、住人にあげよう');}
     for(const k in CROPS){if(!S.seeds[k])continue;row(list,ICON[k],`${CROPS[k].name}の種　×${S.seeds[k]}`,'畑にまく');}
     if(!list.children.length){const n=document.createElement('p');n.className='note';n.textContent='からっぽ';list.appendChild(n);}
@@ -1766,7 +1785,7 @@ async function begin(fresh){
   renderBase('farm');renderBase('town');updHud();updClock();started=true;
   if(!S.flags.intro){S.flags.intro=true;
     const intro=DLG.intro&&DLG.intro.length?DLG.intro:[{who:'narr',text:'モン娘だけが暮らす街の、はずれの牧場。'},{who:'player',text:'今日からここが、わたしの牧場。がんばろう！'}];
-    await scene(intro);toast('下の板でクワをえらんで、畑のマスをタップ。指でなぞると見わたせるよ');save();}
+    await scene(intro);toast('下の道具からクワをえらんで、畑のマスをタップ。指でなぞると見わたせるよ');save();}
   await runVisits();
 }
 async function boot(){
@@ -1801,7 +1820,7 @@ async function boot(){
   requestAnimationFrame(loop);
   window.__game={get S(){return S;},P,RT,Q,onTap,sleep,openNpc,view,cam,canAct,LIT,
     fps(){const a=LIT.fr||[];return a.length?Math.round(a.length/a.reduce((x,y)=>x+y,0)):0;},
-    debug(o){if(o.time!=null)S.time=o.time;if(o.map)S.map=o.map;if(o.cam&&o.cam[0]>=0)setFree({x:o.cam[0],y:o.cam[1]});if(o.light!=null){LIT.q=o.light;applyLight();}if(o.pos){P.x=o.pos[0];P.y=o.pos[1];P.path=[];}if(o.npc)Object.assign(DBGN,o.npc);if(o.pdir!=null)P.dir=o.pdir;}};
+    debug(o){if(o.time!=null)S.time=o.time;if(o.map)S.map=o.map;if(o.cam&&o.cam[0]>=0)setFree({x:o.cam[0],y:o.cam[1]});if(o.light!=null){LIT.q=o.light;applyLight();}if(o.pos){P.x=o.pos[0];P.y=o.pos[1];P.path=[];}if(o.npc)Object.assign(DBGN,o.npc);if(o.pdir!=null)P.dir=o.pdir;if(o.wear){CHARS.player.wear=o.wear;makeSprites('player');}}};
 }
 boot();
 })();

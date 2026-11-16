@@ -25,7 +25,7 @@ async function begin(fresh){
   renderBase('farm');renderBase('town');updHud();updClock();started=true;
   if(!S.flags.intro){S.flags.intro=true;
     const intro=DLG.intro&&DLG.intro.length?DLG.intro:[{who:'narr',text:'モン娘だけが暮らす街の、はずれの牧場。'},{who:'player',text:'今日からここが、わたしの牧場。がんばろう！'}];
-    await scene(intro);toast('下の板でクワをえらんで、畑のマスをタップ。指でなぞると見わたせるよ');save();}
+    await scene(intro);toast('下の道具からクワをえらんで、畑のマスをタップ。指でなぞると見わたせるよ');save();}
   await runVisits();
 }
 async function boot(){
@@ -60,6 +60,6 @@ async function boot(){
   requestAnimationFrame(loop);
   window.__game={get S(){return S;},P,RT,Q,onTap,sleep,openNpc,view,cam,canAct,LIT,
     fps(){const a=LIT.fr||[];return a.length?Math.round(a.length/a.reduce((x,y)=>x+y,0)):0;},
-    debug(o){if(o.time!=null)S.time=o.time;if(o.map)S.map=o.map;if(o.cam&&o.cam[0]>=0)setFree({x:o.cam[0],y:o.cam[1]});if(o.light!=null){LIT.q=o.light;applyLight();}if(o.pos){P.x=o.pos[0];P.y=o.pos[1];P.path=[];}if(o.npc)Object.assign(DBGN,o.npc);if(o.pdir!=null)P.dir=o.pdir;}};
+    debug(o){if(o.time!=null)S.time=o.time;if(o.map)S.map=o.map;if(o.cam&&o.cam[0]>=0)setFree({x:o.cam[0],y:o.cam[1]});if(o.light!=null){LIT.q=o.light;applyLight();}if(o.pos){P.x=o.pos[0];P.y=o.pos[1];P.path=[];}if(o.npc)Object.assign(DBGN,o.npc);if(o.pdir!=null)P.dir=o.pdir;if(o.wear){CHARS.player.wear=o.wear;makeSprites('player');}}};
 }
 boot();

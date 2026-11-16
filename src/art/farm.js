@@ -182,5 +182,5 @@ function renderBase(m){
   NB=null;CAST=null;
   BASE[m]=c;
 }
-const ROOM_COLOR={chloe:'#7a56a8',luu:'#9adb6e'};
+const ROOM_COLOR={chloe:'#7a56a8',luu:'#8fd3f5'};
 

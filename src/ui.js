@@ -1,4 +1,4 @@
-/* ---------- 上と下の板 ---------- */
+/* ---------- 上の文字と下の道具の列 ---------- */
 const el={date:$('#date'),clock:$('#clock'),money:$('#money'),st:$('#stbar'),hot:$('#hotbar')};
 let lastClock='';
 function clockStr(t){const m=Math.floor(t/10)*10;const h=Math.floor(m/60)%24,mi=m%60;return`${h}:${String(mi).padStart(2,'0')}`;}
@@ -76,7 +76,7 @@ function openShip(){
 }
 function openBag(){
   openPanel('かばん','',(list)=>{
-    for(const k in TOOLS){const lv=(S.tools&&S.tools[k])||1;row(list,HICON[k],`${TOOLS[k].name}　${TOOL_LV[lv]||'Lv'+lv}`,'下の板でえらんで使う。あとで強くできる（次の試作から）');}
+    for(const k in TOOLS){const lv=(S.tools&&S.tools[k])||1;row(list,HICON[k],`${TOOLS[k].name}　${TOOL_LV[lv]||'Lv'+lv}`,'下の道具の列でえらんで使う。あとで強くできる（次の試作から）');}
     for(const k in ITEM_NAMES){if(!S.inv[k])continue;row(list,ICON[k],`${ITEM_NAMES[k]}　×${S.inv[k]}`,k==='stone'?'改築の材料（クロエの工房）':k==='flower'?'畑のまわりに毎朝さく':'出荷するか、住人にあげよう');}
     for(const k in CROPS){if(!S.seeds[k])continue;row(list,ICON[k],`${CROPS[k].name}の種　×${S.seeds[k]}`,'畑にまく');}
     if(!list.children.length){const n=document.createElement('p');n.className='note';n.textContent='からっぽ';list.appendChild(n);}

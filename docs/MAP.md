@@ -14,12 +14,12 @@
 | ファイル | 行 | 役目・おもな名前 |
 |---|---|---|
 | src/page.html | 67 | 画面の形（上の板・地図・下の板・ふきだし・まど・タイトル）と印の行 |
-| src/style.css | 115 | 見た目（木の板と紙のふきだし・DotGothic16） |
+| src/style.css | 117 | 見た目（地図に重ねる上の文字と下の道具の列・紙のふきだし・DotGothic16） |
 | src/data/rules.js | 21 | 数字：CROPS（作物）・RENO（改築）・HEART・COST（体力）・TOOLS・1日の長さ・SAVE_KEY |
 | src/data/maps.js | 68 | MAPS（牧場・街のマスの文字）・BLOCK（歩けない文字）・tile・blocked・SPOTS（地図の行き先） |
 | src/dialogue.js | 13 | DLG の最小版と loadDLG（台詞は src/data/dialogue.json） |
-| src/data/chars.js | 51 | CHARS：人の絵の表（16×32・前／後ろ／横・足3コマ・pal＝[色, 部分, つや]） |
-| src/art/people.js | 31 | charFrame（部分ごとの面の向き）・makeSprites・SPR |
+| src/data/chars.js | 60 | CHARS：人の絵の表（16×32・前／後ろ／横・足3コマ・pal＝[色, 部分, つや]）・着せかえの部品 items（帽子など）と wear（いま身につけている物） |
+| src/art/people.js | 35 | charFrame（身につけた物を重ねてから、部分ごとの面の向き）・makeSprites（着せかえたらもう一度）・SPR |
 | src/art/pixel.js | 138 | ドット絵の道具（mk・grid）・面の向きの道具（NBuf・nput・nrect・bumpLum・nHouse）・草・道・木・さく・池 |
 | src/art/town.js | 248 | 街の3枚組：Surf3・stamp3・PS（色の段）・makeBld（家）・街灯・ベンチ・金床・材木・たる・袋・噴水（makeFountain・fountainWater）・石だたみ（drawTownGround）・置き場所（drawTownThings） |
 | src/art/farm.js | 186 | 牧場の家の部品（roof・wall・door・win・shipBox）・土・作物・岩・花・道具の絵・drawBuildings・renderBase（地図ごとの土台＝色・面の向き・高さ/かげ/つや・影の形） |
@@ -39,7 +39,7 @@
 - 作物・改築・体力・1日の長さ → src/data/rules.js
 - 地図のマス（新しい物を置くときは文字を足して BLOCK・BLD・描く所も） → src/data/maps.js
 - 台詞・住人の好み・掛け合い → src/data/dialogue.json
-- 人の見た目 → src/data/chars.js（色と部分は pal、形は rows と legs）
+- 人の見た目 → src/data/chars.js（色と部分は pal、形は rows と legs）。体は何も身につけない形で描き、帽子や服は items に重ねる部品で（着せかえできる）
 - 時間ごとの光 → src/data/light.js
 - 街の建物の形・色 → src/art/town.js の drawTownThings（makeBld に渡す数字）と PS
 
