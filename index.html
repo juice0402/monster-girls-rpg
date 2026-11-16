@@ -63,13 +63,16 @@ button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
 
 /* 下の板 */
 #bar{flex:none;background:var(--wood);border-top:3px solid var(--wood-d);padding:6px max(8px,env(safe-area-inset-left,0px)) 8px max(8px,env(safe-area-inset-right,0px));display:flex;gap:6px;align-items:stretch}
-#seeds{flex:1;display:flex;gap:5px;min-width:0;overflow-x:auto;scrollbar-width:none}
-#seeds::-webkit-scrollbar{display:none}
-.seed{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:58px;padding:4px 4px 3px;background:var(--wood-d);border:2px solid #2c1a10;font-size:11px;line-height:1.1}
-.seed img{width:24px;height:24px;image-rendering:pixelated}
-.seed b{font-weight:normal;font-variant-numeric:tabular-nums}
-.seed[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf-d);color:var(--ink)}
-.seed:disabled{opacity:.45}
+#hotbar{flex:1;display:flex;gap:4px;min-width:0;overflow-x:auto;scrollbar-width:none}
+#hotbar::-webkit-scrollbar{display:none}
+.slot{flex:none;position:relative;white-space:nowrap;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:52px;padding:4px 3px 3px;background:var(--wood-d);border:2px solid #2c1a10;font-size:10px;line-height:1.1}
+.slot img{width:28px;height:28px;image-rendering:pixelated}
+.slot b{position:absolute;right:2px;top:1px;font-weight:normal;font-size:10px;font-variant-numeric:tabular-nums;text-shadow:1px 1px 0 #2c1a10}
+.slot.empty img{opacity:.4}
+.slot[aria-pressed="true"]{background:var(--sun);border-color:#fff6d0;color:var(--ink)}
+.slot[aria-pressed="true"] b{text-shadow:none}
+.slot.gap{margin-left:6px}
+#recenter{position:absolute;right:8px;bottom:8px;z-index:5;background:var(--wood);border:2px solid #2c1a10;color:var(--paper);padding:5px 10px;font-size:13px}
 .big{flex:none;min-width:58px;background:var(--wood-l);border:2px solid #2c1a10;font-size:13px;padding:4px 6px}
 
 /* ふきだし */
@@ -136,6 +139,7 @@ button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
     <canvas id="cv"></canvas>
     <div id="fx"></div>
     <div id="toast" class="off"></div>
+    <button id="recenter" hidden>自分にもどる</button>
     <div id="dlg" hidden>
       <canvas id="face" width="16" height="16"></canvas>
       <div id="dname"></div>
@@ -145,7 +149,7 @@ button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
     </div>
   </main>
   <footer id="bar">
-    <div id="seeds"></div>
+    <div id="hotbar"></div>
     <button class="big" id="bagBtn">かばん</button>
     <button class="big" id="mapBtn">地図</button>
   </footer>
@@ -179,6 +183,10 @@ const ITEM_NAMES={kabu:'カブ',jaga:'ジャガイモ',ichigo:'イチゴ',stone:
 const RENO={cost:1500,stone:30,days:2,rooms:2};
 const HEART=100, INVITE_HEARTS=4, MAX_HEARTS=10;
 const COST={till:2,water:1,rock:4};
+// 道具（レベルは S.tools。あとで強くできるように、いまは全部1）
+const TOOLS={hoe:{name:'クワ'},can:{name:'じょうろ'},pick:{name:'ハンマー'}};
+const TOOL_LV=['','ふつう'];
+const HOTBAR=()=>[...Object.keys(TOOLS),...Object.keys(CROPS)];
 const SAVE_KEY='monmusu-farm-proto1';
 const DIRS=[[0,1],[0,-1],[-1,0],[1,0]];
 
@@ -390,8 +398,33 @@ function itemIcon(id){
   else if(id==='flower'){g.fillStyle='#4f9a37';g.fillRect(7,8,2,6);g.fillStyle='#ff9ec1';g.fillRect(5,4,6,4);g.fillRect(6,3,4,6);g.fillStyle='#ffe066';g.fillRect(7,5,2,2);}
   return c;
 }
+// 道具と種袋の絵（16×16）
+const TOOLC={};
+function toolIcon(id){
+  const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');
+  const r=(x,y,w,h,col)=>{g.fillStyle=col;g.fillRect(x,y,w,h);};
+  if(id==='hoe'){
+    for(let k=0;k<9;k++){r(3+k,13-k,2,1,'#a8733f');r(3+k,14-k,1,1,'#6e4426');}
+    r(10,2,5,2,'#c9d1d8');r(12,4,3,3,'#c9d1d8');r(12,7,3,1,'#7d868d');r(10,2,2,1,'#eef2f5');r(14,4,1,3,'#9aa3aa');r(11,4,1,1,'#7d868d');
+  }else if(id==='can'){
+    r(3,7,8,6,'#5a9fd0');r(3,12,8,1,'#3d77a3');r(4,8,2,3,'#9fd0ef');r(2,7,1,5,'#3d77a3');r(11,7,1,6,'#3d77a3');
+    r(4,4,1,3,'#3d77a3');r(4,3,5,1,'#3d77a3');r(8,4,1,3,'#3d77a3');
+    for(let k=0;k<4;k++)r(11+k,8-k,1,2,'#5a9fd0');r(14,3,2,2,'#3d77a3');
+  }else if(id==='pick'){
+    for(let k=0;k<8;k++){r(5+k,14-k,2,1,'#a8733f');r(5+k,15-k,1,1,'#6e4426');}
+    r(2,3,9,4,'#8f969c');r(2,3,9,1,'#c9d1d8');r(2,6,9,1,'#5d6368');r(3,4,2,2,'#b5bcc2');r(9,2,3,6,'#6f767c');r(9,2,3,1,'#9aa3aa');
+  }else if(CROPS[id]){
+    const band={kabu:'#a45bb5',jaga:'#c9965a',ichigo:'#e8384f'}[id]||'#8a5a35';
+    r(4,5,8,9,'#e8d3a0');r(3,6,1,7,'#c9ad72');r(12,6,1,7,'#c9ad72');r(4,13,8,1,'#b8955a');
+    r(5,3,6,2,'#d6bd85');r(6,2,4,1,'#b8955a');r(7,4,2,1,'#8a6a3a');
+    r(5,8,6,3,band);r(6,9,1,1,'#fff6e0');r(9,9,1,1,'#fff6e0');r(7,10,2,1,'rgba(255,255,255,.35)');
+  }
+  return c;
+}
 const ICON={};
 ['kabu','jaga','ichigo','stone','flower'].forEach(k=>ICON[k]=itemIcon(k).toDataURL());
+const HICON={};
+HOTBAR().forEach(k=>{TOOLC[k]=toolIcon(k);HICON[k]=TOOLC[k].toDataURL();});
 
 /* ---------- 地面と建物（地図ごとに1枚に描いておく） ---------- */
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
@@ -475,7 +508,7 @@ const ROOM_COLOR={chloe:'#7a56a8',luu:'#9adb6e'};
 let S=null;
 function newState(){
   const s={v:1,day:1,time:DAY_START,money:300,stamina:100,maxSt:100,map:'farm',px:3,py:6,dir:0,
-    seeds:{kabu:15,jaga:0,ichigo:0},sel:'kabu',
+    seeds:{kabu:15,jaga:0,ichigo:0},hand:'hoe',tools:{hoe:1,can:1,pick:1},
     inv:{kabu:0,jaga:0,ichigo:0,stone:0,flower:0},ship:{kabu:0,jaga:0,ichigo:0},
     farm:{soil:Array(MW*MH).fill(0),wet:Array(MW*MH).fill(0),crop:Array(MW*MH).fill(null),rock:Array(MW*MH).fill(0),flower:Array(MW*MH).fill(0)},
     reno:{state:0,days:0},rooms:[null,null],
@@ -599,25 +632,27 @@ function updNpc(id,dt){
 }
 
 /* ---------- プレイヤーの作業 ---------- */
-function canAct(x,y){
-  if(S.map!=='farm')return null;const i=I(x,y),t=tile('farm',x,y);
-  if(S.farm.rock[i])return'rock';
+// 手に持っている物（item）でこのマスに何ができるか。文字列＝できる作業、{need}／{done}＝できない理由、null＝作業なし（歩く）
+function canAct(x,y,item){
+  if(S.map!=='farm')return null;const i=I(x,y),t=tile('farm',x,y);item=item||S.hand;
+  if(S.farm.rock[i])return item==='pick'?'rock':{need:'岩はハンマーでくだこう'};
   if(S.farm.flower[i])return'flower';
   if(t!=='f')return null;
-  const c=S.farm.crop[i];
-  if(!S.farm.soil[i])return'till';
-  if(!c)return'plant';
-  if(c.ready)return'harvest';
-  if(!S.farm.wet[i])return'water';
-  return'done';
+  const soil=S.farm.soil[i],c=S.farm.crop[i],wet=S.farm.wet[i];
+  if(c&&c.ready)return'harvest';
+  if(item==='hoe'&&!soil)return'till';
+  if(item==='can'&&soil)return wet?{done:'ここは今日もう水をやったよ'}:'water';
+  if(CROPS[item]&&soil&&!c)return S.seeds[item]>0?'plant':{need:`${CROPS[item].name}の種がない。街の種屋で買えるよ`};
+  const need=!soil?'耕すならクワに持ちかえてね':!c?'種をえらぶと、ここにまけるよ':!wet?'水やりはじょうろに持ちかえてね':null;
+  return need?{need}:null;
 }
 function queueField(x,y){
-  const k=canAct(x,y);
+  const k=canAct(x,y,S.hand);
   if(!k)return false;
-  if(k==='done'){toast('ここは今日もう水をやったよ');return true;}
+  if(typeof k==='object'){toast(k.need||k.done);return true;}
   if(Q.some(t=>t.kind==='field'&&t.x===x&&t.y===y)||(P.task&&P.task.kind==='field'&&P.task.x===x&&P.task.y===y))return true;
   if(Q.length>=12){toast('予約は12マスまで');return true;}
-  Q.push({kind:'field',x,y});return true;
+  Q.push({kind:'field',x,y,item:S.hand});return true;
 }
 function startTask(t){
   P.task=t;P.tries=(P.tries||0);
@@ -637,21 +672,21 @@ function updPlayer(dt){
   if(Q.length)startTask(Q.shift());
 }
 async function arrive(t){
-  if(t.kind==='field'){faceTo(P,t.x,t.y);doField(t.x,t.y);}
+  if(t.kind==='field'){faceTo(P,t.x,t.y);doField(t.x,t.y,t.item);}
   else if(t.kind==='npc'){const r=RT[t.id];if(r&&!r.hidden&&r.map===S.map&&near(Math.round(P.x),Math.round(P.y),Math.round(r.x),Math.round(r.y),1.5)){faceTo(P,r.x,r.y);faceTo(r,P.x,P.y);r.wait=2;P.tries=0;await openNpc(t.id);r.wait=1;}
     else if((P.tries=(P.tries||0)+1)<4)startTask(t);else P.tries=0;}
   else if(t.kind==='bld'){if(t.face)P.dir=t.face;await interact(t.id);}
 }
-function doField(x,y){
-  const k=canAct(x,y),i=I(x,y);
+function doField(x,y,item){
+  item=item||S.hand;const k=canAct(x,y,item),i=I(x,y);
+  if(!k||typeof k==='object')return;   // 予約のあいだに様子が変わった
   const need=k==='till'?COST.till:k==='water'?COST.water:k==='rock'?COST.rock:0;
   if(need&&S.stamina<need){toast('つかれて動けない…今日は家で休もう');Q.length=0;return;}
-  if(k==='plant'&&S.seeds[S.sel]<=0){toast(`${CROPS[S.sel].name}の種がない。街の種屋で買えるよ`);Q.length=0;return;}
-  if(!k||k==='done')return;
-  P.act={t:0,dur:k==='rock'?.5:.28,done:()=>{
+  const tool=TOOLS[item]&&(k==='till'||k==='water'||k==='rock')?item:null;
+  P.act={t:0,dur:k==='rock'?.5:.28,tool,done:()=>{
     S.stamina-=need;
-    if(k==='till'){S.farm.soil[i]=1;dust(x*TS+8,y*TS+10,'#8a5a35',5);hint('till','もう一度タップで種まき。種は下でえらべるよ');}
-    else if(k==='plant'){S.seeds[S.sel]--;S.farm.crop[i]={id:S.sel,d:0,ready:false};hint('plant','タップで水やり。毎日やると育つよ');}
+    if(k==='till'){S.farm.soil[i]=1;dust(x*TS+8,y*TS+10,'#8a5a35',5);hint('till','つぎは下の板で種をえらんで、耕したマスをタップ');}
+    else if(k==='plant'){S.seeds[item]--;S.farm.crop[i]={id:item,d:0,ready:false};hint('plant','じょうろに持ちかえて水やり。毎日やると育つよ');}
     else if(k==='water'){S.farm.wet[i]=1;splash(x*TS+8,y*TS+8);}
     else if(k==='harvest'){const c=S.farm.crop[i];S.inv[c.id]++;fxText(x*TS+8,y*TS,'+1 '+CROPS[c.id].name);const cd=CROPS[c.id];if(cd.regrow){c.d=cd.days-cd.regrow;c.ready=false;}else{S.farm.crop[i]=null;}hint('harvest','とれた作物は出荷箱へ。あげると喜ぶ住人もいるよ');}
     else if(k==='rock'){S.farm.rock[i]=0;S.inv.stone+=2;dust(x*TS+8,y*TS+8,'#9d978a',7);fxText(x*TS+8,y*TS,'+2 石');hint('rock','石は家の改築に使うよ。クロエの工房で相談しよう');}
@@ -709,7 +744,7 @@ async function openNpc(id){
   if(!n.met){n.met=true;await scene(d.meet.map(text=>({who:id,text})));n.talked=true;addPts(id,20);hint('town2','また話したり、贈り物をすると仲よくなれるよ');return;}
   const opts=['話す','贈り物'];
   if(id==='chloe'&&S.reno.state!==2)opts.push(S.reno.state===1?'工事のようす':'改築をたのむ');
-  if(!n.live&&!n.pending)opts.push('一緒に住もう');
+  if(!n.live&&!n.pending&&!n.visit)opts.push('一緒に住もう');
   opts.push('またね');
   const k=await choose(id,`${heartStr(id)}`,opts,true);
   const o=opts[k];
@@ -749,9 +784,22 @@ async function invite(id){
   const n=S.npc[id],d=DLG[id];
   if(hearts(id)<INVITE_HEARTS){await say(id,d.invite.lowHearts);toast(`♥${INVITE_HEARTS}から誘えるよ（いま♥${hearts(id)}）`);return;}
   if(freeRooms()<=0){await say(id,d.invite.noRoom);toast('家を改築して部屋をふやそう（クロエの工房）');return;}
-  await scene(d.cohabit);
+  // 街では「部屋を見に来て」まで。一緒に暮らす話は、次の朝に牧場で（runVisits）
+  await scene(d.invite.visit||[{who:id,text:'あしたの朝、見に行くね。'}]);
   const ri=S.rooms.indexOf(null);S.rooms[ri]=id;n.pending=true;
-  toast(`${d.name}が、あしたの朝から牧場で暮らす！`);save();
+  toast(`${d.name}が、あしたの朝 部屋を見に来る`);save();
+}
+// 次の朝：牧場で新しい部屋を見て、同居が始まる
+async function runVisits(){
+  let k=0;
+  for(const id of['chloe','luu']){const n=S.npc[id];if(!n||!n.visit)continue;
+    const r=RT[id],sp=[[5,6],[4,7]][k++]||[5,6];
+    if(S.map!=='farm'){S.map='farm';P.x=3;P.y=6;}r.hidden=false;r.map='farm';r.x=sp[0];r.y=sp[1];r.path=[];r.task=null;r.act=null;
+    faceTo(r,P.x,P.y);faceTo(P,r.x,r.y);
+    await scene(DLG[id].cohabit);
+    n.visit=false;n.live=true;r.wait=2;
+    toast(`${DLG[id].name}と一緒に暮らしはじめた！ ${id==='luu'?'毎朝、畑に水をやってくれる':'畑の岩をくだいてくれる'}`);save();
+  }
 }
 async function renovate(){
   const d=DLG.chloe.reno;
@@ -776,8 +824,8 @@ async function sleep(passedOut){
   for(let i=0;i<MW*MH;i++){const c=S.farm.crop[i];if(c&&!c.ready&&S.farm.wet[i]){c.d++;if(c.d>=CROPS[c.id].days)c.ready=true;}S.farm.wet[i]=0;}
   // 改築
   let renoDone=false;if(S.reno.state===1){S.reno.days--;if(S.reno.days<=0){S.reno.state=2;renoDone=true;}}
-  // 引っこし
-  const moved=[];for(const id of['chloe','luu']){const n=S.npc[id];if(n.pending){n.pending=false;n.live=true;moved.push(id);}}
+  // 部屋を見に来る（同居の場面は朝のカードのあと）
+  for(const id of['chloe','luu']){const n=S.npc[id];if(n.pending){n.pending=false;n.visit=true;}}
   // 住人の毎日
   for(const id in S.npc){S.npc[id].talked=false;S.npc[id].gifted=false;}
   // 岩と花
@@ -788,13 +836,13 @@ async function sleep(passedOut){
   if(pay){S.money+=pay;S.stats.earned+=pay;S.stats.shipped+=cnt;lines.push(`出荷のお金 ${pay}G が入った`);}
   if(passedOut)lines.unshift('つかれて眠ってしまった…（体力が少しへった）');
   if(renoDone){lines.push('家の増築ができた！部屋が2つふえた');}
-  moved.forEach(id=>lines.push(`${DLG[id].name}が牧場に引っこしてきた！`));
   if(S.npc.luu.live)lines.push('ルゥが畑の水やりをしてくれる');
   if(S.npc.chloe.live)lines.push('クロエが畑の岩をくだいてくれる');
   renderBase('farm');
   if(S.day>SEASON_DAYS){S.over=true;save();return seasonEnd();}
-  save();
+  setFree(null);save();
   await dayCard(lines);
+  await runVisits();
   if(S.day===2)hint('map','街へは下の「地図」から。住人と仲よくなろう');
 }
 async function passOut(){if(dlgOpen||modalOpen)return;await sleep(true);}
@@ -811,6 +859,10 @@ function dust(x,y,c,n){for(let i=0;i<n;i++)parts.push({x,y,vx:(Math.random()-.5)
 function splash(x,y){for(let i=0;i<7;i++)parts.push({x:x+(Math.random()-.5)*8,y:y-6,vx:(Math.random()-.5)*20,vy:-Math.random()*30,g:160,life:.5,c:i%2?'#8fd3f5':'#4aa3d8',s:1});}
 const fxEl=$('#fx');
 function w2s(x,y){return[(x-cam.x)*view.sc,(y-cam.y)*view.sc];}
+// 指でなぞると画面が動く（camFree）。指を離したときに動いていなければタップ
+let camFree=null,ptr=null;const recBtn=$('#recenter');
+function clampCam(x,y){const mw=MW*TS,mh=MH*TS;return[mw<=view.w?(mw-view.w)/2:Math.max(0,Math.min(mw-view.w,x)),mh<=view.h?(mh-view.h)/2:Math.max(0,Math.min(mh-view.h,y))];}
+function setFree(v){camFree=v;recBtn.hidden=!v;}
 function fxText(x,y,text,cls){const e=document.createElement('div');e.className='ft'+(cls?' '+cls:'');e.textContent=text;const[sx,sy]=w2s(x,y);e.style.left=sx+'px';e.style.top=sy+'px';fxEl.appendChild(e);setTimeout(()=>e.remove(),1300);}
 const bubs={};
 function bubble(id,text){if(!text)return;let e=bubs[id];if(!e){e=document.createElement('div');e.className='bub';fxEl.appendChild(e);bubs[id]=e;}e.textContent=text;RT[id].bub=2.6;}
@@ -823,9 +875,15 @@ const shopTitle=()=>DLG.shop.shopName?`種屋「${DLG.shop.shopName}」`:`${DLG.
 function render(){
   const pm=S?S.map:'farm';
   if(!S||!BASE[pm]){ctx.fillStyle='#24351f';ctx.fillRect(0,0,view.w,view.h);return;}
-  const mw=MW*TS,mh=MH*TS;
-  cam.x=mw<=view.w?(mw-view.w)/2:Math.max(0,Math.min(mw-view.w,P.x*TS+8-view.w/2));
-  cam.y=mh<=view.h?(mh-view.h)/2:Math.max(0,Math.min(mh-view.h,P.y*TS+8-view.h/2));
+  if(camFree){
+    // 指で動かした画面のまま。自分が画面の中を歩いて、はしに近づいたら追いかける
+    const px=P.x*TS+8,py=P.y*TS+8,m=28;
+    const inView=px>camFree.x&&px<camFree.x+view.w&&py>camFree.y&&py<camFree.y+view.h;
+    if(inView&&P.path.length&&!(ptr&&ptr.drag)){
+      if(px<camFree.x+m)camFree.x=px-m;else if(px>camFree.x+view.w-m)camFree.x=px-view.w+m;
+      if(py<camFree.y+m)camFree.y=py-m;else if(py>camFree.y+view.h-m)camFree.y=py-view.h+m;}
+    [camFree.x,camFree.y]=clampCam(camFree.x,camFree.y);cam.x=camFree.x;cam.y=camFree.y;
+  }else[cam.x,cam.y]=clampCam(P.x*TS+8-view.w/2,P.y*TS+8-view.h/2);
   const cx=Math.round(cam.x),cy=Math.round(cam.y);
   ctx.fillStyle='#24351f';ctx.fillRect(0,0,view.w,view.h);
   ctx.drawImage(BASE[pm],-cx,-cy);
@@ -857,6 +915,10 @@ function render(){
     const fr=e.act?3:e.mov?[1,0,2,0][((e.anim*8)|0)%4]:0;
     const bob=e.id==='luu'&&!e.mov?((now*3)|0)%2:0;
     ctx.drawImage(SPR[e.id][e.dir][fr],X,Y-9+bob);
+    // 作業中は道具を持つ
+    if(e.id==='player'&&P.act&&P.act.tool){const ic=TOOLC[P.act.tool],up=P.act.t/P.act.dur<.5?-3:1;
+      if(e.dir===2){ctx.save();ctx.translate(X-9+16,Y-5+up);ctx.scale(-1,1);ctx.drawImage(ic,0,0);ctx.restore();}
+      else{const o=[[5,1],[5,-15],[0,0],[9,-5]][e.dir];ctx.drawImage(ic,X+o[0],Y+o[1]+up);}}
   }
   // 粒
   for(const p of parts){ctx.fillStyle=p.c;ctx.fillRect(Math.round(p.x-cx),Math.round(p.y-cy),p.s,p.s);}
@@ -871,16 +933,20 @@ function render(){
 }
 
 /* ---------- 上と下の板 ---------- */
-const el={date:$('#date'),clock:$('#clock'),money:$('#money'),st:$('#stbar'),seeds:$('#seeds')};
+const el={date:$('#date'),clock:$('#clock'),money:$('#money'),st:$('#stbar'),hot:$('#hotbar')};
 let lastClock='';
 function clockStr(t){const m=Math.floor(t/10)*10;const h=Math.floor(m/60)%24,mi=m%60;return`${h}:${String(mi).padStart(2,'0')}`;}
 function updHud(){
   el.date.textContent=`春 ${S.day}日（${DOW[(S.day-1)%7]}）`;
   el.money.textContent=S.money;el.st.style.width=(S.stamina/S.maxSt*100)+'%';
-  el.seeds.innerHTML='';
-  for(const k in CROPS){const b=document.createElement('button');b.className='seed';b.setAttribute('aria-pressed',S.sel===k?'true':'false');
-    b.innerHTML=`<img alt="" src="${ICON[k]}"><span>${CROPS[k].name}</span><b>×${S.seeds[k]}</b>`;
-    b.onclick=()=>{S.sel=k;updHud();};el.seeds.appendChild(b);}
+  // ホットバー：道具 → 種
+  if(!el.hot.children.length){
+    HOTBAR().forEach((k,n)=>{const b=document.createElement('button');b.className='slot'+(CROPS[k]&&!CROPS[HOTBAR()[n-1]]?' gap':'');b.dataset.k=k;
+      b.innerHTML=`<img alt="" src="${HICON[k]}"><span>${TOOLS[k]?TOOLS[k].name:CROPS[k].name}</span>${CROPS[k]?'<b></b>':''}`;
+      b.onclick=()=>{if(!S)return;S.hand=k;updHud();if(CROPS[k]&&!S.seeds[k])toast(`${CROPS[k].name}の種は街の種屋で買えるよ`);};el.hot.appendChild(b);});
+  }
+  for(const b of el.hot.children){const k=b.dataset.k;b.setAttribute('aria-pressed',S.hand===k?'true':'false');
+    if(CROPS[k]){b.querySelector('b').textContent=S.seeds[k];b.classList.toggle('empty',!S.seeds[k]);}}
 }
 function updClock(){const c=clockStr(S.time);if(c!==lastClock){lastClock=c;el.clock.textContent=c;}}
 
@@ -944,6 +1010,7 @@ function openShip(){
 }
 function openBag(){
   openPanel('かばん','',(list)=>{
+    for(const k in TOOLS){const lv=(S.tools&&S.tools[k])||1;row(list,HICON[k],`${TOOLS[k].name}　${TOOL_LV[lv]||'Lv'+lv}`,'下の板でえらんで使う。あとで強くできる（次の試作から）');}
     for(const k in ITEM_NAMES){if(!S.inv[k])continue;row(list,ICON[k],`${ITEM_NAMES[k]}　×${S.inv[k]}`,k==='stone'?'改築の材料（クロエの工房）':k==='flower'?'畑のまわりに毎朝さく':'出荷するか、住人にあげよう');}
     for(const k in CROPS){if(!S.seeds[k])continue;row(list,ICON[k],`${CROPS[k].name}の種　×${S.seeds[k]}`,'畑にまく');}
     if(!list.children.length){const n=document.createElement('p');n.className='note';n.textContent='からっぽ';list.appendChild(n);}
@@ -967,7 +1034,7 @@ function openMap(){
 function openFriends(){
   const close=openPanel('なかよし','',(list)=>{
     for(const id of['chloe','luu']){const n=S.npc[id],d=DLG[id];const h=hearts(id);
-      const st=n.live?'牧場で一緒に暮らしている':n.pending?'あしたの朝 引っこしてくる':!n.met?'まだ会っていない':h>=INVITE_HEARTS?'一緒に住もうと誘えそう':`♥${INVITE_HEARTS}になったら誘える`;
+      const st=n.live?'牧場で一緒に暮らしている':n.pending?'あしたの朝 部屋を見に来る':n.visit?'けさ 部屋を見に来る':!n.met?'まだ会っていない':h>=INVITE_HEARTS?'一緒に住もうと誘えそう':`♥${INVITE_HEARTS}になったら誘える`;
       const r=row(list,null,`${d.name}<span style="font-size:12px;color:#8f6038">　${id==='chloe'?'ドラゴン娘':'スライム娘'}</span>`,`<span class="hearts">${'♥'.repeat(h)}<i>${'♥'.repeat(MAX_HEARTS-h)}</i></span>　${st}`);
       const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');g.drawImage(SPR[id][0][0],0,0,16,16,0,1,16,16);r.replaceChild(c,r.firstChild);}
     const hs=S.reno.state===0?`改築：まだ（クロエに${RENO.cost}Gと石${RENO.stone}個）`:S.reno.state===1?`改築：工事中（あと${S.reno.days}日）`:`改築：完成・部屋 ${S.rooms.filter(Boolean).length}/${RENO.rooms}`;
@@ -978,7 +1045,7 @@ function openFriends(){
 }
 async function warp(m,x,y){
   Q.length=0;P.path=[];P.task=null;fading=true;const f=$('#fade');f.innerHTML='';f.classList.add('on');await wait(350);
-  S.map=m;P.x=x;P.y=y;P.dir=0;await wait(120);f.classList.remove('on');await wait(300);fading=false;
+  S.map=m;P.x=x;P.y=y;P.dir=0;setFree(null);await wait(120);f.classList.remove('on');await wait(300);fading=false;
   if(m==='town')hint('town','クロエは工房、ルゥは噴水のまわりにいるよ。タップで話せる');
 }
 async function dayCard(lines){
@@ -1017,11 +1084,13 @@ function initRT(){for(const id of['chloe','luu','shop']){RT[id]={map:'town',x:0,
 async function begin(fresh){
   $('#title').hidden=true;
   if(fresh){clearSave();S=newState();}
-  P.x=S.px;P.y=S.py;P.dir=S.dir||0;
+  if(!S.hand)S.hand='hoe';if(!S.tools)S.tools={hoe:1,can:1,pick:1};delete S.sel;
+  P.x=S.px;P.y=S.py;P.dir=S.dir||0;setFree(null);
   renderBase('farm');renderBase('town');updHud();updClock();started=true;
   if(!S.flags.intro){S.flags.intro=true;
     const intro=DLG.intro&&DLG.intro.length?DLG.intro:[{who:'narr',text:'モン娘だけが暮らす街の、はずれの牧場。'},{who:'player',text:'今日からここが、わたしの牧場。がんばろう！'}];
-    await scene(intro);toast('畑のマスをタップすると耕せるよ。岩もくだける');save();}
+    await scene(intro);toast('下の板でクワをえらんで、畑のマスをタップ。指でなぞると見わたせるよ');save();}
+  await runVisits();
 }
 async function boot(){
   resize();addEventListener('resize',resize);
@@ -1035,7 +1104,15 @@ async function boot(){
   drawCrop(tg,'kabu',3,4,28);drawCrop(tg,'ichigo',3,78,28);
   const sv=loadSave();if(sv){S=sv;$('#contBtn').hidden=false;}
   $('#newBtn').onclick=()=>begin(true);$('#contBtn').onclick=()=>begin(false);
-  cv.addEventListener('pointerdown',e=>{const b=cv.getBoundingClientRect();onTap(e.clientX-b.left,e.clientY-b.top);});
+  cv.addEventListener('pointerdown',e=>{if(ptr||!e.isPrimary)return;const b=cv.getBoundingClientRect();
+    ptr={id:e.pointerId,sx:e.clientX,sy:e.clientY,bx:b.left,by:b.top,drag:false,cx:cam.x,cy:cam.y};try{cv.setPointerCapture(e.pointerId);}catch(_){}});
+  cv.addEventListener('pointermove',e=>{if(!ptr||e.pointerId!==ptr.id)return;const dx=e.clientX-ptr.sx,dy=e.clientY-ptr.sy;
+    if(!ptr.drag&&Math.hypot(dx,dy)>10)ptr.drag=true;
+    if(ptr.drag&&S&&started){const[x,y]=clampCam(ptr.cx-dx/view.sc,ptr.cy-dy/view.sc);setFree({x,y});}});
+  const endPtr=(e,cancel)=>{if(!ptr||e.pointerId!==ptr.id)return;const p=ptr;ptr=null;
+    if(p.drag){if(S&&started)hint('pan','もどるときは右下の「自分にもどる」');}else if(!cancel)onTap(p.sx-p.bx,p.sy-p.by);};
+  cv.addEventListener('pointerup',e=>endPtr(e,false));cv.addEventListener('pointercancel',e=>endPtr(e,true));
+  recBtn.onclick=()=>setFree(null);
   $('#bagBtn').onclick=()=>{if(!busy())openBag();};
   $('#mapBtn').onclick=()=>{if(!busy())openMap();};
   $('#friendBtn').onclick=()=>{if(!busy())openFriends();};
