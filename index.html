@@ -900,29 +900,35 @@ function drawFence(g,m,x,y){const X=x*TS,Y=y*TS;drawGrass(g,x,y);
   stamp3(g,s,X,Y);contactAO(X,Y+12,16,4,.7);
   if(CAST)CAST.push({sil:sil3(s),x:X,y:Y,ay:Y+14});}
 
-/* ---- 岩（6つの形×4つの色。こけつき・ひび入り）：どれも横に寝た形で、下の方は土にうまる ----
-   地面の線 RGY より下は描かない（平らな底）→ 底に近いほど暗く → 足もとに暗い草のふち → 手前に草が少しかぶさる */
+/* ---- 岩（6つの形×4つの色。こけつき・ひび入り）：どれも下重心 ----
+   1つの石は「底（地面の線）がいちばん広く、上へいくほど丸くせまくなる」形（お椀を伏せた形）。底に近いほど暗く → 足もとに暗い草 → はしに草のふさ */
 const ROCKC={},RGY=13;
 function rockSprite(x,y){const k=(h3(x,y,83)*6)|0,pi=(h3(y,x,89)*4)|0,key=k+'_'+pi;
   if(ROCKC[key])return ROCKC[key];
   const s=Surf3(16,16,14),P=PS.stone[pi],sd=k*7+pi+1;
-  const lump=(cx,cy,rx,ry,o)=>{for(let yy=Math.floor(cy-ry-1);yy<=Math.min(RGY,Math.ceil(cy+ry));yy++)for(let xx=Math.floor(cx-rx-1);xx<=Math.ceil(cx+rx);xx++){
-    const dx=(xx+.5-cx)/rx,dy=(yy+.5-cy)/ry,a=Math.atan2(dy,dx),d=Math.hypot(dx,dy)/(1+Math.sin(a*3+sd)*.08+Math.sin(a*5+sd*2)*.05);if(d>1)continue;
-    let n=sphereN(cl1(dx*.92),cl1(dy*.92));
-    if(o&&o.flat&&dy<-.1)n=[n[0]*.3,n[1]*.3+.15,1];                       // 平らな上の面
-    const q=n.map(v=>Math.round(v*3.2)/3.2);if(Math.hypot(q[0],q[1],q[2])>.3)n=q;    // 面を少しかくばらせる
-    const L=lit3(n),edge=d>.86,sink=Math.max(0,yy-(RGY-1.5));let v=.9+3*L+(h3(xx,yy,sd)-.5)*.6-sink*.6,P2=P;if(edge&&dy>0)v-=1;if(edge)v=Math.min(v,1.6);
-    if(o&&o.moss&&n[2]>.6&&sink<1&&h3(xx,yy,sd+4)<.85){P2=PS.moss;v=1+3.6*L+(h3(xx,yy,sd+5)-.5);}
-    s.S(xx,yy,P2,v,n,Math.max(.35,(dy>.4?.7:1)-sink*.16),.08);}};
-  if(k===0)lump(8,9.8,6,4.2);
-  else if(k===1)lump(8,11,7,3,{flat:1});
-  else if(k===2){lump(6,10,4.8,3.8);lump(11.6,12,3.2,2.2);}
-  else if(k===3){lump(10.2,10.8,3.6,2.6);lump(5.2,11.4,3.4,2.4);lump(8.2,12.4,2.8,1.8);}   // 小石のかたまり
-  else if(k===4)lump(8,9.8,6.2,4.2,{moss:1});
-  else{lump(8,10,6.4,4);let cx=6+(sd%3);for(let yy=7;yy<=11;yy++){cx+=(yy&1)?(h3(yy,sd,9)<.5?-1:1):0;if(s.on(cx,yy))s.S(cx,yy,P,.3,[0,.5,.8],.6,0);}}   // ひび
-  // 足もと：岩のすぐ下と両はしに暗い草（地面にめりこんだかげ）
+  // cx＝まん中・gb＝底の段・rx＝底の半分の幅・ry＝高さ
+  const lump=(cx,gb,rx,ry,o)=>{const ex=o&&o.flat?3.4:2.6;
+    const wAt=yy=>{const u=(gb+1-(yy+.5))/ry;if(u<=0||u>1)return 0;const w=rx*Math.pow(1-Math.pow(u,ex),.45),a=sd+yy;
+      return w*(1+(Math.sin(a*1.7)*.07+Math.sin(a*2.9)*.05)*u);};          // でこぼこは上ほど大きく・底はまっすぐ広い
+    for(let yy=Math.floor(gb-ry);yy<=gb;yy++){const w=wAt(yy),u=(gb+1-(yy+.5))/ry;if(w<=0)continue;
+      for(let xx=Math.floor(cx-w);xx<=Math.ceil(cx+w);xx++){const px=xx+.5-cx;if(Math.abs(px)>w)continue;
+        let n=sphereN(cl1(px/rx*.92),cl1(-u*.92));
+        if(o&&o.flat&&u>.45)n=[n[0]*.3,n[1]*.3+.15,1];                    // 平らな上の面
+        const q=n.map(v=>Math.round(v*3.2)/3.2);if(Math.hypot(q[0],q[1],q[2])>.3)n=q;    // 面を少しかくばらせる
+        const L=lit3(n),edge=Math.abs(px)>w-1||Math.abs(px)>wAt(yy-1),sink=Math.max(0,yy-(gb-1.5));
+        let v=.7+3.5*L+(h3(xx,yy,sd)-.5)*.6-sink*.6,P2=P;if(edge)v=Math.min(v,1.6);
+        if(o&&o.moss&&n[2]>.6&&sink<1&&h3(xx,yy,sd+4)<.85){P2=PS.moss;v=1+3.6*L+(h3(xx,yy,sd+5)-.5);}
+        s.S(xx,yy,P2,v,n,Math.max(.35,1-sink*.16),.08);}}};
+  if(k===0)lump(8,RGY,6.2,6.2);
+  else if(k===1)lump(8,RGY,7,3.8,{flat:1});
+  else if(k===2){lump(6,RGY,5,6.2);lump(11.8,RGY,3.2,3.2);}
+  else if(k===3){lump(9.8,RGY-1,4,3.8);lump(5.4,RGY,3.6,3);lump(10.4,RGY,2.8,2.2);}   // 小石のかたまり（大きい1つは1段奥）
+  else if(k===4)lump(8,RGY,6.2,6,{moss:1});
+  else{lump(8,RGY,6.4,6.4);let cx=6+(sd%3);for(let yy=8;yy<=12;yy++){cx+=(yy&1)?(h3(yy,sd,9)<.5?-1:1):0;if(s.on(cx,yy))s.S(cx,yy,P,.3,[0,.5,.8],.6,0);}}   // ひび
+  // 足もと：どの列も石のいちばん下のすぐ下に暗い草（地面にめりこんだかげ）。はしは少し明るく
   let x0=16,x1=-1;for(let xx=0;xx<16;xx++)if(s.on(xx,RGY)){x0=Math.min(x0,xx);x1=Math.max(x1,xx);}
-  for(let xx=x0-1;xx<=x1+1;xx++){const end=xx<x0||xx>x1;s.S(xx,RGY+1,PS.grass,end?1.2:.3,NU,end?.7:.45,0,0);if(end)s.S(xx,RGY,PS.grass,1.6,NU,.75,0,0);}
+  for(let xx=0;xx<16;xx++){let yb=-1;for(let yy=RGY;yy>=0;yy--)if(s.on(xx,yy)){yb=yy;break;}if(yb>=0&&!s.on(xx,yb+1))s.S(xx,yb+1,PS.grass,.3,NU,.45,0,0);}
+  for(const xx of[x0-1,x1+1]){s.S(xx,RGY+1,PS.grass,1.2,NU,.7,0,0);s.S(xx,RGY,PS.grass,1.6,NU,.75,0,0);}
   // 両はしの根もとに草のふさ（岩のはしに少しかぶさる）
   for(const[gx,dir]of[[x0,1],[x1,-1]]){if(h3(gx,sd,13)<.3)continue;const bh=2+((h3(sd,gx,12)*2)|0);
     for(let j=0;j<bh;j++)s.S(gx+(j===bh-1?-dir:0),RGY+1-j,PS.grass,2.2+j*1.2,[0,.55,.83],1,.03,j*.5);
