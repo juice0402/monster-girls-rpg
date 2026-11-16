@@ -16,12 +16,12 @@ const CHARS={
     legs:[[".......oso......",".......oSo......",".......offFo....",".......ooooo...."],["......oso.oso...",".....oso...oSo..",".....offo..offFo",".....oooo..ooooo"],["......oSo.oso...",".....oso...oso..",".....offo..offFo",".....oooo..ooooo"]]},
   },
   // 着せかえの部品：絵の枠（横24×たて36・体のまわりに横4・上4のゆとり）に y 段目から重ねる。'.' はすける。c＝ふくらみの丸 [x,y,半径]
-  // 麦わら帽子は tools/hat3d.py で立体から計算したドット（つばは水平・人を描く角度＝20度で見た形）
+  // 麦わら帽子は tools/hat3d.py で立体から計算したドット（ふくらみは頭を少しふくらませた形・つばは水平でふちがたれる・人と同じ真正面から見る）
   items:{
    straw:{name:"麦わら帽子",views:{
-    front:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqqQQQjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvvvvjjjjhjjjhhhHHo..","...oovvvhhhhhhhhhhhoo...",".....oooooooooooooo....."]},
-    back:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqQQQQjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvvvvjjjjbjjjhhhHHo..","...oovvvhhhhbBhhhhhoo...",".....ooooooobBooooo.....","..........oboBo.........","...........o.oBo........","..............o........."]},
-    side:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqqQQjjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvbvhjjjjhjjjhhhHHo..","...obBvvhhhhhhhhhhhoo...","...obBooooooooooooo.....","..oBoo..................","...o...................."]},
+    front:{y:8,c:[12.0,  15.2,  7.1],rows:["........oooooooo........",".......ouuqqqqqQo.......","......ouuuqqqqqQQo......",".....ouuqqqqqQQQQQo.....","...oobbbbbbbbbBBBBBoo...","..ovvvHHHHjjjjjjjjjHHo..",".ovvvvvvhhhhhhhHHHHHHHo.",".ohhhhhhhhhHHHHHHjjjjjo.","..oooooooooooooooooooo.."]},
+    back:{y:8,c:[12.0,  15.2,  7.1],rows:["........oooooooo........",".......ouuqqqqqQo.......","......ouuuqqqqqQQo......",".....ouuqqqqqQQQQQo.....","...oobbbbbbbBbBBBBBoo...","..ovvHHHHHjjbBjjjjjHHo..",".ovvvvvvhhhhbBhHHHHHHHo.",".ohhhhhhhhhHbBHHHHHHHjo.","..oooooooooobBoooooooo..","............oBo.........",".............o.........."]},
+    side:{y:8,c:[12.0,  15.2,  7.1],rows:["........oooooooo........",".......ouuqqqqqQo.......","......ouuuqqqqqQQo......",".....ouuqqqqqQQQQQo.....","...ooBbbbbbbbbBBBBBoo...","..ovvbBHHHjjjjjjjjjHHo..",".ovvbBvvhhhhhhhHHHHHHHo.",".ohhbBhhhhhHHHHHHHjHHjo.","..oobBoooooooooooooooo..","....oBo.................",".....o.................."]},
    }},
   },
  },
