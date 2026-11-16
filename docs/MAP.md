@@ -14,7 +14,7 @@
 | ファイル | 行 | 役目・おもな名前 |
 |---|---|---|
 | src/page.html | 67 | 画面の形（上の板・地図・下の板・ふきだし・まど・タイトル）と印の行 |
-| src/style.css | 117 | 見た目（地図に重ねる上の文字と下の道具の列・紙のふきだし・DotGothic16） |
+| src/style.css | 132 | 見た目（上の文字・下の道具の列・ふきだし・まどは、枠なし・半透明で地図に重ねる。色は :root の --veil・--chip・--line・--dim・--gold-*。ふきだしとまどが出ている間は下の列をかくす・DotGothic16） |
 | src/data/rules.js | 21 | 数字：CROPS（作物）・RENO（改築）・HEART・COST（体力）・TOOLS・1日の長さ・SAVE_KEY |
 | src/data/maps.js | 68 | MAPS（牧場・街のマスの文字）・BLOCK（歩けない文字）・tile・blocked・SPOTS（地図の行き先） |
 | src/dialogue.js | 13 | DLG の最小版と loadDLG（台詞は src/data/dialogue.json） |
@@ -33,7 +33,7 @@
 | src/light/particles.js | 42 | 花びら・光のちり・ほたる（drawLP）・LAMPS・lightsFor（夜のあかりの一覧） |
 | src/render.js | 123 | resize・カメラ（clampCam・setFree）・粒・toast・render（毎コマ：土台→畑→人→影→光） |
 | src/ui.js | 130 | updHud・ふきだし（say・scene・choose）・まど（openShop・openShip・openBag・openMap・openFriends）・warp・dayCard・seasonEnd |
-| src/main.js | 65 | update・loop・initRT・begin・boot・`window.__game`（試す用の debug） |
+| src/main.js | 66 | update・loop・initRT・begin・boot・`window.__game`（試す用の debug） |
 
 ## データ・数字の場所
 - 作物・改築・体力・1日の長さ → src/data/rules.js
@@ -45,6 +45,7 @@
 
 ## 試す
 - `window.__game.debug({time:分, map:'farm'|'town', cam:[x,y], light:0〜3, pos:[x,y], npc:{id:[map,x,y,向き]}})`・`__game.fps()`
+- ふきだし・まどを出す：`__game.ui.say(id,文)`・`choose(id,文,[選択肢],true)`・`openShop()`・`openShip()`・`openBag()`・`openMap()`・`openFriends()`・`bubble(id,文)`
 - 確かめはビルド → スクショ（牧場と街・朝昼夕夜）。読み直して確かめない
 
 ## ほか

@@ -101,7 +101,7 @@ function openFriends(){
   const close=openPanel('なかよし','',(list)=>{
     for(const id of['chloe','luu']){const n=S.npc[id],d=DLG[id];const h=hearts(id);
       const st=n.live?'牧場で一緒に暮らしている':n.pending?'あしたの朝 部屋を見に来る':n.visit?'けさ 部屋を見に来る':!n.met?'まだ会っていない':h>=INVITE_HEARTS?'一緒に住もうと誘えそう':`♥${INVITE_HEARTS}になったら誘える`;
-      const r=row(list,null,`${d.name}<span style="font-size:12px;color:#8f6038">　${id==='chloe'?'ドラゴン娘':'スライム娘'}</span>`,`<span class="hearts">${'♥'.repeat(h)}<i>${'♥'.repeat(MAX_HEARTS-h)}</i></span>　${st}`);
+      const r=row(list,null,`${d.name}<span class="kind">　${id==='chloe'?'ドラゴン娘':'スライム娘'}</span>`,`<span class="hearts">${'♥'.repeat(h)}<i>${'♥'.repeat(MAX_HEARTS-h)}</i></span>　${st}`);
       const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');const sp=SPR[id][0][0];g.drawImage(sp,sp.ox||0,(SPR[id].faceY||0)+(sp.oy||0),16,16,0,1,16,16);r.replaceChild(c,r.firstChild);}
     const hs=S.reno.state===0?`改築：まだ（クロエに${RENO.cost}Gと石${RENO.stone}個）`:S.reno.state===1?`改築：工事中（あと${S.reno.days}日）`:`改築：完成・部屋 ${S.rooms.filter(Boolean).length}/${RENO.rooms}`;
     const n=document.createElement('p');n.className='note';n.innerHTML=`${hs}<br>話す（1日1回）と贈り物（1日1回）で仲よくなれる。${OTHERS.length?`<br>ほかの住人：${OTHERS.join('・')}（次の試作から）`:''}`;list.appendChild(n);
