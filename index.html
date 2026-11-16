@@ -274,117 +274,86 @@ async function loadDLG(){
 }
 
 /* ---------- 見た目（コードで描くドット絵・C） ---------- */
-const LOOKS={
-  player:{skin:'#f6d3b8',hair:'#8a4b2a',hairD:'#6a3820',hairL:'#b06a3c',eye:'#5a3a2a',eyeD:'#2a1a14',top:'#d9603b',topD:'#a8452a',sleeve:'#d9603b',bottom:'#5f7d3a',bottomD:'#465e2a',skirt:true,legs:'#f6d3b8',shoe:'#6b4426',hat:{c:'#e3bd62',d:'#b8923e',band:'#c0392b'}},
-  chloe:{skin:'#f2d4c4',hair:'#3e2558',hairD:'#2e1b42',hairL:'#5f3f86',eye:'#e0a526',eyeD:'#3a2214',top:'#ece0c6',topD:'#cbbd9c',sleeve:'#ece0c6',bottom:'#4a4054',bottomD:'#363040',legs:'#4a4054',shoe:'#2a2024',longHair:true,horns:'#efe2c4',wings:'#5b3a8c',wingsD:'#43296a',tail:'#5b3a8c',apron:{c:'#8b5a2b',d:'#6a4220'},gloves:'#6b4423'},
-  luu:{skin:'#9adb6e',hair:'#6cbf4a',hairD:'#58a63a',hairL:'#c7f2a6',eye:'#2f5a2a',eyeD:'#1c3418',top:'#9adb6e',topD:'#86c75c',sleeve:'#9adb6e',bottom:'#4a6fa5',bottomD:'#3a5785',legs:'#4a6fa5',shoe:'#f2c230',slime:true,overalls:{c:'#4a6fa5',d:'#3a5785'},blush:'#f7a6a6'},
-  shop:{skin:'#f6dccb',hair:'#f2b3c6',hairD:'#d98fa8',hairL:'#ffdbe5',eye:'#4f8a3a',eyeD:'#22301a',top:'#f1e6cc',topD:'#d7c9a6',sleeve:'#f1e6cc',bottom:'#f1e6cc',bottomD:'#d7c9a6',skirt:true,legs:'#8d8a4e',shoe:'#6f6a38',longHair:true,apron:{c:'#3f6e45',d:'#2f5535'},flower:'#ff8fb8',leaves:'#5fae58'},
+/* ---------- 人（16×32・4方向・歩き・面の向きつき） ----------
+   文字の表 → 色。pal は [色, 部分, つや]。部分ごとに1ドットずつ面の向きを決める：
+   hd＝頭（球）・hc＝帽子の上（球）・hb＝帽子のつば（平ら）・hn＝つの・tr＝胴・ar＝うで・sk＝スカート・lg＝足
+   wg＝つばさ・tl＝しっぽ・em＝光る所（ルゥの核）・ol＝線（となりの面の向きを外へ少しひらく） */
+const CHARS={
+ // ミノリ
+ player:{head:[7.5, 13, 6.4],faceY:7,
+  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15]},
+  views:{
+   front:{rows:["................","................","......oooo......",".....ohhhho.....","....ohhhhhho....","....oBbbbbBo....","..oooHhhhhHooo..",".ohhhhhhhhhhhho.","ojHHHHHHHHHHHHjo",".oorRRRRRRRRroo.","..orlRrrrrrRlro.","..orrsrrrrsrro..","..orssssssssro..","..orsessssesro..","..orcessssecro..","..orsssmmsssro..","..rroSssssSorr..","...oRowsswoRo...","..ottwwwwwwtto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
+    legs:[["....oso..oso....","....oSo..oSo....","...offo..offo...","...oooo..oooo..."],["....oso..oso....","....oSo..offo...","...offo..oooo...","...oooo........."],["....oso..oso....","...offo..oSo....","...oooo..offo...",".........oooo..."]]},
+   back:{rows:["................","................","......oooo......",".....ohhhho.....","....ohhhhhho....","....oBbbbbBo....","..oooHhhhhHooo..",".ohhhhhhhhhhhho.","ojHHHHHHHHHHHHjo",".oorRRRRRRRRroo.","..orlrrrrrrlro..","..orrrrrrrrrro..","..orrrrrrrrrro..","..oRrrrrrrrrRo..","..oRRrrrrrrRRo..","..orRRRRRRRRro..","...oRRRRRRRRo...","....oossssoo....","..otttttttttto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
+    legs:[["....oso..oso....","....oSo..oSo....","...offo..offo...","...oooo..oooo..."],["....oso..oso....","....oSo..offo...","...offo..oooo...","...oooo........."],["....oso..oso....","...offo..oSo....","...oooo..offo...",".........oooo..."]]},
+   side:{rows:["................","................","......oooo......",".....ohhhho.....","....ohhhhhho....","....oBbbbbBo....","..oooHhhhhHooo..",".ohhhhhhhhhhhho.","ojHHHHHHHHHHHHjo",".oorRRRRRRRRroo.","..orlrrrrrrrRro.","..orrrrrrrRssro.","..oRrrrrrRsssso.","..oRrrrrrRsesso.","..oRRrrrRssecso.","..oRRRrrRsssmo..","..orRRRroSsso...","...oRRRoowwo....","....ottttwwo....","....otttttttto..","....otyTttttto..","....otyTttttto..","....ottsotttto..","....okkkkkkkko..","...oknkkkkkkKo..","...oknkkkkkKKo..","..oknkkkkkkKKKo.","..ooooooooooooo."],
+    legs:[["......oso.......","......oSo.......","......offFo.....","......ooooo....."],[".....oso.oso....","....oso...oSo...","....offo..offFo.","....oooo..ooooo."],[".....oSo.oso....","....oso...oso...","....offo..offFo.","....oooo..ooooo."]]},
+  }},
+ // クロエ（ドラゴン娘）
+ chloe:{head:[7.5, 11.5, 7.2],faceY:5,
+  pal:{"o":["#2a1a30","ol"],"h":["#3d2856","hd",0.25],"j":["#6a4c92","hd",0.3],"H":["#281a3a","hd",0.2],"k":["#eee2c6","hn",0.3],"K":["#b8a684","hn",0.2],"s":["#f3d8ca","hd"],"S":["#dbb3a3","hd"],"e":["#e8b030","hd",0.5],"E":["#7a4c12","hd",0.3],"m":["#c27a70","hd"],"c":["#7a58a8","hd",0.3],"w":["#efe6d2","tr"],"W":["#c9bba0","tr"],"a":["#8a5a34","tr",0.15],"A":["#62402a","tr",0.1],"n":["#ad7a4c","tr",0.2],"b":["#3a2a22","tr",0.1],"y":["#d9b25a","tr",0.6],"q":["#efe6d2","ar"],"Q":["#c9bba0","ar"],"r":["#f3d8ca","ar"],"R":["#7a58a8","ar",0.3],"g":["#6e4428","ar",0.15],"G":["#4a2c18","ar",0.1],"p":["#4f4560","lg"],"P":["#3a3248","lg"],"f":["#2e2428","lg",0.25],"F":["#4c3c40","lg",0.3],"v":["#5b3a8c","wg",0.2],"V":["#3f2766","wg",0.15],"x":["#5b3a8c","tl",0.3],"X":["#3f2766","tl",0.2]},
+  views:{
+   front:{rows:["................","................","................","................","..oo........oo..",".oKkooooooooKko.",".ohhjjhhhhhhhho.",".ohjjhhhhhhhhHo.",".ohhhhhhhhhhhHo.",".ohhhhhhhhhhHHo.",".ohhhshhhhshHHo.",".ohhssssssssHHo.",".ohhssssssssHHo.",".ohhsessssesHHo.",".ohhcEssssEcHHo.",".ohhsssmsssHHHo.",".ohhoSssssSoHHo.","..ohHowsswoHho..",".oqwwwaaaawwwQo.",".oqwwwanaawwwQo.",".oqowwaaaawwoQo.",".orowaaaaaawoRo.",".oRobybbbbbboro.",".ogoaaaaaaaaogo.",".oGoanaaaaAaoGo.","..opaaaaaaAApo..","..opAAAAAAAApo..","..oppppPPpppPo.."],
+    legs:[["...oppo..oPPo...","...oppo..oPPo...","...oFfo..oFfo...","...oooo..oooo..."],["...oppo..oPPo...","...oppo..oFfo...","...oFfo..oooo...","...oooo........."],["...oppo..oPPo...","...oFfo..oPPo...","...oooo..oFfo...",".........oooo..."]]},
+   back:{rows:["................","................","................","................","..oo........oo..",".oKkooooooooKko.",".ohhjjhhhhhhhho.",".ohjjhhhhhhhhHo.",".ohhhhhhhhhhhHo.",".ohhhhhhhhhhHHo.",".ohhhhhbbhhhHHo.",".ohhhhojjohhHHo.",".oHhhhohhohhHHo.",".oHHhhohhohHHHo.",".oHHHhohhoHHHHo.","..oHHhohhoHHHo..","..ooHHohHoHHoo..","..oVvoohhoovVo..",".oqVvvoHHovvVQo.",".oqoVvvwwvvVoQo.",".oqowVvwwvVwoQo.",".orowwVwwVwwoRo.",".oRobbbbbbbboro.",".ogoppoxxoppogo.",".oGoppoxXopPoGo.","..oppPoxXoPPpo..","..opppoxXoPPpo..","..oppppoxoPPPo.."],
+    legs:[["...oppoxXoPPo...","...oppoxooPPo...","...oFfo..oFfo...","...oooo..oooo..."],["...oppoxXoPPo...","...oppoxooFfo...","...oFfo..oooo...","...oooo........."],["...oppoxXoPPo...","...oFfoxooPPo...","...oooo..oFfo...",".........oooo..."]]},
+   side:{rows:["................","................","................","ok..............","oKkk............",".ooKkoooooo.....","..oKhhhhjjjo....",".ohhhhhhhjjho...",".ohhhhhhhhhhho..",".ohhhhhhhhhhho..",".oHhhhhhhhhsso..","ooHHhhhhhsssso..","oHHHhhhhhsessso.","oHHoHhhhhsEssso.","oHHooHhhssscsso.",".oHo.oHhSsssmo..",".oHo..oHoSsso...","..o..oovwwoo....",".....oVvqwaao...","....oVvoqwanao..","....oVoqqwaaao..",".....oorrwaaao..",".....oRrybbbbo..",".....ogowaaaao..","...ooGoppaaAao..","..oxXooppaaAAo..",".oxXo.oppAAAAo..",".oXo..opppppPo.."],
+    legs:[[".oo...oppPPo....","......oppPPo....","......oFffFoo...","......ooooooo..."],["......opo.oPo...",".....opo..oPPo..","....oFffo.oFffo.","....ooooo.ooooo."],["......oPo.opo...",".....oPPo.oppo..","....oFffo.oFffo.","....ooooo.ooooo."]]},
+  }},
+ // ルゥ（スライム娘）
+ luu:{head:[7.5, 10.5, 7.4],faceY:4,
+  pal:{"o":["#1e4a2a","ol"],"g":["#a4e478","hd",0.55],"G":["#6fbf4a","hd",0.5],"l":["#dcf9c0","hd",0.7],"e":["#1f3a1c","hd",0.6],"E":["#ffffff","hd",0.6],"m":["#2f5a24","hd"],"c":["#f7a6a6","hd",0.4],"k":["#fff2a0","em"],"u":["#a4e478","tr",0.55],"U":["#6fbf4a","tr",0.5],"d":["#4a6fa5","tr",0.08],"D":["#36558a","tr",0.05],"z":["#6c90c8","tr",0.1],"y":["#e8c64a","tr",0.6],"a":["#a4e478","ar",0.55],"A":["#6fbf4a","ar",0.5],"b":["#a8743f","ar",0.15],"B":["#7a5030","ar",0.1],"p":["#4a6fa5","lg",0.08],"P":["#36558a","lg",0.05],"f":["#f4c430","lg",0.5],"F":["#c99a1a","lg",0.4],"n":["#c9f29c","hd",0.55],"N":["#a9dc7e","hd",0.5],"w":["#ffffff","hd",0.6]},
+  views:{
+   front:{rows:["................","................","................","......oooo......","....oolllgoo....","...olggggggGo...","..olgggggggggo..",".olgggggggggGGo.",".oggggggggggGGo.",".ogglgGggGggGGo.",".oGgGnnnnnnGgGo.",".oGgnnnnnnnnGGo.",".oGgnwnnnnwnGGo.",".oGgnennnnenGGo.",".oGGcennnnecGGo.",".oGGnnnmmnnnGGo.","oGlGoNnnnnNoGlGo","olGGooonnoooGGlo",".ooouuuukuuuooo.",".oauDuuuuuuDuAo.",".oaoddddddddoAo.",".oaodyzddzydoAo.",".oaoddddddddoAo.",".obodddzzdddoUo.",".oBoddDzzDddoAo.","..odddddddddDo..","..oddDdddddDDo..","..odddDooDddDo.."],
+    legs:[["...oppo..oPPo...","...offo..oFFo...","...offo..oFFo...","...oooo..oooo..."],["...oppo..oPPo...","...offo..oFFo...","...offo..oooo...","...oooo........."],["...oppo..oPPo...","...offo..oFFo...","...oooo..oFFo...",".........oooo..."]]},
+   back:{rows:["................","................","................","......oooo......","....oolllgoo....","...olggggggGo...","..olgggggggggo..",".olgggggggggGGo.",".ogglggggggggGo.",".oggggggggggGGo.",".oGggggggggGGGo.",".oGGgggggggGGGo.",".oGGGgggggGGGGo.",".oGGGGggggGGGGo.",".oGGGGGGGGGGGGo.",".ooGGGGGGGGGGoo.","oGlGoGGGGGGoGlGo","olGGoouuuuuoGGlo",".ooouuuuuuuuooo.",".oauDuuuuuuDuAo.",".oaouDuuuuDuoAo.",".oaouuDuuDuuoAo.",".oaouuuDDuuuoAo.",".oboddddddddoUo.",".oBodddddddDoAo.","..odzzddddzzDo..","..odzzddddzzDo..","..odddDooDddDo.."],
+    legs:[["...oppo..oPPo...","...offo..oFFo...","...offo..oFFo...","...oooo..oooo..."],["...oppo..oPPo...","...offo..oFFo...","...offo..oooo...","...oooo........."],["...oppo..oPPo...","...offo..oFFo...","...oooo..oFFo...",".........oooo..."]]},
+   side:{rows:["................","................","................",".....oooo.......","...oolllgoo.....","..olggggggGo....",".olggggggggGo...",".ogglggggggggo..",".oggggggggggggo.",".oGgggggGggGnno.",".oGGgggggGnnnno.",".oGGGgggGnnnnwo.",".oGGGggggnnnneno",".oGGGGgggnnncnno","oGlGGGgggnnnnmo.","olGGooGGgNnnno..",".ooo..oounnoo...",".ooo..oouuuoo...","......ouuuuko...",".....oaaDuuuuo..",".....oaAoddddo..",".....oaAoydddzo.",".....oaAodddddo.",".....oubodzzddo.",".....oBBodzzddo.",".....odddddddDo.",".....oddddddDDo.",".....odddddddDo."],
+    legs:[["......oppPPo....","......offFFo....","......offFFFo...","......ooooooo..."],[".....opo.oPo....","....offo.oFFo...","....offfooFFFo..","....ooooo.oooo.."],[".....oPo.opo....","....oFFo.offo...","....oFFFooffo...","....oooo.ooooo.."]]},
+  }},
+ // ネリネ（アルラウネ・種屋）
+ shop:{head:[7.5, 11, 7.4],faceY:5,
+  pal:{"o":["#3a2430","ol"],"h":["#f4c3d0","hd",0.2],"H":["#d995ab","hd",0.15],"j":["#ffe3ea","hd",0.3],"f":["#ff7fae","hd",0.25],"F":["#d9578a","hd",0.2],"Y":["#ffe066","hd",0.3],"L":["#5fae58","hd",0.15],"s":["#f8dccc","hd"],"S":["#e2b8a4","hd"],"e":["#4f8a3a","hd",0.4],"E":["#22301a","hd",0.3],"m":["#c46a72","hd"],"v":["#7cc46a","hd",0.2],"w":["#f3ead6","tr"],"W":["#d6c8ab","tr"],"a":["#2f6a45","tr",0.1],"A":["#22503a","tr",0.08],"n":["#4a8a5c","tr",0.12],"q":["#f3ead6","ar"],"Q":["#d6c8ab","ar"],"r":["#f8dccc","ar"],"R":["#7cc46a","ar",0.2],"x":["#f3ead6","lg"],"X":["#d6c8ab","lg"],"t":["#9a7448","lg",0.1],"T":["#6a4c2c","lg",0.08]},
+  views:{
+   front:{rows:["................","................","..........ooo...",".........offfo..","....oooooFYfFo..","...ohjhjhoffoLo.","..ohjhjhhhoLLho.",".ohjjhhjjhhhjHo.",".ohhhHhhhhHhhHo.",".oHhhsHssHssHHo.",".ohHsHssHssHsHo.",".ohhssssssssHHo.",".ohhsessssesHHo.",".ohhvEssssEvHHo.",".ohhssssmsssHHo.",".oHhoSssssSoHHo.",".oHjHowsswoHjHo.",".oHoHqwwwwqHoHo.",".oo.qwwwwwwwqoo.","...oqwaaaaawQo..","...oqwanaaawQo..","..oqwaaaaaawQo..","..orwaaaaaawRo..","..oRwaaaaaaAro..","..orwaaaaaaAro..","..owwAaaaaAAWo..",".owwwwAAAAWWWWo.",".owwwwwwwwwWWWo."],
+    legs:[[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ootTo..oTtoo..","...oooo..oooo..."],[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ootTo..ooooo..","...oooo........."],[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ooooo..oTtoo..",".........oooo..."]]},
+   back:{rows:["................","................","..........ooo...",".........offfo..","....oooooFFfFo..","...ohjhjhoffoLo.","..ohjhjhhhoLLho.",".ohjjhhjjhhjjHo.",".ohhhHhhhHhhhHo.",".oHhjjhhjjhhjHo.",".oHhhhHhhhHhhHo.",".ohjjhhjjhhjjHo.",".oHhhHhhhHhhHHo.",".oHhjjhhjjhhHHo.",".oHHhhHhhhHhHHo.",".oHjjhhjjhhjHHo.",".oHhhHHhhHHhHHo.",".oHoHoHoHoHoHHo.",".oo.qwwaawwwqoo.","...oqwwwwwwwQo..",".ooqwwwaawwwQoo.","..oqwwwwwwwwQo..","..orwwwaawwwRo..","..oRwwanaawwro..","..orwwwaawwwro..","..owwwwaawwwWo..",".owwwwwwwwWWWWo.",".owwwwwwwwwWWWo."],
+    legs:[[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ootTo..oTtoo..","...oooo..oooo..."],[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ootTo..ooooo..","...oooo........."],[".owwwwwwwwWWWWo.",".oXwXwwwwXwWXWo.","..ooooo..oTtoo..",".........oooo..."]]},
+   side:{rows:["................","................","......ooo.......",".....offfo......","...oooFYfFo.....","..ohjhoffoLo....",".ohjhjhoLLhho...",".ohjjhhjjhhhho..",".oHhhHhhhHhsso..",".oHjjhhjhssssso.",".oHhhHhhhsesso..",".oHjjhhjhsEvsso.",".oHhhHhhhssssso.",".oHjjhhjSsssmo..",".oHhhHhhoSsso...",".oHjHoHoowwo....",".oHjHoHoowwo....","..oHoo.oqqwaao..","..oHHHoqqwaao...","...ooHoqqwanao..",".....oQqwwaaao..",".....orrwwaaao..",".....oRrwwaaao..",".....owwwwaaAo..","....owwwwwaAAo..","....owwwwwwWWWo.","...owwwwwwwWWWo.","...owwwwwwwwWWo."],
+    legs:[["...owwwwwwwwWWo.","...oXwwXwwXwWo..","....ootTttoo....",".....oooooo....."],["...owwwwwwwwWWo.","...oXwwXwwXwWo..","...ootToottoo...","...ooooo.ooooo.."],["...owwwwwwwwWWo.","...oXwwXwwXwWo..","...oottoootToo..","...ooooo.ooooo.."]]},
+  }},
 };
-function drawChibi(g,L,dir,fr){
-  const r=(x,y,w,h,c)=>{if(!c)return;g.fillStyle=c;g.fillRect(x,y,w,h);};
-  const side=dir>=2, back=dir===1, act=fr===3;
-  const l1=fr===1?1:0, l2=fr===2?1:0;
-  // うしろ：翼・しっぽ・長い髪
-  if(L.wings){
-    if(back){r(1,11,4,5,L.wings);r(11,11,4,5,L.wings);r(0,12,1,3,L.wingsD);r(15,12,1,3,L.wingsD);r(2,15,2,1,L.wingsD);r(12,15,2,1,L.wingsD);}
-    else if(side){r(1,11,4,4,L.wings);r(0,12,1,2,L.wingsD);r(2,14,2,1,L.wingsD);}
-    else{r(1,12,2,3,L.wings);r(13,12,2,3,L.wings);r(0,13,1,1,L.wingsD);r(15,13,1,1,L.wingsD);}
-  }
-  if(L.tail){
-    if(back){r(7,18,2,3,L.tail);r(8,21,4,1,L.tail);r(11,20,2,1,L.wingsD);}
-    else if(side){r(1,18,4,2,L.tail);r(0,17,1,2,L.wingsD);}
-    else{r(12,18,3,2,L.tail);r(14,17,1,1,L.wingsD);}
-  }
-  if(L.longHair&&!back){if(side)r(3,9,5,8,L.hairD);else r(3,9,10,7,L.hairD);}
-  // 足
-  const legC=L.legs||L.skin;
-  if(side){
-    r(6,19,2,3-l1,legC);r(6,22-l1,2,2,L.shoe);
-    r(8,19,2,3-l2,legC);r(8,22-l2,2,2,L.shoe);
-  }else{
-    r(5,19,2,3-l1,legC);r(5,22-l1,2,2,L.shoe);
-    r(9,19,2,3-l2,legC);r(9,22-l2,2,2,L.shoe);
-  }
-  // 腰から下
-  if(L.skirt){if(side){r(5,16,6,3,L.bottom);r(4,18,7,1,L.bottomD);}else{r(4,16,8,2,L.bottom);r(3,18,10,1,L.bottom);r(3,19,10,1,L.bottomD);}}
-  else{if(side)r(5,16,6,3,L.bottom);else r(4,16,8,3,L.bottom);}
-  // 胴
-  if(side){r(5,12,6,4,L.top);r(5,15,6,1,L.topD);}
-  else{r(4,12,8,4,L.top);r(4,15,8,1,L.topD);}
-  if(!back)r(7,11,2,1,L.skin);
-  if(L.overalls){const o=L.overalls;
-    if(back){r(5,12,1,4,o.c);r(10,12,1,4,o.c);r(4,15,8,1,o.c);}
-    else if(side){r(6,13,4,3,o.c);r(7,12,1,1,o.c);r(6,15,4,1,o.d);}
-    else{r(5,13,6,3,o.c);r(5,12,1,1,o.c);r(10,12,1,1,o.c);r(7,14,2,1,o.d);r(4,15,8,1,o.c);}
-  }
-  if(L.apron){const a=L.apron;
-    if(back){r(5,12,1,4,a.c);r(10,12,1,4,a.c);r(6,14,4,1,a.c);}
-    else if(side){r(9,13,2,6,a.c);r(9,12,1,1,a.c);}
-    else{r(5,13,6,6,a.c);r(5,12,1,1,a.c);r(10,12,1,1,a.c);r(6,16,4,1,a.d);}
-  }
-  // 腕
-  const hand=L.gloves||L.skin, sl=L.sleeve||L.top;
-  if(side){
-    if(act){r(9,11,3,2,sl);r(12,10,2,2,hand);}
-    else{const s=fr===1?1:0;r(7,12+s,2,3,sl);r(7,15+s,2,1,hand);}
-  }else{
-    const a1=fr===1?-1:0,a2=fr===2?-1:0;
-    r(3,12+a1,1,3,sl);r(3,15+a1,1,1,hand);
-    if(act&&!back){r(12,9,1,4,sl);r(12,8,2,2,hand);}
-    else{r(12,12+a2,1,3,sl);r(12,15+a2,1,1,hand);}
-  }
-  // 頭
-  if(side){r(4,3,9,8,L.skin);r(5,2,7,1,L.skin);r(5,11,7,1,L.skin);}
-  else{r(3,3,10,8,L.skin);r(4,2,8,1,L.skin);r(4,11,8,1,L.skin);}
-  if(back){
-    r(3,1,10,11,L.hair);r(2,3,1,7,L.hair);r(13,3,1,7,L.hair);r(4,2,3,1,L.hairL);
-    if(L.longHair)r(3,12,10,4,L.hair);
-  }else if(side){
-    r(4,1,8,3,L.hair);r(4,4,5,7,L.hair);r(3,3,1,7,L.hair);r(9,4,4,1,L.hair);r(11,5,2,1,L.hair);r(5,2,3,1,L.hairL);
-    if(L.longHair)r(3,10,5,7,L.hair);
-    r(10,7,1,1,L.eyeD);r(10,8,1,1,L.eye);r(11,9,1,1,L.blush||'#f2a0a0');r(11,10,1,1,L.mouth||'#c96a5a');
-  }else{
-    r(3,1,10,4,L.hair);r(2,3,1,8,L.hair);r(13,3,1,8,L.hair);
-    r(3,5,10,1,L.hair);r(3,6,2,1,L.hair);r(7,6,2,1,L.hair);r(11,6,2,1,L.hair);r(4,2,3,1,L.hairL);
-    if(L.longHair){r(2,11,2,5,L.hair);r(12,11,2,5,L.hair);}
-    r(5,7,2,1,L.eyeD);r(5,8,2,1,L.eye);r(9,7,2,1,L.eyeD);r(9,8,2,1,L.eye);
-    r(6,8,1,1,'#fff8e8');r(10,8,1,1,'#fff8e8');
-    r(4,9,1,1,L.blush||'#f2a0a0');r(11,9,1,1,L.blush||'#f2a0a0');
-    r(7,10,2,1,L.mouth||'#c96a5a');
-  }
-  // かざり
-  if(L.hat){const h=L.hat;
-    if(side){r(2,4,12,1,h.c);r(4,0,7,4,h.c);r(4,3,7,1,h.band);r(2,4,1,1,h.d);r(13,4,1,1,h.d);}
-    else{r(1,4,14,1,h.c);r(4,0,8,4,h.c);r(4,3,8,1,h.band);r(1,4,1,1,h.d);r(14,4,1,1,h.d);r(5,0,3,1,'#f2d68a');}
-  }
-  if(L.horns){
-    if(side){r(6,0,1,2,L.horns);r(7,1,1,1,L.horns);}
-    else{r(4,0,1,2,L.horns);r(5,1,1,1,L.horns);r(11,0,1,2,L.horns);r(10,1,1,1,L.horns);}
-  }
-  if(L.slime){
-    r(back?5:4,3,1,1,'#e6ffd6');r(back?6:5,2,1,1,'#e6ffd6');
-    if(!side){r(2,11,1,1+(fr===2?1:0),L.hair);r(13,10,1,1+(fr===1?1:0),L.hair);}
-    else r(3,10,1,2,L.hair);
-  }
-  if(L.flower){
-    if(side){r(4,0,4,3,L.flower);r(5,1,2,1,'#ffe066');r(8,2,2,1,L.leaves);}
-    else{r(9,0,4,3,L.flower);r(8,1,1,1,L.flower);r(10,1,2,1,'#ffe066');r(7,2,2,1,L.leaves);}
-    if(!back&&!side){r(4,10,1,1,L.leaves);r(11,10,1,1,L.leaves);}
-  }
-}
+function charFrame(id,view,f,flip){
+  const C=CHARS[id],v=C.views[view],pal=C.pal,W=16,H=32;
+  let rows=v.rows.concat(v.legs[f]);if(flip)rows=rows.map(r=>[...r].reverse().join(''));
+  const col=new Uint8ClampedArray(W*H*4),n=new Uint8ClampedArray(W*H*4),d=new Uint8ClampedArray(W*H*4),em=new Uint8ClampedArray(W*H*4),NN=[];
+  const at=(x,y)=>x<0||y<0||x>=W||y>=H||rows[y][x]==='.'?null:pal[rows[y][x]];
+  const hx=flip?15-C.head[0]:C.head[0],hy=C.head[1],hr=C.head[2];let hasEm=false;
+  const cl=v=>Math.max(-.98,Math.min(.98,v));
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const p=at(x,y);if(!p)continue;const i=y*W+x,c=hexRGB(p[0]);
+    col[i*4]=c[0];col[i*4+1]=c[1];col[i*4+2]=c[2];col[i*4+3]=255;const pt=p[1];let N=null;
+    if(pt==='hd'||pt==='hc')N=sphereN(cl((x+.5-hx)/hr),cl((y+.5-hy)/hr));
+    else if(pt==='hn')N=sphereN(cl((x+.5-hx)/hr),-.75);
+    else if(pt==='hb')N=[(x+.5-8)/8*.35,.32,.9];
+    else if(pt==='em'){N=NF;hasEm=true;em[i*4]=255;em[i*4+1]=240;em[i*4+2]=150;em[i*4+3]=170;}
+    else if(pt!=='ol'){let a0=x,a1=x;while(a0>0&&at(a0-1,y)&&at(a0-1,y)[1]===pt)a0--;while(a1<W-1&&at(a1+1,y)&&at(a1+1,y)[1]===pt)a1++;
+      const u=(x+.5-(a0+a1+1)/2)/((a1-a0+1)/2+.6);
+      if(pt==='wg')N=[u*.5,.45,.75];
+      else{let top=0;if(pt==='tr'){let k=0;while(y-k-1>=0&&at(x,y-k-1)&&at(x,y-k-1)[1]==='tr')k++;top=k<2?(2-k)*.35:0;}
+        N=[u*.8,Math.sqrt(Math.max(0,1-u*u*.64))*.95,(pt==='sk'?.05:.18)+top];}}
+    NN[i]=N;d[i*4]=Math.min(255,(H-y)*3);d[i*4+1]=255;d[i*4+2]=(p[2]||0)*255;d[i*4+3]=255;}
+  // 線：となりの面の向き＋外向き
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const p=at(x,y);if(!p||p[1]!=='ol')continue;const i=y*W+x;let s=[0,0,0],k=0,ox=0,oy=0;
+    for(const[dx,dy]of[[1,0],[-1,0],[0,1],[0,-1]]){const q=at(x+dx,y+dy);if(q&&q[1]!=='ol'&&NN[(y+dy)*W+x+dx]){const m=NN[(y+dy)*W+x+dx];s[0]+=m[0];s[1]+=m[1];s[2]+=m[2];k++;}else if(!q){ox-=dx;oy-=dy;}}
+    const N=k?[s[0]/k,s[1]/k,s[2]/k]:[0,.7,.7];NN[i]=[N[0]+ox*.45,N[1]+Math.max(0,oy)*.2,N[2]-Math.min(0,oy)*.45];d[i*4+1]=185;}
+  for(let i=0;i<W*H;i++){const N=NN[i];if(!N)continue;const l=Math.hypot(N[0],N[1],N[2])||1;n[i*4]=(N[0]/l*.5+.5)*255;n[i*4+1]=(N[1]/l*.5+.5)*255;n[i*4+2]=(N[2]/l*.5+.5)*255;n[i*4+3]=255;}
+  const nb=bumpLum(col,n,d,W,H,.9),c=bufCanvas(W,H,col);
+  c.nd={n:bufCanvas(W,H,nb),d:bufCanvas(W,H,d),sil:silOf(c),by:H};if(hasEm)c.em=bufCanvas(W,H,em);
+  return c;}
 const SPR={};
-function makeSprites(id){
-  if(id==='player'){SPR.player=[0,1,2,3].map(d=>[0,1,2,3].map(f=>minoriFrame(d===1?1:0,f)));return;}
-  const L=LOOKS[id]; SPR[id]=[];
-  for(let d=0;d<4;d++){SPR[id][d]=[];
-    for(let f=0;f<4;f++){
-      const c=document.createElement('canvas');c.width=16;c.height=24;const g=c.getContext('2d');
-      if(d===2){const t=document.createElement('canvas');t.width=16;t.height=24;drawChibi(t.getContext('2d'),L,3,f);g.translate(16,0);g.scale(-1,1);g.drawImage(t,0,0);}
-      else drawChibi(g,L,d,f);
-      SPR[id][d][f]=c;
-    }
-  }
-}
+function makeSprites(id){const fr=(d,f)=>d===0?charFrame(id,'front',f):d===1?charFrame(id,'back',f):charFrame(id,'side',f,d===2);
+  SPR[id]=[0,1,2,3].map(d=>{const a=[0,1,2].map(f=>fr(d,f));a[3]=a[0];return a;});SPR[id].faceY=CHARS[id].faceY;}
 
 /* ---------- 作物・小物の絵 ---------- */
 /* ---- ドット絵の道具 ---- */
@@ -636,23 +605,6 @@ const FLOWERC=['#ff8fb8','#ffd25e','#ffffff'].map(pc=>mk(16,16,g=>grid(g,['.....
   '.......p........','......pkp.......','.....pkykp......','......pkp.......','.......p..p.....','.......s.pkp....','..l....s..p.....','..ll...s.ls.....','...ll..sll......','....lllsl.......'],
   {p:pc,k:shade(pc,1.3),y:'#f2a93b',s:'#3f8a33',l:'#5fae45'},0,0)));
 
-/* ---- ミノリ（16×32） ---- */
-const MINORI_PAL={o:'#3a2216',h:'#efcb72',H:'#cfa650',j:'#9c7a36',b:'#c0392b',B:'#8e2a20',r:'#8a4b2a',R:'#5e321c',l:'#b46c3e',
-  s:'#f7d6bc',S:'#e2ae90',e:'#2e1c14',m:'#c0604f',c:'#f4a3a0',t:'#e2683e',T:'#b24a2a',y:'#f59266',w:'#f6efe0',k:'#5f8a3e',K:'#456a2c',n:'#7aa652',f:'#7a4a2a',F:'#4e2e1a'};
-const M_HAT=['................','................','......oooo......','.....ohhhho.....','....ohhhhhho....','....oBbbbbBo....','..oooHhhhhHooo..','.ohhhhhhhhhhhho.','ojHHHHHHHHHHHHjo','.oorRRRRRRRRroo.'];
-const M_FACE=['..orlRrrrrrRlro.','..orrsrrrrsrro..','..orssssssssro..','..orsesssssesro..'.slice(0,4)+'sesssses'+'ro..','..orcessssecro..','..orsssmmsssro..','..rroSssssSorr..','...oRowsswoRo...'];
-const M_BACK=['..orlrrrrrrlro..','..orrrrrrrrrro..','..orrrrrrrrrro..','..oRrrrrrrrrRo..','..oRRrrrrrrRRo..','..orRRRRRRRRro..','...oRRRRRRRRo...','....oossssoo....'];
-const M_BODY=['..ottwwwwwwtto..','.otttttttttttto.','.otytttttttttTo.','.otTtttttttttTo.','.oso'+'tttttttt'+'oso.','...okkkkkkkko...','..oknkkkkkkKko..','..oknkkkkkkKKo..','.oknkkkkkkkKKKo.','.oooooooooooooo.'];
-const M_BODYB=['..otttttttttto..'].concat(M_BODY.slice(1));
-const M_LEGS=[
-  ['....oso..oso....','....oSo..oSo....','...offo..offo...','...oooo..oooo...'],
-  ['....oso..oso....','....oSo..offo...','...offo..oooo...','...oooo.........'],
-  ['....oso..oso....','...offo..oSo....','...oooo..offo...','.........oooo...'],
-];
-function minoriFrame(dir,f){const legs=M_LEGS[f===1?1:f===2?2:0];
-  const rows=dir===1?M_HAT.concat(M_BACK,M_BODYB,legs):M_HAT.concat(M_FACE,M_BODY,legs);
-  return mk(16,32,g=>grid(g,rows,MINORI_PAL,0,0));}
-
 function itemIcon(id){
   const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');
   if(CROPS[id])drawCrop(g,id,3,0,1);
@@ -850,8 +802,10 @@ function spawnFor(id,sc){
 }
 function randTile(m,a){for(let k=0;k<20;k++){const x=a[0]+((Math.random()*(a[2]-a[0]+1))|0),y=a[1]+((Math.random()*(a[3]-a[1]+1))|0);if(!blocked(m,x,y))return[x,y];}return null;}
 function npcPath(r,goal){const res=bfs(r.map,Math.round(r.x),Math.round(r.y),goal);if(res){r.path=res.path;return res;}return null;}
+const DBGN={};   // 試す用：人をその場に立たせる
 function updNpc(id,dt){
   const r=RT[id],sc=schedule(id);
+  if(DBGN[id]){const q=DBGN[id];Object.assign(r,{map:q[0],x:q[1],y:q[2],dir:q[3],hidden:false,path:[],act:null,task:null});return;}
   if(sc.hidden){r.hidden=true;r.path=[];r.task=null;r.act=null;return;}
   if(r.hidden||r.map!==sc.map){r.hidden=false;r.map=sc.map;const sp=spawnFor(id,sc);r.x=sp[0];r.y=sp[1];r.path=[];r.task=null;r.act=null;}
   if(r.bub>0)r.bub-=dt;
@@ -1116,7 +1070,7 @@ const BASE3={};
 // 動く物の「面の向き」：色の絵から1ドットずつ作っておく（kind: flat＝地面・round＝丸い物・body＝人）
 const NCACHE=new WeakMap();
 function silOf(c){const w=c.width,h=c.height,d=c.getContext('2d').getImageData(0,0,w,h).data,o=new Uint8ClampedArray(w*h*4);for(let i=0;i<w*h;i++)if(d[i*4+3]>=160)o[i*4+3]=255;return bufCanvas(w,h,o);}
-function sprN(src,kind){let o=NCACHE.get(src);if(o)return o;
+function sprN(src,kind){if(src.nd)return src.nd;let o=NCACHE.get(src);if(o)return o;
   const w=src.width,h=src.height,cd=src.getContext('2d').getImageData(0,0,w,h).data;
   const n=new Uint8ClampedArray(w*h*4),d=new Uint8ClampedArray(w*h*4);
   let x0=w,x1=-1,y0=h,y1=-1;for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(cd[(y*w+x)*4+3]>=160){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
@@ -1132,7 +1086,7 @@ function sprN(src,kind){let o=NCACHE.get(src);if(o)return o;
   const nn=bumpLum(cd,n,d,w,h,kind==='flat'?2.2:1.1);
   o={n:bufCanvas(w,h,nn),d:bufCanvas(w,h,d),sil:silOf(src),by:y1+1};NCACHE.set(src,o);return o;}
 // 色と面の向きを同じ所に重ねて描く
-function blit3(src,kind,X,Y){ctx.drawImage(src,X,Y);if(!LIT.act)return null;const o=sprN(src,kind);nctx.drawImage(o.n,X,Y);dctx.drawImage(o.d,X,Y);return o;}
+function blit3(src,kind,X,Y){ctx.drawImage(src,X,Y);if(!LIT.act)return null;const o=sprN(src,kind);nctx.drawImage(o.n,X,Y);dctx.drawImage(o.d,X,Y);if(src.em)eg.drawImage(src.em,X,Y);return o;}
 
 /* 時間ごとの光（日の向き・日の色・空の明るさ・照り返し・霧・ランプ・窓） */
 const KEYS=[
@@ -1455,7 +1409,7 @@ function setSpeaker(who){
   if(!who||who==='narr'){D.box.classList.add('noface');D.name.textContent='';return;}
   D.box.classList.remove('noface');
   const id=who==='player'?'player':who;D.name.textContent=who==='player'?DLG.player.name:(DLG[who]?DLG[who].name:who);
-  fctx.clearRect(0,0,16,16);fctx.imageSmoothingEnabled=false;const fsp=SPR[id][0][0];fctx.drawImage(fsp,0,fsp.height>24?7:0,16,16,0,1,16,16);
+  fctx.clearRect(0,0,16,16);fctx.imageSmoothingEnabled=false;const fsp=SPR[id][0][0];fctx.drawImage(fsp,0,SPR[id].faceY||0,16,16,0,1,16,16);
 }
 let typing=null;
 function typeText(text){
@@ -1532,7 +1486,7 @@ function openFriends(){
     for(const id of['chloe','luu']){const n=S.npc[id],d=DLG[id];const h=hearts(id);
       const st=n.live?'牧場で一緒に暮らしている':n.pending?'あしたの朝 部屋を見に来る':n.visit?'けさ 部屋を見に来る':!n.met?'まだ会っていない':h>=INVITE_HEARTS?'一緒に住もうと誘えそう':`♥${INVITE_HEARTS}になったら誘える`;
       const r=row(list,null,`${d.name}<span style="font-size:12px;color:#8f6038">　${id==='chloe'?'ドラゴン娘':'スライム娘'}</span>`,`<span class="hearts">${'♥'.repeat(h)}<i>${'♥'.repeat(MAX_HEARTS-h)}</i></span>　${st}`);
-      const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');g.drawImage(SPR[id][0][0],0,0,16,16,0,1,16,16);r.replaceChild(c,r.firstChild);}
+      const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');g.drawImage(SPR[id][0][0],0,SPR[id].faceY||0,16,16,0,1,16,16);r.replaceChild(c,r.firstChild);}
     const hs=S.reno.state===0?`改築：まだ（クロエに${RENO.cost}Gと石${RENO.stone}個）`:S.reno.state===1?`改築：工事中（あと${S.reno.days}日）`:`改築：完成・部屋 ${S.rooms.filter(Boolean).length}/${RENO.rooms}`;
     const n=document.createElement('p');n.className='note';n.innerHTML=`${hs}<br>話す（1日1回）と贈り物（1日1回）で仲よくなれる。${OTHERS.length?`<br>ほかの住人：${OTHERS.join('・')}（次の試作から）`:''}`;list.appendChild(n);
     const rb=document.createElement('button');rb.className='pbtn sub';rb.style.marginTop='8px';rb.textContent='最初からやり直す';let armed=false;
@@ -1620,7 +1574,7 @@ async function boot(){
   requestAnimationFrame(loop);
   window.__game={get S(){return S;},P,RT,Q,onTap,sleep,openNpc,view,cam,canAct,LIT,
     fps(){const a=LIT.fr||[];return a.length?Math.round(a.length/a.reduce((x,y)=>x+y,0)):0;},
-    debug(o){if(o.time!=null)S.time=o.time;if(o.map)S.map=o.map;if(o.cam&&o.cam[0]>=0)setFree({x:o.cam[0],y:o.cam[1]});if(o.light!=null){LIT.q=o.light;applyLight();}if(o.pos){P.x=o.pos[0];P.y=o.pos[1];P.path=[];}}};
+    debug(o){if(o.time!=null)S.time=o.time;if(o.map)S.map=o.map;if(o.cam&&o.cam[0]>=0)setFree({x:o.cam[0],y:o.cam[1]});if(o.light!=null){LIT.q=o.light;applyLight();}if(o.pos){P.x=o.pos[0];P.y=o.pos[1];P.path=[];}if(o.npc)Object.assign(DBGN,o.npc);if(o.pdir!=null)P.dir=o.pdir;}};
 }
 boot();
 })();
