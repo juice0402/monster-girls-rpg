@@ -6,4 +6,4 @@
 - 絵の依頼（Codex）：[art-requests/](art-requests/README.md)・[AGENTS.md](AGENTS.md)
 - 前のガチャ版（お蔵入り）：ブランチ `archive/gacha-v1`
 
-公開ページは GitHub Actions の Pages（main に push すると更新）。試作ができたら `index.html` を置きます。
+公開ページは GitHub Actions の Pages（main に push すると更新）。`index.html` は `node tools/build.mjs` で src/ から作ります（地図は docs/MAP.md）。
