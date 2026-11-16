@@ -21,7 +21,7 @@ const CHARS={
    straw:{name:"麦わら帽子",views:{
     front:{y:8,c:[12.0,  15.2,  7.1],rows:["........oooooooo........",".......ouuuqqqqQo.......","......ouuuqqqqQQQo......","....oobbbbbbbbbBBBoo....","..oovvHHHHHjjjjjjjHHoo..",".ovhhhhhhhhHHHHHHjjjjHo.","ohhhhhoooooooooooojjjjjo","ohhhho............ojjjjo","ohhhho............ojjjjo",".oHHHjo..........ojjjjo.","..oooo............oooo.."]},
     back:{y:8,c:[12.0,  15.2,  7.1],rows:["........oooooooo........",".......ouuuqqqqQo.......","......ouuuqqqqqQQo......","....oouuqqqqqqQQQQoo....","..oovbbbqqqqQQQQBBBhoo..",".ovvvbbbbbbbBBBBBBHhHHo.","ovvvvhhhHHHHbBHHHHHHHHHo","ovvvvvhhhhhhbBhHHHHHHHjo","ohhhhhhhhhhhbBHHHHHjjjjo",".ohhhHHHhHHjbBjjjjjjjjo.","..ooooooHHHjjBjjoooooo..","........oooooooo........"]},
-    side:{y:8,c:[12.0,  15.2,  7.1],rows:[".........ooooooo........",".......oouuqqqqQoo......","......ouuuqqqqQQQQo.....",".....ouuuqqqqbbBBBBoooo.","....ouubbbbbbbHHHHHhhjjo","...oBbbbhhhHHHhhhhjjjjjo","..ovbBhhvvhhhhhHjjjjjoo.",".ovbBvvvHHHHHHHHjjooo...","ovvbBhhHHHHHHHoooo......","ohhbBhhHoooooo..........","ohhoBooo................",".oo.o..................."]},
+    side:{y:8,c:[12.0,  15.2,  7.1],rows:["........oooooooo........",".......ouuqqqqqQo.......","......ouuuqqqqqQQo......","....oouuqqqqqqQQQQo.....","..ooBbbbbbbbbbBBBBBoo...",".ovvvhHHHHHHHHHHHHHhHoo.","ovvvvhhhHHHHHhhhhhhhHHHo","ohhhhooooooooooooojjjjHo","ohooo.............oooojo",".o....................o."]},
    }},
   },
  },
