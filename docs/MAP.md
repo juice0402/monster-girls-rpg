@@ -19,7 +19,7 @@
 | src/data/maps.js | 68 | MAPS（牧場・街のマスの文字）・BLOCK（歩けない文字）・tile・blocked・SPOTS（地図の行き先） |
 | src/dialogue.js | 13 | DLG の最小版と loadDLG（台詞は src/data/dialogue.json） |
 | src/data/chars.js | 60 | CHARS：人の絵の表（16×32・前／後ろ／横・足3コマ・pal＝[色, 部分, つや]）・着せかえの部品 items（帽子など）と wear（いま身につけている物） |
-| src/art/people.js | 35 | charFrame（身につけた物を重ねてから、部分ごとの面の向き）・makeSprites（着せかえたらもう一度）・SPR |
+| src/art/people.js | 40 | charFrame（絵の枠は24×36＝体16×32のまわりに横4・上4のゆとり。身につけた物を重ねてから、部分ごとの面の向き）・makeSprites（着せかえたらもう一度）・SPR。描く所は sp.ox・sp.oy だけずらす |
 | src/art/pixel.js | 138 | ドット絵の道具（mk・grid）・面の向きの道具（NBuf・nput・nrect・bumpLum・nHouse）・草・道・木・さく・池 |
 | src/art/town.js | 248 | 街の3枚組：Surf3・stamp3・PS（色の段）・makeBld（家）・街灯・ベンチ・金床・材木・たる・袋・噴水（makeFountain・fountainWater）・石だたみ（drawTownGround）・置き場所（drawTownThings） |
 | src/art/farm.js | 186 | 牧場の家の部品（roof・wall・door・win・shipBox）・土・作物・岩・花・道具の絵・drawBuildings・renderBase（地図ごとの土台＝色・面の向き・高さ/かげ/つや・影の形） |
@@ -49,6 +49,7 @@
 
 ## ほか
 - art-samples/hikari.html … 光の見本（1ファイル・ゲームとは別）
+- tools/hat3d.py … 麦わら帽子を立体（ふくらみ＋水平のつば）から向きごとのドットにする道具（人を描く角度＝20度で見る）。新しい帽子もこれで作る
 - tools/greenkey.py・tools/import_single.py … Codex の絵の緑を抜く道具
 - art-requests/ … Codex への絵の依頼書（AGENTS.md の決まり）
 - index.html … 自動で作るファイル。読まない・手で直さない

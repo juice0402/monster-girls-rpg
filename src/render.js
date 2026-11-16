@@ -81,7 +81,7 @@ function render(){
     ctx.fillStyle=L?'rgba(0,0,0,.16)':'rgba(0,0,0,.22)';ctx.fillRect(X+3,Y+14,10,2);ctx.fillRect(X+4,Y+13,8,4);
     const fr=e.act?3:e.mov?[1,0,2,0][((e.anim*8)|0)%4]:0;
     const bob=e.id==='luu'&&!e.mov?((now*3)|0)%2:0;
-    const sp=SPR[e.id][e.dir][fr],Ys=Y-(sp.height-15)+bob,o=blit3(sp,'body',X,Ys);if(o)dyn.push({sil:o.sil,X,Y:Ys,ay:Ys+o.by});
+    const sp=SPR[e.id][e.dir][fr],Xs=X-(sp.ox||0),Ys=Y-(sp.height-15)+bob,o=blit3(sp,'body',Xs,Ys);if(o)dyn.push({sil:o.sil,X:Xs,Y:Ys,ay:Ys+o.by});
     // 作業中は道具を持つ
     if(e.id==='player'&&P.act&&P.act.tool){const ic=TOOLC[P.act.tool],up=P.act.t/P.act.dur<.5?-3:1;
       if(e.dir===2){ctx.save();ctx.translate(X-9+16,Y-5+up);ctx.scale(-1,1);ctx.drawImage(ic,0,0);ctx.restore();}

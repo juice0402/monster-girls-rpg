@@ -5,8 +5,8 @@
    wg＝つばさ・tl＝しっぽ・em＝光る所（ルゥの核）・ol＝線（となりの面の向きを外へ少しひらく） */
 const CHARS={
  // ミノリ
- player:{head:[7.5, 13, 6.4],faceY:7,hatC:[8, 7.5, 6.5],wear:{"hat": "straw"},
-  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15],"q":["#efcb72","hc",0.12],"Q":["#cfa650","hc",0.1],"u":["#fbe39c","hc",0.15]},
+ player:{head:[7.5, 13, 6.4],faceY:7,wear:{"hat": "straw"},
+  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15],"q":["#efcb72","hc",0.12],"Q":["#cfa650","hc",0.1],"u":["#fbe39c","hc",0.15],"v":["#fbe39c","hb",0.15]},
   views:{
    front:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlRrrrrrRlro.","..orrsrrrrsrro..","..orssssssssro..","..orsessssesro..","..orcessssecro..","..orsssmmsssro..","..rroSssssSorr..","...oRowsswoRo...","..ottwwwwwwtto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
     legs:[["....oso..oso....","....oSo..oSo....","...offo..offo...","...oooo..oooo..."],["....oso..oso....","....oSo..offo...","...offo..oooo...","...oooo........."],["....oso..oso....","...offo..oSo....","...oooo..offo...",".........oooo..."]]},
@@ -15,12 +15,13 @@ const CHARS={
    side:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlrrrrrrrRro.","..orrrrrrrRssro.","..oRrrrrrRsssso.","..oRrrrrrRsesso.","..oRRrrrRssecso.","..oRRRrrRsssmo..","..orRRRroSsso...","...oRRRoowwo....",".....otwwto.....",".....ottttto....",".....oyTttto....",".....oyTttto....",".....otsotto....",".....okkkkko....","....oknkkkkKo...","....oknkkkKKo...","...oknkkkkKKKo..","...ooooooooooo.."],
     legs:[[".......oso......",".......oSo......",".......offFo....",".......ooooo...."],["......oso.oso...",".....oso...oSo..",".....offo..offFo",".....oooo..ooooo"],["......oSo.oso...",".....oso...oso..",".....offo..offFo",".....oooo..ooooo"]]},
   },
-  // 着せかえの部品（views ごとに y 段目から重ねる・'.' はすける）
+  // 着せかえの部品：絵の枠（横24×たて36・体のまわりに横4・上4のゆとり）に y 段目から重ねる。'.' はすける。c＝ふくらみの丸 [x,y,半径]
+  // 麦わら帽子は tools/hat3d.py で立体から計算したドット（つばは水平・人を描く角度＝20度で見た形）
   items:{
    straw:{name:"麦わら帽子",views:{
-    front:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
-    back:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
-    side:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
+    front:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqqQQQjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvvvvjjjjhjjjhhhHHo..","...oovvvhhhhhhhhhhhoo...",".....oooooooooooooo....."]},
+    back:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqQQQQjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvvvvjjjjbjjjhhhHHo..","...oovvvhhhhbBhhhhhoo...",".....ooooooobBooooo.....","..........oboBo.........","...........o.oBo........","..............o........."]},
+    side:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqqQQjjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvbvhjjjjhjjjhhhHHo..","...obBvvhhhhhhhhhhhoo...","...obBooooooooooooo.....","..oBoo..................","...o...................."]},
    }},
   },
  },

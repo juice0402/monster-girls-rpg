@@ -285,8 +285,8 @@ async function loadDLG(){
    wg＝つばさ・tl＝しっぽ・em＝光る所（ルゥの核）・ol＝線（となりの面の向きを外へ少しひらく） */
 const CHARS={
  // ミノリ
- player:{head:[7.5, 13, 6.4],faceY:7,hatC:[8, 7.5, 6.5],wear:{"hat": "straw"},
-  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15],"q":["#efcb72","hc",0.12],"Q":["#cfa650","hc",0.1],"u":["#fbe39c","hc",0.15]},
+ player:{head:[7.5, 13, 6.4],faceY:7,wear:{"hat": "straw"},
+  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15],"q":["#efcb72","hc",0.12],"Q":["#cfa650","hc",0.1],"u":["#fbe39c","hc",0.15],"v":["#fbe39c","hb",0.15]},
   views:{
    front:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlRrrrrrRlro.","..orrsrrrrsrro..","..orssssssssro..","..orsessssesro..","..orcessssecro..","..orsssmmsssro..","..rroSssssSorr..","...oRowsswoRo...","..ottwwwwwwtto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
     legs:[["....oso..oso....","....oSo..oSo....","...offo..offo...","...oooo..oooo..."],["....oso..oso....","....oSo..offo...","...offo..oooo...","...oooo........."],["....oso..oso....","...offo..oSo....","...oooo..offo...",".........oooo..."]]},
@@ -295,12 +295,13 @@ const CHARS={
    side:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlrrrrrrrRro.","..orrrrrrrRssro.","..oRrrrrrRsssso.","..oRrrrrrRsesso.","..oRRrrrRssecso.","..oRRRrrRsssmo..","..orRRRroSsso...","...oRRRoowwo....",".....otwwto.....",".....ottttto....",".....oyTttto....",".....oyTttto....",".....otsotto....",".....okkkkko....","....oknkkkkKo...","....oknkkkKKo...","...oknkkkkKKKo..","...ooooooooooo.."],
     legs:[[".......oso......",".......oSo......",".......offFo....",".......ooooo...."],["......oso.oso...",".....oso...oSo..",".....offo..offFo",".....oooo..ooooo"],["......oSo.oso...",".....oso...oso..",".....offo..offFo",".....oooo..ooooo"]]},
   },
-  // 着せかえの部品（views ごとに y 段目から重ねる・'.' はすける）
+  // 着せかえの部品：絵の枠（横24×たて36・体のまわりに横4・上4のゆとり）に y 段目から重ねる。'.' はすける。c＝ふくらみの丸 [x,y,半径]
+  // 麦わら帽子は tools/hat3d.py で立体から計算したドット（つばは水平・人を描く角度＝20度で見た形）
   items:{
    straw:{name:"麦わら帽子",views:{
-    front:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
-    back:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
-    side:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
+    front:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqqQQQjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvvvvjjjjhjjjhhhHHo..","...oovvvhhhhhhhhhhhoo...",".....oooooooooooooo....."]},
+    back:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqQQQQjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvvvvjjjjbjjjhhhHHo..","...oovvvhhhhbBhhhhhoo...",".....ooooooobBooooo.....","..........oboBo.........","...........o.oBo........","..............o........."]},
+    side:{y:4,c:[12.0, 11.07, 6.6],rows:[".........oooooo.........",".......ooqqqqqQoo.......","......ouuuqqqqqQQo......",".....ouuuuqqqqqQQjo.....","...ooquuuuqqqqqQQjjoo...","..ohjbuuuqqqqqQQQjBjHo..",".ovhjbbbqqqqqQQQBBBjhHo.",".ovvjbbbbbbbbBBBBBBjhHo.",".ovvvjjjbbbbbBBBjjjhHHo.","..ovvbvhjjjjhjjjhhhHHo..","...obBvvhhhhhhhhhhhoo...","...obBooooooooooooo.....","..oBoo..................","...o...................."]},
    }},
   },
  },
@@ -341,20 +342,23 @@ const CHARS={
   },
  },
 };
+// 絵の枠は体（16×32）のまわりに、横4・上4ドットのゆとり（帽子のつばなどがはみ出せる）
+const PADX=4,PADY=4;
 function charFrame(id,view,f,flip,wear){
-  const C=CHARS[id],v=C.views[view],pal=C.pal,W=16,H=32;
-  let rows=v.rows.concat(v.legs[f]);
+  const C=CHARS[id],v=C.views[view],pal=C.pal,W=16+PADX*2,H=32+PADY,E='.'.repeat(PADX);
+  let rows=Array(PADY).fill('.'.repeat(W)).concat(v.rows.concat(v.legs[f]).map(r=>E+r+E)),hatc=null;
   // 着せかえ：身につけた物（帽子など）を上に重ねる。'.' はすけて下の体が見える
-  for(const k in(wear||{})){const it=wear[k]&&C.items&&C.items[wear[k]],L=it&&it.views[view];if(!L)continue;
+  // 部品の rows はゆとりこみの枠（横24）で、y 段目から。c は帽子のふくらみの丸 [x,y,半径]
+  for(const k in(wear||{})){const it=wear[k]&&C.items&&C.items[wear[k]],L=it&&it.views[view];if(!L)continue;if(L.c)hatc=L.c;
     rows=rows.map((r,y)=>{const o=L.rows[y-L.y];if(!o)return r;let t='';for(let x=0;x<W;x++)t+=o[x]!=='.'?o[x]:r[x];return t;});}
   if(flip)rows=rows.map(r=>[...r].reverse().join(''));
   const col=new Uint8ClampedArray(W*H*4),n=new Uint8ClampedArray(W*H*4),d=new Uint8ClampedArray(W*H*4),em=new Uint8ClampedArray(W*H*4),NN=[];
   const at=(x,y)=>x<0||y<0||x>=W||y>=H||rows[y][x]==='.'?null:pal[rows[y][x]];
-  const hx=flip?15-C.head[0]:C.head[0],hy=C.head[1],hr=C.head[2];let hasEm=false;
+  const hx=(flip?15-C.head[0]:C.head[0])+PADX,hy=C.head[1]+PADY,hr=C.head[2];let hasEm=false;
   const cl=v=>Math.max(-.98,Math.min(.98,v));
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const p=at(x,y);if(!p)continue;const i=y*W+x,c=hexRGB(p[0]);
     col[i*4]=c[0];col[i*4+1]=c[1];col[i*4+2]=c[2];col[i*4+3]=255;const pt=p[1];let N=null;
-    if(pt==='hc'&&C.hatC){const c=C.hatC,cx=flip?15-c[0]:c[0];N=sphereN(cl((x+.5-cx)/c[2]),cl((y+.5-c[1])/c[2]));}   // 帽子のふくらみは帽子の丸で
+    if(pt==='hc'&&hatc){const cx=flip?W-hatc[0]:hatc[0];N=sphereN(cl((x+.5-cx)/hatc[2]),cl((y+.5-hatc[1])/hatc[2]));}   // 帽子のふくらみは帽子の丸で
     else if(pt==='hd'||pt==='hc')N=sphereN(cl((x+.5-hx)/hr),cl((y+.5-hy)/hr));
     else if(pt==='hn')N=sphereN(cl((x+.5-hx)/hr),-.75);
     else if(pt==='hb')N=[(x+.5-8)/8*.35,.32,.9];
@@ -371,7 +375,7 @@ function charFrame(id,view,f,flip,wear){
     const N=k?[s[0]/k,s[1]/k,s[2]/k]:[0,.7,.7];NN[i]=[N[0]+ox*.45,N[1]+Math.max(0,oy)*.2,N[2]-Math.min(0,oy)*.45];d[i*4+1]=185;}
   for(let i=0;i<W*H;i++){const N=NN[i];if(!N)continue;const l=Math.hypot(N[0],N[1],N[2])||1;n[i*4]=(N[0]/l*.5+.5)*255;n[i*4+1]=(N[1]/l*.5+.5)*255;n[i*4+2]=(N[2]/l*.5+.5)*255;n[i*4+3]=255;}
   const nb=bumpLum(col,n,d,W,H,.9),c=bufCanvas(W,H,col);
-  c.nd={n:bufCanvas(W,H,nb),d:bufCanvas(W,H,d),sil:silOf(c),by:H};if(hasEm)c.em=bufCanvas(W,H,em);
+  c.nd={n:bufCanvas(W,H,nb),d:bufCanvas(W,H,d),sil:silOf(c),by:H};c.ox=PADX;c.oy=PADY;if(hasEm)c.em=bufCanvas(W,H,em);
   return c;}
 const SPR={};
 // wear：身につける物（例 {hat:'straw'}）。着せかえたら makeSprites(id) をもう一度
@@ -1588,7 +1592,7 @@ function render(){
     ctx.fillStyle=L?'rgba(0,0,0,.16)':'rgba(0,0,0,.22)';ctx.fillRect(X+3,Y+14,10,2);ctx.fillRect(X+4,Y+13,8,4);
     const fr=e.act?3:e.mov?[1,0,2,0][((e.anim*8)|0)%4]:0;
     const bob=e.id==='luu'&&!e.mov?((now*3)|0)%2:0;
-    const sp=SPR[e.id][e.dir][fr],Ys=Y-(sp.height-15)+bob,o=blit3(sp,'body',X,Ys);if(o)dyn.push({sil:o.sil,X,Y:Ys,ay:Ys+o.by});
+    const sp=SPR[e.id][e.dir][fr],Xs=X-(sp.ox||0),Ys=Y-(sp.height-15)+bob,o=blit3(sp,'body',Xs,Ys);if(o)dyn.push({sil:o.sil,X:Xs,Y:Ys,ay:Ys+o.by});
     // 作業中は道具を持つ
     if(e.id==='player'&&P.act&&P.act.tool){const ic=TOOLC[P.act.tool],up=P.act.t/P.act.dur<.5?-3:1;
       if(e.dir===2){ctx.save();ctx.translate(X-9+16,Y-5+up);ctx.scale(-1,1);ctx.drawImage(ic,0,0);ctx.restore();}
@@ -1655,7 +1659,7 @@ function setSpeaker(who){
   if(!who||who==='narr'){D.box.classList.add('noface');D.name.textContent='';return;}
   D.box.classList.remove('noface');
   const id=who==='player'?'player':who;D.name.textContent=who==='player'?DLG.player.name:(DLG[who]?DLG[who].name:who);
-  fctx.clearRect(0,0,16,16);fctx.imageSmoothingEnabled=false;const fsp=SPR[id][0][0];fctx.drawImage(fsp,0,SPR[id].faceY||0,16,16,0,1,16,16);
+  fctx.clearRect(0,0,16,16);fctx.imageSmoothingEnabled=false;const fsp=SPR[id][0][0];fctx.drawImage(fsp,fsp.ox||0,(SPR[id].faceY||0)+(fsp.oy||0),16,16,0,1,16,16);
 }
 let typing=null;
 function typeText(text){
@@ -1732,7 +1736,7 @@ function openFriends(){
     for(const id of['chloe','luu']){const n=S.npc[id],d=DLG[id];const h=hearts(id);
       const st=n.live?'牧場で一緒に暮らしている':n.pending?'あしたの朝 部屋を見に来る':n.visit?'けさ 部屋を見に来る':!n.met?'まだ会っていない':h>=INVITE_HEARTS?'一緒に住もうと誘えそう':`♥${INVITE_HEARTS}になったら誘える`;
       const r=row(list,null,`${d.name}<span style="font-size:12px;color:#8f6038">　${id==='chloe'?'ドラゴン娘':'スライム娘'}</span>`,`<span class="hearts">${'♥'.repeat(h)}<i>${'♥'.repeat(MAX_HEARTS-h)}</i></span>　${st}`);
-      const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');g.drawImage(SPR[id][0][0],0,SPR[id].faceY||0,16,16,0,1,16,16);r.replaceChild(c,r.firstChild);}
+      const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');const sp=SPR[id][0][0];g.drawImage(sp,sp.ox||0,(SPR[id].faceY||0)+(sp.oy||0),16,16,0,1,16,16);r.replaceChild(c,r.firstChild);}
     const hs=S.reno.state===0?`改築：まだ（クロエに${RENO.cost}Gと石${RENO.stone}個）`:S.reno.state===1?`改築：工事中（あと${S.reno.days}日）`:`改築：完成・部屋 ${S.rooms.filter(Boolean).length}/${RENO.rooms}`;
     const n=document.createElement('p');n.className='note';n.innerHTML=`${hs}<br>話す（1日1回）と贈り物（1日1回）で仲よくなれる。${OTHERS.length?`<br>ほかの住人：${OTHERS.join('・')}（次の試作から）`:''}`;list.appendChild(n);
     const rb=document.createElement('button');rb.className='pbtn sub';rb.style.marginTop='8px';rb.textContent='最初からやり直す';let armed=false;
@@ -1798,7 +1802,7 @@ async function boot(){
   initRT();
   // タイトルの絵
   const tg=$('#tcv').getContext('2d');tg.imageSmoothingEnabled=false;
-  for(let x=0;x<6;x++)drawGrass(tg,x,2);tg.drawImage(SPR.chloe[0][0],20,14);tg.drawImage(SPR.player[0][0],40,14);tg.drawImage(SPR.luu[0][0],60,14);
+  for(let x=0;x<6;x++)drawGrass(tg,x,2);const T=(sp,x,y)=>tg.drawImage(sp,x-(sp.ox||0),y-(sp.oy||0));T(SPR.chloe[0][0],20,14);T(SPR.player[0][0],40,14);T(SPR.luu[0][0],60,14);
   drawCrop(tg,'kabu',3,4,28);drawCrop(tg,'ichigo',3,78,28);
   const sv=loadSave();if(sv){S=sv;$('#contBtn').hidden=false;}
   $('#newBtn').onclick=()=>begin(true);$('#contBtn').onclick=()=>begin(false);

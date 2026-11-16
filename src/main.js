@@ -38,7 +38,7 @@ async function boot(){
   initRT();
   // タイトルの絵
   const tg=$('#tcv').getContext('2d');tg.imageSmoothingEnabled=false;
-  for(let x=0;x<6;x++)drawGrass(tg,x,2);tg.drawImage(SPR.chloe[0][0],20,14);tg.drawImage(SPR.player[0][0],40,14);tg.drawImage(SPR.luu[0][0],60,14);
+  for(let x=0;x<6;x++)drawGrass(tg,x,2);const T=(sp,x,y)=>tg.drawImage(sp,x-(sp.ox||0),y-(sp.oy||0));T(SPR.chloe[0][0],20,14);T(SPR.player[0][0],40,14);T(SPR.luu[0][0],60,14);
   drawCrop(tg,'kabu',3,4,28);drawCrop(tg,'ichigo',3,78,28);
   const sv=loadSave();if(sv){S=sv;$('#contBtn').hidden=false;}
   $('#newBtn').onclick=()=>begin(true);$('#contBtn').onclick=()=>begin(false);
