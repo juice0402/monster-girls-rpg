@@ -1,25 +1,9 @@
-# モン娘RPG — 試遊版
+# モン娘×牧場スローライフ（開発中・名前はまだ）
 
-iPad/iPhoneからURLで確認できる横スクロール・モン娘RPGの開発用リポジトリです。
+しょーくんの自作ゲームの開発用リポジトリです。
 
-## 現在の試作
-- リリス（右向き）の待機・魔法発動2ポーズ
-- キャラクターと魔法陣・オーラ・蝶・光弾・着弾の別レイヤー
-- フェードイン／フェードアウト、足元オーラ、下から上へ舞う蝶
-- スマホブラウザ用の単一HTML試作
-- ミュウ（スライム娘）の16ポーズの動き：[myu-motions.html](myu-motions.html)（ゲルのエフェクトはコード・アンカーはポーズごと）
+- 設計：[docs/GAME_DESIGN.md](docs/GAME_DESIGN.md)
+- 絵の依頼（Codex）：[art-requests/](art-requests/README.md)・[AGENTS.md](AGENTS.md)
+- 前のガチャ版（お蔵入り）：ブランチ `archive/gacha-v1`
 
-## 公開手順
-ルート直下に `index.html` を配置してください。GitHub ActionsのPagesデプロイが自動実行されます。初回は Settings → Pages → Build and deployment → Source を **GitHub Actions** に設定してください。
-
-想定公開URL: https://juice0402.github.io/monster-girls-rpg/
-
-このリポジトリは PATH QUEST とは独立しています。
-
-
-## 制作マスター仕様書
-
-- [キャラクター・モーション・エフェクト制作仕様書【完全版 v1.0】](docs/CHARACTER_FX_MASTER_SPEC.md)
-- **全キャラ共通14ポーズ＋固有1〜2、表情8種、共通FX36系統、技テンプレート28型**を制作規格として採用。勝利ポーズはセクシーポーズ兼用。
-- 新規キャラ・スキルの制作前にこの仕様書を参照し、承認済みの立ち絵と実装を勝手に差し替えない。
-- 絵とエフェクトの作り方（再現できる手順・道具）：[docs/ART_PIPELINE.md](docs/ART_PIPELINE.md)
+公開ページは GitHub Actions の Pages（main に push すると更新）。試作ができたら `index.html` を置きます。

@@ -5,7 +5,7 @@
     python3 tools/import_single.py one <codexの.png> <保存先.png> <表示用.webp> [--web 0.75]
   何体か並んだシートを切り分ける（左から順に名前）:
     python3 tools/import_single.py split <codexの.png> <保存先フォルダ> <表示用フォルダ> 名前1 名前2 ... [--web 0.75]
-緑を抜くやり方は tools/import_codex.py と同じ（ふちの緑をまぜ戻す）。
+緑を抜くやり方は tools/greenkey.py（ふちの緑をまぜ戻す）。
 """
 import os
 import sys
@@ -14,7 +14,7 @@ import numpy as np
 from PIL import Image
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from import_codex import figures, tight, unkey_green  # noqa: E402
+from greenkey import figures, tight, unkey_green  # noqa: E402
 
 
 def save(rgba, png, webp, web):
