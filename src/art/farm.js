@@ -135,7 +135,7 @@ function drawBuildings(g,m){
       B(makeBld({W:64,H:72,roof:'roofF',rh:20,wall:'plank',wallP:'woodL',door:[24,16],wins:[[6,36,1,cur(S.rooms[0])],[44,36,1,cur(S.rooms[1])]],seed:17}),X,96-72);}
     else if(S.reno.state===1){const sc=makeScaffold();stamp3(g,sc,X,96-sc.h);CAST.push({sil:sil3(sc),x:X,y:96-sc.h,ay:95});}
     // 出荷箱
-    const sb=makeShipBox();stamp3(g,sb,12*TS,5*TS);CAST.push({sil:sil3(sb),x:12*TS,y:5*TS,ay:5*TS+15});contactAO(12*TS+1,6*TS,14,2,.6);
+    const sb=makeShipBox();stamp3(g,sb,12*TS,5*TS);CAST.push({sil:sil3(sb),x:12*TS,y:5*TS,ay:5*TS+15});contactAO(12*TS,6*TS-1,16,3,.4);
   }else drawTownThings(g);
 }
 function renderBase(m){

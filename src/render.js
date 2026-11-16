@@ -25,6 +25,10 @@ const pick=a=>a[(Math.random()*a.length)|0];
 const shopTitle=()=>DLG.shop.shopName?`種屋「${DLG.shop.shopName}」`:`${DLG.shop.name}の種屋`;
 
 function castSh(sil,X,Y,ay,kx,ky){shg.setTransform(1,0,-kx,-ky,kx*ay,ay*(1+ky));shg.drawImage(sil,X,Y);}
+// 動く物（岩など）の足もとのかげ：地面を少し暗く・光の演出のときは「かげ」の絵も暗く（地面に置いた感じにする）
+function footShade(X,Y,W,L){const rows=[[2,-4,.2],[1,-2,.3],[0,0,.34],[1,-2,.22]];
+  for(let j=0;j<rows.length;j++){const[a,dw,k]=rows[j],w=W+dw;if(w<1)continue;ctx.fillStyle=`rgba(16,34,12,${k})`;ctx.fillRect(X+a,Y+j,w,1);
+    if(L){dctx.globalCompositeOperation='multiply';dctx.fillStyle=`rgb(255,${Math.round(255*(1-k*1.6))},255)`;dctx.fillRect(X+a,Y+j,w,1);dctx.globalCompositeOperation='source-over';}}}
 let lpLast=0;
 function render(){
   const pm=S?S.map:'farm';
@@ -57,7 +61,7 @@ function render(){
         if(stg>=1){ctx.fillStyle='rgba(40,20,10,.25)';ctx.fillRect(X+4,Y+13,8,2);}
         const o=blit3(cropSprite(stg===3?c.id:'s'+stg,stg>=1?cropLean(x,y,now):0),'round',X,Y);if(o&&stg>=2)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});
         if(c.ready&&((now*2+x+y)|0)%5===0){E.fillStyle='#fffbe0';E.fillRect(X+12,Y+2,1,1);E.fillRect(X+11,Y+3,3,1);E.fillRect(X+12,Y+4,1,1);}}
-      if(F.rock[i]){if(!L){ctx.fillStyle='rgba(20,40,15,.3)';ctx.fillRect(X+3,Y+13,10,2);}const o=blit3(rockSprite(x,y),'round',X,Y);if(o)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});}
+      if(F.rock[i]){const rs=rockSprite(x,y),fx=rs.nd.fx;footShade(X+fx[0]-1,Y+12,fx[1]-fx[0]+3,L);const o=blit3(rs,'round',X,Y);if(o)dyn.push({sil:o.sil,X,Y,ay:Y+o.by-(o.foot||0)});}
       if(F.flower[i])blit3(FLOWERC[(x+y)%3],'round',X,Y);
     }
     // 池のきらめき（光の演出のときは水のつやで光る）

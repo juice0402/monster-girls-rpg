@@ -1,9 +1,11 @@
-/* ---------- 牧場と森の景色（3枚組で1ドットずつ）：木4種類と風・さく・岩 ----------
+/* ---------- 牧場と森の景色（3枚組で1ドットずつ）：広葉樹の林と風・さく・岩 ----------
    木は土台に焼きこまず、毎コマ「風でかたむいた絵」をえらんで、人といっしょに奥から順に描く（影もいっしょにゆれる）。
-   木の種類・さくの古さ・岩の形は場所で決まる（同じ地図ならいつも同じ）。色の段 PS は town.js */
+   木の形・大きさ・葉の色・さくの古さ・岩の形は場所で決まる（同じ地図ならいつも同じ）。色の段 PS は town.js */
 Object.assign(PS,{
-  pine:R3(['#0b1f22','#11302f','#173f39','#1f5244','#2a654f','#3c7c5c','#5a9868','#86b67c']),
-  leafF:R3(['#173420','#204a28','#2e6430','#41803a','#5c9c44','#80b852','#a8d066','#d2e68c']),
+  leafD:R3(['#0e2620','#14362a','#1c4a31','#275f37','#367540','#4a8c4a','#6aa65a','#97c47a']),   // 深い緑（かげの多い林）
+  leafF:R3(['#173420','#204a28','#2e6430','#41803a','#5c9c44','#80b852','#a8d066','#d2e68c']),   // あたたかい緑
+  leafY:R3(['#1d3a1a','#29521f','#386c26','#4c8830','#66a33a','#88bd48','#afd462','#d9ea92']),   // 若葉（若い木）
+  grass:R3(['#2c6224','#3a782c','#468a32','#579d3d','#6db34b','#87c95c','#a6dd73']),
   bark:R3(['#22150f','#372318','#4f3322','#69462d','#835b3a','#9f744b']),
   fruitR:R3(['#4e0e16','#82192a','#b82c32','#de4c3c','#f68564','#ffc29a']),
   fruitO:R3(['#5a2a08','#8c4410','#c06618','#e68c26','#f8b848','#ffe08a']),
@@ -66,34 +68,38 @@ function fruitDots(s,P,cl,n,sd,cy,ry){let k=0;
     const fx=Math.round(c[0]+(h3(i,sd,5)-.5)*3),fy=Math.round(c[1]+c[2]*.35);
     if(!s.on(fx,fy)||!s.on(fx+1,fy+1)||!s.on(fx+1,fy)||!s.on(fx,fy+1))continue;
     s.S(fx,fy,P,4.6,[-.5,-.2,.85],1,.55);s.S(fx+1,fy,P,3.4,[.5,-.2,.85],1,.45);s.S(fx,fy+1,P,2.6,[-.5,.6,.6],1,.35);s.S(fx+1,fy+1,P,1.8,[.5,.6,.6],1,.3);k++;}}
-// 針葉樹：三角の段を下から重ねる（上の段のすそが下の段にかぶさる）
-function pineMass(s,o){
-  for(let k=o.tiers.length-1;k>=0;k--){const[t0,t1,hw]=o.tiers[k];
-    for(let y=t0;y<=t1;y++){const t=(y-t0)/Math.max(1,t1-t0),w=.8+hw*Math.pow(t,.85);
-      for(let x=Math.floor(o.cx-w-1);x<=Math.ceil(o.cx+w);x++){const u=(x+.5-o.cx)/w;if(Math.abs(u)>1)continue;
-        const jag=t1-(((Math.abs((x-o.cx)|0)+((h3(x,k,o.sd)*2)|0))%3===0)?1:0);if(y>jag)continue;
-        const under=y>=jag-1,n=under?[u*.5,.9,-.15]:[u*.78,.5+.25*t,.62-.2*t];
-        let v=.8+4*lit3(n)+(h3(x,y,o.sd+(o.fl?9:0))<.1?-.9:0)+((x+y*2)%5===0?-.4:0);
-        if(Math.abs(u)>.88)v=Math.min(v,1.4);
-        s.S(x,y,PS.pine,v,n,under?.7:1,.04);}}}}
+// 枝（幹の上から葉のかたまりへ。葉のすきまから見える）
+function limb(s,x0,y0,x1,y1,w){const n=Math.max(1,Math.ceil(Math.hypot(x1-x0,y1-y0)));
+  for(let i=0;i<=n;i++){const t=i/n,x=x0+(x1-x0)*t,y=Math.round(y0+(y1-y0)*t),hw=Math.max(.5,w*(1-t*.6)/2);
+    for(let xx=Math.floor(x-hw);xx<Math.ceil(x+hw);xx++){const nn=cylN((xx+.5-x)/hw);s.S(xx,y,PS.bark,1.1+2.6*lit3(nn),nn,.8,0);}}}
 
-/* ---- 木の形（4種類×4つ）：広葉樹・針葉樹・実のなる木・低木 ---- */
-const TW=40,TH=52,TAX=20,TAY=48;           // 木の絵の大きさと足もと（足もと＝マスの上から14ドット）
-const TAMP={oak:1,pine:1.15,fruit:.9,bush:.55};
+/* ---- 木の形：広葉樹（形4つ×大きさ3つ×葉の色）と低木。実のなる木は畑に植える木で使う予定 ---- */
+const TW=48,TH=58,TAX=24,TAY=54;           // 木の絵の大きさと足もと（足もと＝マスの上から14ドット）
+const TAMP={oak:1,fruit:.9,bush:.55};
+const LEAFP=()=>[PS.leafD,PS.leaf,PS.leafF,PS.leafY];
+// 広葉樹：sd＝形（まるい・片がわに広がった・横に広い・かたまりが分かれた）＋4×大きさ＋12×葉の色
+function oakModel(s,cx,b,R,sd,fl){const shape=sd%4,size=((sd/4)|0)%3,P=LEAFP()[((sd/12)|0)%4],k=[.78,1,1.2][size];
+  let r,th,cy,B,rx,ry,nx=0;
+  if(shape===0){r=(8+R(1)*1.6)*k;th=6+((R(2)*3)|0);cy=b-th-r*.85;
+    B=[[cx,cy,r],[cx-r*.5,cy+r*.3,r*.58],[cx+r*.5,cy+r*.25,r*.6],[cx+(R(5)-.5)*r*.7,cy-r*.5,r*.62]];rx=r*1.15;ry=r*1.05;}
+  else if(shape===1){const sd2=R(5)<.5?-1:1;r=(7.6+R(1)*1.4)*k;th=6+((R(2)*3)|0);cy=b-th-r*.85;nx=sd2*r*.3;   // 片がわに広がった形
+    B=[[cx+sd2*r*.35,cy,r],[cx-sd2*r*.55,cy+r*.35,r*.6],[cx+sd2*r*1.05,cy+r*.3,r*.6],[cx+sd2*r*.1,cy-r*.55,r*.7]];rx=r*1.4;ry=r*1.05;}
+  else if(shape===2){r=(7.6+R(1)*1.4)*k;th=5+((R(2)*3)|0);cy=b-th-r*.8;
+    B=[[cx,cy,r],[cx-r*.95,cy+r*.28,r*.72],[cx+r*.95,cy+r*.22,r*.75],[cx-r*.45,cy-r*.5,r*.62],[cx+r*.5,cy-r*.42,r*.6]];rx=r*1.75;ry=r;}
+  else{r=(7.4+R(1)*1.4)*k;th=7+((R(2)*3)|0);cy=b-th-r*.9;
+    B=[[cx-r*.64,cy+r*.18,r*.6],[cx+r*.66,cy+r*.3,r*.56],[cx+(R(5)-.5)*r*.5,cy-r*.62,r*.64]];if(R(6)<.4)B.push([cx+(R(7)-.5)*r*.5,cy+r*.75,r*.36]);rx=r*1.3;ry=r*1.1;}
+  const top=Math.floor(cy+r*(shape===3?.5:.2)),tw=(shape===2?3.8:3.1)+R(4)*.8+size*.4;
+  bark(s,cx,top,b,tw,sd);
+  for(const c of B)if(c!==B[0]||shape===3)limb(s,cx+(c[0]>cx?.6:-.6),top+1,c[0],c[1]+c[2]*.2,tw*.62);   // 枝
+  return canopy(s,P,{b:B,cx:cx+nx,cy,rx,ry,cr:3.2+size*.2,v0:.5,vr:4.9,sd:sd*13+1,fl});}
 function treeModel(kind,sd,fl){const s=Surf3(TW,TH,TAY),R=k=>h3(sd,k,kind.length*7+3),cx=TAX+.5,b=TAY;
-  if(kind==='oak'){const r=8+R(1)*2.6,th=6+((R(2)*4)|0),cy=b-th-r*.85;
-    bark(s,cx,Math.floor(cy),b,3.4+R(4),sd);
-    canopy(s,PS.leaf,{b:[[cx,cy,r],[cx-r*.5,cy+r*.3,r*.58],[cx+r*.5,cy+r*.25,r*.6],[cx+(R(5)-.5)*r*.7,cy-r*.5,r*.62]],cx,cy,rx:r*1.15,ry:r*1.05,cr:3.4,v0:.5,vr:4.9,sd:sd*13+1,fl});}
+  if(kind==='oak')oakModel(s,cx,b,R,sd,fl);
   else if(kind==='fruit'){const r=7.8+R(1)*2,th=5+((R(2)*3)|0),cy=b-th-r*.9;
     bark(s,cx,Math.floor(cy),b,3,sd);
     const cl=canopy(s,PS.leafF,{b:[[cx,cy,r],[cx-r*.48,cy+r*.35,r*.58],[cx+r*.48,cy+r*.35,r*.58]],cx,cy,rx:r*1.15,ry:r,cr:3.2,v0:.8,vr:4.6,sd:sd*17+5,fl});
     fruitDots(s,R(6)<.6?PS.fruitR:PS.fruitO,cl,5+((R(7)*4)|0),sd,cy,r);}
-  else if(kind==='pine'){const h=24+R(1)*8,w=7+R(2)*2.5,top=b-5-h,n=3+(R(3)<.5?1:0),tiers=[];
-    bark(s,cx,b-6,b,2.6,sd);
-    for(let i=0;i<n;i++){const t0=top+i*h/(n+.4),t1=t0+h/(n+.4)*1.55;tiers.push([Math.round(t0),Math.round(Math.min(b-4,t1)),w*(.45+.55*(i+1)/n)]);}
-    pineMass(s,{cx,tiers,sd,fl});}
-  else{const r=5.5+R(1)*2,cy=b-r*1.1;      // 低木（手前のふち）
-    const cl=canopy(s,R(3)<.5?PS.leaf:PS.leafF,{b:[[cx,cy,r],[cx-r*.95,cy+r*.35,r*.72],[cx+r*.95,cy+r*.3,r*.75],[cx+(R(2)-.5)*r,cy-r*.45,r*.65]],cx,cy,rx:r*1.9,ry:r,cr:2.8,v0:.7,vr:4.8,sd:sd*19+7,fl});
+  else{const r=5.5+R(1)*2,cy=b-r*1.1;      // 低木（手前のふち）。sd＝葉の色＋3×形
+    const cl=canopy(s,LEAFP()[sd%3],{b:[[cx,cy,r],[cx-r*.95,cy+r*.35,r*.72],[cx+r*.95,cy+r*.3,r*.75],[cx+(R(2)-.5)*r,cy-r*.45,r*.65]],cx,cy,rx:r*1.9,ry:r,cr:2.8,v0:.7,vr:4.8,sd:sd*19+7,fl});
     if(R(4)<.55){const F=PS.flw[(R(5)*4)|0];let k=0;
       for(let i=0;i<cl.length&&k<6;i++){const c=cl[(i*5+sd)%cl.length],fx=Math.round(c[0]),fy=Math.round(c[1]-c[2]*.2);if(s.on(fx,fy)){s.S(fx,fy,F,2.8,[0,.3,.95],1,.1);k++;}}}}
   let top=TH;for(let y=0;y<TH&&top===TH;y++)for(let x=0;x<TW;x++)if(s.on(x,y)){top=y;break;}
@@ -108,11 +114,14 @@ function treeFrame(kind,sd,lean,fl){
     for(let x=0;x<W;x++){const sx=x-sh;if(sx<0||sx>=W)continue;const i=(y*W+sx)*4;if(!r.col[i+3])continue;const j=(y*W+x)*4;
       for(let k=0;k<4;k++){s.col[j+k]=r.col[i+k];s.nrm[j+k]=r.nrm[i+k];s.dat[j+k]=r.dat[i+k];}}}
   const c=s.cv();return M.fr[lean]={c:c.c,n:c.n,d:c.d,sil:sil3(s)};}
-// 地図の木（T のマス）。奥のふちは高い木、手前のふちは低木が多い
+// 地図の木（T のマス）。全部広葉樹の林：奥のふちは大きい木、手前のふちは低木が多い。
+// 葉の色は近くの木どうしで似せる（林のまとまり）。若い小さい木はときどき若葉の色
 const TREES={farm:[],town:[]};
 function treeAt(m,x,y){const z=m==='town'?57:0,h=h3(x,y,11+z),h2=h3(y,x,23+z),jx=Math.round((h3(x,y,31+z)-.5)*5),jy=Math.round((h3(x,y,37+z)-.5)*3);
-  const kind=y===MH-1?(h<.7?'bush':'oak'):y===0?(h<.42?'oak':h<.78?'pine':'fruit'):(h<.5?'oak':h<.83?'pine':'fruit');
-  return{x,y,X:x*TS+8-TAX+jx,Y:y*TS+14-TAY+jy,kind,sd:(h2*4)|0,lean:0,ph:h2*7};}
+  const g=vn3(x*.3,y*.3,91+z),pal=g<.38?0:g<.68?1:2,o={x,y,X:x*TS+8-TAX+jx,Y:y*TS+14-TAY+jy,lean:0,ph:h2*7};
+  if(y===MH-1&&h<.7)return Object.assign(o,{kind:'bush',sd:pal+3*((h2*2)|0)});
+  const size=y===0?(h2<.7?2:1):y===MH-1?0:(h2<.25?0:h2<.72?1:2),shape=(h3(x,y,43+z)*4)|0;
+  return Object.assign(o,{kind:'oak',sd:shape+4*size+12*(size===0&&h3(x,y,47+z)<.45?3:pal)});}
 function treeNow(t,now){const w=windAt(t.X+TAX,t.Y+TAY,now);
   if(Math.abs(w-t.lean)>.62)t.lean=Math.max(-1,Math.min(3,Math.round(w)));
   const fl=w>.85?(Math.floor(now*(1.5+w*1.6)+t.ph)&1):0;   // 風が強いと葉がちらちら
@@ -153,23 +162,31 @@ function drawFence(g,m,x,y){const X=x*TS,Y=y*TS;drawGrass(g,x,y);
   stamp3(g,s,X,Y);contactAO(X,Y+12,16,4,.7);
   if(CAST)CAST.push({sil:sil3(s),x:X,y:Y,ay:Y+14});}
 
-/* ---- 岩（6つの形×4つの色。こけつき・ひび入り） ---- */
-const ROCKC={};
+/* ---- 岩（6つの形×4つの色。こけつき・ひび入り）：どれも横に寝た形で、下の方は土にうまる ----
+   地面の線 RGY より下は描かない（平らな底）→ 底に近いほど暗く → 足もとに暗い草のふち → 手前に草が少しかぶさる */
+const ROCKC={},RGY=13;
 function rockSprite(x,y){const k=(h3(x,y,83)*6)|0,pi=(h3(y,x,89)*4)|0,key=k+'_'+pi;
   if(ROCKC[key])return ROCKC[key];
   const s=Surf3(16,16,14),P=PS.stone[pi],sd=k*7+pi+1;
-  const lump=(cx,cy,rx,ry,o)=>{for(let yy=Math.floor(cy-ry-1);yy<=Math.ceil(cy+ry);yy++)for(let xx=Math.floor(cx-rx-1);xx<=Math.ceil(cx+rx);xx++){
+  const lump=(cx,cy,rx,ry,o)=>{for(let yy=Math.floor(cy-ry-1);yy<=Math.min(RGY,Math.ceil(cy+ry));yy++)for(let xx=Math.floor(cx-rx-1);xx<=Math.ceil(cx+rx);xx++){
     const dx=(xx+.5-cx)/rx,dy=(yy+.5-cy)/ry,a=Math.atan2(dy,dx),d=Math.hypot(dx,dy)/(1+Math.sin(a*3+sd)*.08+Math.sin(a*5+sd*2)*.05);if(d>1)continue;
     let n=sphereN(cl1(dx*.92),cl1(dy*.92));
     if(o&&o.flat&&dy<-.1)n=[n[0]*.3,n[1]*.3+.15,1];                       // 平らな上の面
     const q=n.map(v=>Math.round(v*3.2)/3.2);if(Math.hypot(q[0],q[1],q[2])>.3)n=q;    // 面を少しかくばらせる
-    const L=lit3(n),edge=d>.86;let v=.9+3*L+(h3(xx,yy,sd)-.5)*.6,P2=P;if(edge&&dy>0)v-=1;if(edge)v=Math.min(v,1.6);
-    if(o&&o.moss&&n[2]>.6&&h3(xx,yy,sd+4)<.85){P2=PS.moss;v=1+3.6*L+(h3(xx,yy,sd+5)-.5);}
-    s.S(xx,yy,P2,v,n,dy>.55?.65:1,.08);}};
-  if(k===0)lump(8,9.5,6,4.6);
-  else if(k===1)lump(8,10.5,7,3.6,{flat:1});
-  else if(k===2){lump(6,9.5,4.8,4);lump(11.5,11.6,3.2,2.6);}
-  else if(k===3)lump(8,8,4.4,5.8);
-  else if(k===4)lump(8,9.5,6.2,4.6,{moss:1});
-  else{lump(8,9.5,6,4.6);let cx=6+(sd%3);for(let yy=6;yy<=11;yy++){cx+=(yy&1)?(h3(yy,sd,9)<.5?-1:1):0;if(s.on(cx,yy))s.S(cx,yy,P,.3,[0,.5,.8],.6,0);}}   // ひび
-  return ROCKC[key]=sprite3(s);}
+    const L=lit3(n),edge=d>.86,sink=Math.max(0,yy-(RGY-1.5));let v=.9+3*L+(h3(xx,yy,sd)-.5)*.6-sink*.6,P2=P;if(edge&&dy>0)v-=1;if(edge)v=Math.min(v,1.6);
+    if(o&&o.moss&&n[2]>.6&&sink<1&&h3(xx,yy,sd+4)<.85){P2=PS.moss;v=1+3.6*L+(h3(xx,yy,sd+5)-.5);}
+    s.S(xx,yy,P2,v,n,Math.max(.35,(dy>.4?.7:1)-sink*.16),.08);}};
+  if(k===0)lump(8,9.8,6,4.2);
+  else if(k===1)lump(8,11,7,3,{flat:1});
+  else if(k===2){lump(6,10,4.8,3.8);lump(11.6,12,3.2,2.2);}
+  else if(k===3){lump(10.2,10.8,3.6,2.6);lump(5.2,11.4,3.4,2.4);lump(8.2,12.4,2.8,1.8);}   // 小石のかたまり
+  else if(k===4)lump(8,9.8,6.2,4.2,{moss:1});
+  else{lump(8,10,6.4,4);let cx=6+(sd%3);for(let yy=7;yy<=11;yy++){cx+=(yy&1)?(h3(yy,sd,9)<.5?-1:1):0;if(s.on(cx,yy))s.S(cx,yy,P,.3,[0,.5,.8],.6,0);}}   // ひび
+  // 足もと：岩のすぐ下と両はしに暗い草（地面にめりこんだかげ）
+  let x0=16,x1=-1;for(let xx=0;xx<16;xx++)if(s.on(xx,RGY)){x0=Math.min(x0,xx);x1=Math.max(x1,xx);}
+  for(let xx=x0-1;xx<=x1+1;xx++){const end=xx<x0||xx>x1;s.S(xx,RGY+1,PS.grass,end?1.2:.3,NU,end?.7:.45,0,0);if(end)s.S(xx,RGY,PS.grass,1.6,NU,.75,0,0);}
+  // 両はしの根もとに草のふさ（岩のはしに少しかぶさる）
+  for(const[gx,dir]of[[x0,1],[x1,-1]]){if(h3(gx,sd,13)<.3)continue;const bh=2+((h3(sd,gx,12)*2)|0);
+    for(let j=0;j<bh;j++)s.S(gx+(j===bh-1?-dir:0),RGY+1-j,PS.grass,2.2+j*1.2,[0,.55,.83],1,.03,j*.5);
+    s.S(gx+dir,RGY+1,PS.grass,2.4,[0,.55,.83],1,.03,0);s.S(gx-dir,RGY,PS.grass,3,[0,.55,.83],1,.03,.5);}
+  const c=sprite3(s);c.nd.foot=3;c.nd.fx=[x0,x1];return ROCKC[key]=c;}
