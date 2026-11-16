@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
 <style>
-/* 縦持ち1画面：上に日付と体力、まん中に地図、下に種・かばん・地図。木の板と紙のふきだし */
+/* 縦持ち1画面：地図は画面いっぱい。上の文字・下の道具・ふきだし・まどは、枠なし・半透明で地図に重ねる */
 :root{
   --ground:#1c2b22;
   --wood:#6b4426;
@@ -22,6 +22,14 @@
   --leaf-d:#4f8f3a;
   --heart:#ff6b8f;
   --sun:#ffd25e;
+  /* 地図に重ねる物の色：うすい暗さ・細い光の線・うすい文字・えらんだ物の金色 */
+  --veil:linear-gradient(rgba(8,10,16,0),rgba(8,10,16,.7) 34px,rgba(8,10,16,.88));
+  --chip:rgba(255,240,210,.08);
+  --line:rgba(255,236,200,.2);
+  --dim:rgba(251,241,218,.64);
+  --gold-bg:rgba(255,210,94,.2);
+  --gold-glow:0 0 0 1px #ffd25e,0 0 12px rgba(255,210,94,.45);
+  --shade:0 1px 0 rgba(0,0,0,.75),0 0 6px rgba(0,0,0,.45);
   --font:'DotGothic16','Hiragino Maru Gothic ProN','Hiragino Sans','Noto Sans JP',sans-serif;
   color-scheme:dark;
   padding-top:env(safe-area-inset-top,0px);
@@ -58,8 +66,9 @@ button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
 .ft.heart{color:var(--heart)}
 .ft.money{color:var(--sun)}
 @keyframes up{to{transform:translate(-50%,-180%);opacity:0}}
-.bub{position:absolute;transform:translate(-50%,-100%);background:var(--paper);color:var(--ink);border:2px solid var(--ink);padding:3px 7px;font-size:12px;white-space:nowrap;max-width:220px}
-.bub::after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-4px;border:4px solid transparent;border-top-color:var(--ink)}
+/* 頭の上のひとこと：枠なしの暗い半透明 */
+.bub{position:absolute;transform:translate(-50%,-100%);background:rgba(12,14,22,.72);color:var(--paper);border-radius:8px;padding:3px 8px;font-size:12px;white-space:nowrap;max-width:220px;text-shadow:0 1px 0 rgba(0,0,0,.6)}
+.bub::after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-4px;border:4px solid transparent;border-top-color:rgba(12,14,22,.72)}
 #toast{position:absolute;left:50%;top:66px;z-index:13;transform:translateX(-50%);background:rgba(12,14,22,.7);border:1px solid rgba(255,236,200,.3);border-radius:10px;padding:6px 12px;font-size:13px;max-width:92%;text-align:center;pointer-events:none;transition:opacity .25s}
 #toast.off{opacity:0}
 
@@ -78,39 +87,46 @@ button:focus-visible{outline:2px solid var(--sun);outline-offset:1px}
 #recenter{position:absolute;right:max(10px,env(safe-area-inset-right,0px));bottom:94px;z-index:13;background:rgba(12,14,22,.6);border:1px solid rgba(255,236,200,.3);border-radius:999px;color:var(--paper);padding:6px 12px;font-size:13px}
 .big{flex:none;min-width:54px;align-self:stretch;background:rgba(12,14,22,.52);border:1px solid rgba(255,236,200,.3);border-radius:10px;font-size:13px;padding:4px 6px;color:var(--paper)}
 
+/* ふきだしとまど：下の道具の列と同じく、枠なしで地図に重ねる（下へいくほど暗く）。出ている間は下の道具の列と「自分にもどる」をかくす */
+#app:has(#dlg:not([hidden])) #bar,#app:has(#modal:not([hidden])) #bar,
+#app:has(#dlg:not([hidden])) #recenter{visibility:hidden}
+
 /* ふきだし */
-#dlg{position:absolute;left:8px;right:8px;bottom:8px;background:var(--paper);color:var(--ink);border:3px solid var(--ink);box-shadow:0 3px 0 rgba(0,0,0,.35);padding:10px 12px 10px 12px;display:grid;grid-template-columns:auto 1fr;gap:8px 10px;z-index:20}
+#dlg{position:absolute;left:0;right:0;bottom:0;z-index:20;background:var(--veil);color:var(--paper);text-shadow:var(--shade);padding:40px max(14px,env(safe-area-inset-left,0px)) 14px max(14px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:auto 1fr;gap:4px 12px}
 #dlg.noface{grid-template-columns:1fr}
 #dlg.noface #face{display:none}
-#face{width:56px;height:56px;background:#f3e3bf;border:2px solid var(--ink);image-rendering:pixelated;grid-row:span 2}
-#dname{font-size:13px;color:var(--leaf-d);align-self:end}
-#dtext{font-size:16px;line-height:1.55;min-height:3.1em;grid-column:2;white-space:pre-wrap}
+#face{width:56px;height:56px;border-radius:12px;background:radial-gradient(circle at 50% 42%,rgba(255,236,200,.3),rgba(255,236,200,.08) 72%);box-shadow:inset 0 0 0 1px var(--line);image-rendering:pixelated;grid-row:span 2;align-self:start}
+#dname{font-size:13px;color:var(--sun);letter-spacing:.5px;align-self:end}
+#dtext{font-size:16px;line-height:1.6;min-height:3.2em;grid-column:2;white-space:pre-wrap}
 #dlg.noface #dtext,#dlg.noface #dname{grid-column:1}
-#dnext{position:absolute;right:10px;bottom:6px;font-size:12px;animation:blink 1s steps(2) infinite}
+#dnext{position:absolute;right:14px;bottom:10px;font-size:12px;color:var(--sun);animation:blink 1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
-#dopts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
-#dopts button{flex:1 1 40%;background:var(--paper-d);border:2px solid var(--ink);color:var(--ink);padding:9px 6px;font-size:15px}
-#dopts button.primary{background:var(--leaf);}
+#dopts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+#dopts button{flex:1 1 40%;background:var(--chip);border:1px solid var(--line);border-radius:10px;color:var(--paper);text-shadow:inherit;padding:10px 6px;font-size:15px}
+#dopts button.primary{background:var(--gold-bg);border-color:var(--sun);box-shadow:var(--gold-glow);color:#fff3cc}
 
-/* まど */
-#modal{position:absolute;inset:0;background:rgba(10,14,10,.55);display:flex;align-items:flex-end;justify-content:center;z-index:30}
-.panel{width:100%;max-height:82%;display:flex;flex-direction:column;background:var(--paper);color:var(--ink);border-top:3px solid var(--ink);padding:12px max(14px,env(safe-area-inset-left,0px)) 14px max(14px,env(safe-area-inset-right,0px))}
+/* まど（店・出荷・かばん・地図・なかよし）：下から重なる暗い帯。上はうすく、地図が見えたまま */
+#modal{position:absolute;inset:0;background:linear-gradient(rgba(8,10,16,.12),rgba(8,10,16,.4));display:flex;align-items:flex-end;justify-content:center;z-index:30}
+.panel{width:100%;max-height:84%;display:flex;flex-direction:column;background:var(--veil);color:var(--paper);text-shadow:var(--shade);padding:40px max(14px,env(safe-area-inset-left,0px)) 14px max(14px,env(safe-area-inset-right,0px))}
 .panel h2{margin:0 0 8px;font-size:18px;font-weight:normal;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.panel h2 small{font-size:13px;color:var(--wood)}
-.plist{overflow-y:auto;display:flex;flex-direction:column;gap:6px;min-height:0}
-.row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:7px 8px;background:#f3e3bf;border:2px solid var(--paper-d)}
-.row img,.row canvas{width:32px;height:32px;image-rendering:pixelated}
+.panel h2 small{font-size:13px;color:var(--sun)}
+.plist{overflow-y:auto;display:flex;flex-direction:column;gap:6px;min-height:0;scrollbar-width:none}
+.plist::-webkit-scrollbar{display:none}
+.row{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:7px 9px;background:var(--chip);border-radius:10px;box-shadow:inset 0 0 0 1px rgba(255,236,200,.12)}
+.row img,.row canvas{width:32px;height:32px;image-rendering:pixelated;filter:drop-shadow(0 1px 0 rgba(0,0,0,.5))}
 .row .t{min-width:0}
 .row .t div:first-child{font-size:15px}
-.row .t div+div{font-size:12px;color:var(--wood);margin-top:2px}
+.row .t div+div{font-size:12px;color:var(--dim);margin-top:2px}
 .row .acts{display:flex;gap:5px}
-.pbtn{background:var(--leaf);border:2px solid var(--ink);color:var(--ink);padding:7px 10px;font-size:14px}
-.pbtn.sub{background:var(--paper-d)}
-.pbtn:disabled{opacity:.4}
-.close{margin-top:10px;align-self:stretch;background:var(--paper-d);border:2px solid var(--ink);color:var(--ink);padding:10px;font-size:15px}
+.kind{font-size:12px;color:var(--dim)}
+.pbtn{background:var(--gold-bg);border:1px solid var(--sun);border-radius:9px;color:#fff3cc;text-shadow:inherit;box-shadow:0 0 8px rgba(255,210,94,.3);padding:7px 11px;font-size:14px}
+.pbtn.sub{background:var(--chip);border-color:var(--line);color:var(--paper);box-shadow:none}
+.pbtn:disabled{opacity:.35;box-shadow:none}
+.close{margin-top:10px;align-self:stretch;background:var(--chip);border:1px solid var(--line);border-radius:10px;color:var(--paper);text-shadow:inherit;padding:10px;font-size:15px}
+#dopts button:active,.pbtn:not(:disabled):active,.close:active{filter:brightness(1.3)}
 .hearts{color:var(--heart);letter-spacing:1px;font-size:13px}
-.hearts i{font-style:normal;color:#d9c4a0}
-.note{font-size:12px;color:var(--wood);margin:6px 2px 0;line-height:1.5}
+.hearts i{font-style:normal;color:rgba(255,240,210,.22)}
+.note{font-size:12px;color:var(--dim);margin:6px 2px 0;line-height:1.5}
 
 #fade{position:absolute;inset:0;background:#0d0d14;opacity:0;pointer-events:none;transition:opacity .35s;z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px}
 #fade.on{opacity:1;pointer-events:auto}
@@ -285,8 +301,8 @@ async function loadDLG(){
    wg＝つばさ・tl＝しっぽ・em＝光る所（ルゥの核）・ol＝線（となりの面の向きを外へ少しひらく） */
 const CHARS={
  // ミノリ
- player:{head:[7.5, 13, 6.4],faceY:7,hatC:[8, 7.5, 6.5],wear:{"hat": "straw"},
-  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15],"q":["#efcb72","hc",0.12],"Q":["#cfa650","hc",0.1],"u":["#fbe39c","hc",0.15]},
+ player:{head:[7.5, 13, 6.4],faceY:7,wear:{"hat": "straw"},
+  pal:{"o":["#3a2216","ol"],"h":["#efcb72","hb",0.12],"H":["#cfa650","hb",0.1],"j":["#9c7a36","hb"],"b":["#c0392b","hc",0.15],"B":["#8e2a20","hc",0.1],"r":["#8a4b2a","hd",0.22],"R":["#5e321c","hd",0.15],"l":["#b46c3e","hd",0.3],"s":["#f7d6bc","hd"],"S":["#e2ae90","hd"],"e":["#2e1c14","hd",0.5],"m":["#c0604f","hd"],"c":["#f4a3a0","hd"],"t":["#e2683e","tr"],"T":["#b24a2a","tr"],"y":["#f59266","tr"],"w":["#f6efe0","tr"],"k":["#5f8a3e","sk"],"K":["#456a2c","sk"],"n":["#7aa652","sk"],"f":["#7a4a2a","lg",0.2],"F":["#4e2e1a","lg",0.15],"q":["#efcb72","hc",0.12],"Q":["#cfa650","hc",0.1],"u":["#fbe39c","hc",0.15],"v":["#fbe39c","hb",0.15]},
   views:{
    front:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlRrrrrrRlro.","..orrsrrrrsrro..","..orssssssssro..","..orsessssesro..","..orcessssecro..","..orsssmmsssro..","..rroSssssSorr..","...oRowsswoRo...","..ottwwwwwwtto..",".otttttttttttto.",".otytttttttttTo.",".otTtttttttttTo.",".osottttttttoso.","...okkkkkkkko...","..oknkkkkkkKko..","..oknkkkkkkKKo..",".oknkkkkkkkKKKo.",".oooooooooooooo."],
     legs:[["....oso..oso....","....oSo..oSo....","...offo..offo...","...oooo..oooo..."],["....oso..oso....","....oSo..offo...","...offo..oooo...","...oooo........."],["....oso..oso....","...offo..oSo....","...oooo..offo...",".........oooo..."]]},
@@ -295,12 +311,13 @@ const CHARS={
    side:{rows:["................","................","................","................","................",".....oooooo.....","...oolllrrrroo..","..olllrrrrrrRro.","..orlrrrrrrrRro.",".oorrrrrrrrrRro.","..orlrrrrrrrRro.","..orrrrrrrRssro.","..oRrrrrrRsssso.","..oRrrrrrRsesso.","..oRRrrrRssecso.","..oRRRrrRsssmo..","..orRRRroSsso...","...oRRRoowwo....",".....otwwto.....",".....ottttto....",".....oyTttto....",".....oyTttto....",".....otsotto....",".....okkkkko....","....oknkkkkKo...","....oknkkkKKo...","...oknkkkkKKKo..","...ooooooooooo.."],
     legs:[[".......oso......",".......oSo......",".......offFo....",".......ooooo...."],["......oso.oso...",".....oso...oSo..",".....offo..offFo",".....oooo..ooooo"],["......oSo.oso...",".....oso...oso..",".....offo..offFo",".....oooo..ooooo"]]},
   },
-  // 着せかえの部品（views ごとに y 段目から重ねる・'.' はすける）
+  // 着せかえの部品：絵の枠（横24×たて36・体のまわりに横4・上4のゆとり）に y 段目から重ねる。'.' はすける。c＝ふくらみの丸 [x,y,半径]
+  // 麦わら帽子は tools/hat3d.py で立体から計算したドット（UFO 型＝頭に沿うふくらみ＋平らなつば。少しうしろへ傾けてかぶる。前・後ろ・横は同じ1つの立体を真正面から見る）
   items:{
    straw:{name:"麦わら帽子",views:{
-    front:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
-    back:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
-    side:{y:2,rows:[".....oooooo.....","....oqquuqqqo...","...oqquqqqqqQo..","..oqqqqqqqqqqQo.","..oqQqqqQqqqQQo.","..oBbbbbbbbbbBo.","ojhhhhhhhhhhhhjo","oHHhhhhhhhhhhHHo",".oo.HHhhhhHH.oo.",".....oHHHHo....."]},
+    front:{y:8,c:[12.0,  15.2,  7.1],rows:["........oooooooo........",".......ouuqqqqqQo.......","......ouuuqqqqQQQo......",".....ouuqqqqqQQQQQo.....","...ooqbbbbbbbBBBBBjoo...",".oohhHHHHHHHHjjjjjjjjoo.","ohhhhhhHHHHHHHHHHjjjjjjo","ohhHHHHHooooooooHHHHHjjo","oHHHHooo........oooHHHjo","oHHHHHo..........oHHHHHo",".ooooHo..........ojoooo.",".....o............o....."]},
+    back:{y:8,c:[12.0,  15.2,  7.1],rows:["........oooooooo........",".......ouuqqqqqQo.......","......ouuuqqqqqQQo......",".....ouuqqqqqqQQQQo.....","...oouqqqqqqQQQQQjjoo...",".oohhqqqqqQQQQQQjjjhhoo.","ohhhbbbbQQQQQQQjBBBBhhho","ohhhHbbbbBBBBBBBBBBHhhho","ohhhhHHHHHHHBHHHHHHhhhjo","oHhhhHHhhHHjbBjjhjhjjjjo",".ooooHHHHHHjbBjjjjjoooo.",".....ooooooobBooooo.....","...........obBo.........","............oBo.........",".............o.........."]},
+    side:{y:8,c:[12.0,  15.2,  7.1],rows:[".........ooooooo........",".......oouuqqqqQoo......","......ouuuqqqqqQQQo.....",".....ouuuqqqqQQQQQjo....","....ouuqqqqQQQQQBBBoooo.","....oqqqqqQbBBBBBBHhjjjo","....oqbbbbBBBjjjHjHHHHHo","...obbbbjjjjjHHHHHooooo.",".oooBHHHHHHHHooooo......","ohhhhhHHHoooo...........","ohhHooooo...............",".ooo...................."]},
    }},
   },
  },
@@ -341,20 +358,23 @@ const CHARS={
   },
  },
 };
+// 絵の枠は体（16×32）のまわりに、横4・上4ドットのゆとり（帽子のつばなどがはみ出せる）
+const PADX=4,PADY=4;
 function charFrame(id,view,f,flip,wear){
-  const C=CHARS[id],v=C.views[view],pal=C.pal,W=16,H=32;
-  let rows=v.rows.concat(v.legs[f]);
+  const C=CHARS[id],v=C.views[view],pal=C.pal,W=16+PADX*2,H=32+PADY,E='.'.repeat(PADX);
+  let rows=Array(PADY).fill('.'.repeat(W)).concat(v.rows.concat(v.legs[f]).map(r=>E+r+E)),hatc=null;
   // 着せかえ：身につけた物（帽子など）を上に重ねる。'.' はすけて下の体が見える
-  for(const k in(wear||{})){const it=wear[k]&&C.items&&C.items[wear[k]],L=it&&it.views[view];if(!L)continue;
+  // 部品の rows はゆとりこみの枠（横24）で、y 段目から。c は帽子のふくらみの丸 [x,y,半径]
+  for(const k in(wear||{})){const it=wear[k]&&C.items&&C.items[wear[k]],L=it&&it.views[view];if(!L)continue;if(L.c)hatc=L.c;
     rows=rows.map((r,y)=>{const o=L.rows[y-L.y];if(!o)return r;let t='';for(let x=0;x<W;x++)t+=o[x]!=='.'?o[x]:r[x];return t;});}
   if(flip)rows=rows.map(r=>[...r].reverse().join(''));
   const col=new Uint8ClampedArray(W*H*4),n=new Uint8ClampedArray(W*H*4),d=new Uint8ClampedArray(W*H*4),em=new Uint8ClampedArray(W*H*4),NN=[];
   const at=(x,y)=>x<0||y<0||x>=W||y>=H||rows[y][x]==='.'?null:pal[rows[y][x]];
-  const hx=flip?15-C.head[0]:C.head[0],hy=C.head[1],hr=C.head[2];let hasEm=false;
+  const hx=(flip?15-C.head[0]:C.head[0])+PADX,hy=C.head[1]+PADY,hr=C.head[2];let hasEm=false;
   const cl=v=>Math.max(-.98,Math.min(.98,v));
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const p=at(x,y);if(!p)continue;const i=y*W+x,c=hexRGB(p[0]);
     col[i*4]=c[0];col[i*4+1]=c[1];col[i*4+2]=c[2];col[i*4+3]=255;const pt=p[1];let N=null;
-    if(pt==='hc'&&C.hatC){const c=C.hatC,cx=flip?15-c[0]:c[0];N=sphereN(cl((x+.5-cx)/c[2]),cl((y+.5-c[1])/c[2]));}   // 帽子のふくらみは帽子の丸で
+    if(pt==='hc'&&hatc){const cx=flip?W-hatc[0]:hatc[0];N=sphereN(cl((x+.5-cx)/hatc[2]),cl((y+.5-hatc[1])/hatc[2]));}   // 帽子のふくらみは帽子の丸で
     else if(pt==='hd'||pt==='hc')N=sphereN(cl((x+.5-hx)/hr),cl((y+.5-hy)/hr));
     else if(pt==='hn')N=sphereN(cl((x+.5-hx)/hr),-.75);
     else if(pt==='hb')N=[(x+.5-8)/8*.35,.32,.9];
@@ -371,7 +391,7 @@ function charFrame(id,view,f,flip,wear){
     const N=k?[s[0]/k,s[1]/k,s[2]/k]:[0,.7,.7];NN[i]=[N[0]+ox*.45,N[1]+Math.max(0,oy)*.2,N[2]-Math.min(0,oy)*.45];d[i*4+1]=185;}
   for(let i=0;i<W*H;i++){const N=NN[i];if(!N)continue;const l=Math.hypot(N[0],N[1],N[2])||1;n[i*4]=(N[0]/l*.5+.5)*255;n[i*4+1]=(N[1]/l*.5+.5)*255;n[i*4+2]=(N[2]/l*.5+.5)*255;n[i*4+3]=255;}
   const nb=bumpLum(col,n,d,W,H,.9),c=bufCanvas(W,H,col);
-  c.nd={n:bufCanvas(W,H,nb),d:bufCanvas(W,H,d),sil:silOf(c),by:H};if(hasEm)c.em=bufCanvas(W,H,em);
+  c.nd={n:bufCanvas(W,H,nb),d:bufCanvas(W,H,d),sil:silOf(c),by:H};c.ox=PADX;c.oy=PADY;if(hasEm)c.em=bufCanvas(W,H,em);
   return c;}
 const SPR={};
 // wear：身につける物（例 {hat:'straw'}）。着せかえたら makeSprites(id) をもう一度
@@ -1588,7 +1608,7 @@ function render(){
     ctx.fillStyle=L?'rgba(0,0,0,.16)':'rgba(0,0,0,.22)';ctx.fillRect(X+3,Y+14,10,2);ctx.fillRect(X+4,Y+13,8,4);
     const fr=e.act?3:e.mov?[1,0,2,0][((e.anim*8)|0)%4]:0;
     const bob=e.id==='luu'&&!e.mov?((now*3)|0)%2:0;
-    const sp=SPR[e.id][e.dir][fr],Ys=Y-(sp.height-15)+bob,o=blit3(sp,'body',X,Ys);if(o)dyn.push({sil:o.sil,X,Y:Ys,ay:Ys+o.by});
+    const sp=SPR[e.id][e.dir][fr],Xs=X-(sp.ox||0),Ys=Y-(sp.height-15)+bob,o=blit3(sp,'body',Xs,Ys);if(o)dyn.push({sil:o.sil,X:Xs,Y:Ys,ay:Ys+o.by});
     // 作業中は道具を持つ
     if(e.id==='player'&&P.act&&P.act.tool){const ic=TOOLC[P.act.tool],up=P.act.t/P.act.dur<.5?-3:1;
       if(e.dir===2){ctx.save();ctx.translate(X-9+16,Y-5+up);ctx.scale(-1,1);ctx.drawImage(ic,0,0);ctx.restore();}
@@ -1655,7 +1675,7 @@ function setSpeaker(who){
   if(!who||who==='narr'){D.box.classList.add('noface');D.name.textContent='';return;}
   D.box.classList.remove('noface');
   const id=who==='player'?'player':who;D.name.textContent=who==='player'?DLG.player.name:(DLG[who]?DLG[who].name:who);
-  fctx.clearRect(0,0,16,16);fctx.imageSmoothingEnabled=false;const fsp=SPR[id][0][0];fctx.drawImage(fsp,0,SPR[id].faceY||0,16,16,0,1,16,16);
+  fctx.clearRect(0,0,16,16);fctx.imageSmoothingEnabled=false;const fsp=SPR[id][0][0];fctx.drawImage(fsp,fsp.ox||0,(SPR[id].faceY||0)+(fsp.oy||0),16,16,0,1,16,16);
 }
 let typing=null;
 function typeText(text){
@@ -1731,8 +1751,8 @@ function openFriends(){
   const close=openPanel('なかよし','',(list)=>{
     for(const id of['chloe','luu']){const n=S.npc[id],d=DLG[id];const h=hearts(id);
       const st=n.live?'牧場で一緒に暮らしている':n.pending?'あしたの朝 部屋を見に来る':n.visit?'けさ 部屋を見に来る':!n.met?'まだ会っていない':h>=INVITE_HEARTS?'一緒に住もうと誘えそう':`♥${INVITE_HEARTS}になったら誘える`;
-      const r=row(list,null,`${d.name}<span style="font-size:12px;color:#8f6038">　${id==='chloe'?'ドラゴン娘':'スライム娘'}</span>`,`<span class="hearts">${'♥'.repeat(h)}<i>${'♥'.repeat(MAX_HEARTS-h)}</i></span>　${st}`);
-      const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');g.drawImage(SPR[id][0][0],0,SPR[id].faceY||0,16,16,0,1,16,16);r.replaceChild(c,r.firstChild);}
+      const r=row(list,null,`${d.name}<span class="kind">　${id==='chloe'?'ドラゴン娘':'スライム娘'}</span>`,`<span class="hearts">${'♥'.repeat(h)}<i>${'♥'.repeat(MAX_HEARTS-h)}</i></span>　${st}`);
+      const c=document.createElement('canvas');c.width=16;c.height=16;const g=c.getContext('2d');const sp=SPR[id][0][0];g.drawImage(sp,sp.ox||0,(SPR[id].faceY||0)+(sp.oy||0),16,16,0,1,16,16);r.replaceChild(c,r.firstChild);}
     const hs=S.reno.state===0?`改築：まだ（クロエに${RENO.cost}Gと石${RENO.stone}個）`:S.reno.state===1?`改築：工事中（あと${S.reno.days}日）`:`改築：完成・部屋 ${S.rooms.filter(Boolean).length}/${RENO.rooms}`;
     const n=document.createElement('p');n.className='note';n.innerHTML=`${hs}<br>話す（1日1回）と贈り物（1日1回）で仲よくなれる。${OTHERS.length?`<br>ほかの住人：${OTHERS.join('・')}（次の試作から）`:''}`;list.appendChild(n);
     const rb=document.createElement('button');rb.className='pbtn sub';rb.style.marginTop='8px';rb.textContent='最初からやり直す';let armed=false;
@@ -1798,7 +1818,7 @@ async function boot(){
   initRT();
   // タイトルの絵
   const tg=$('#tcv').getContext('2d');tg.imageSmoothingEnabled=false;
-  for(let x=0;x<6;x++)drawGrass(tg,x,2);tg.drawImage(SPR.chloe[0][0],20,14);tg.drawImage(SPR.player[0][0],40,14);tg.drawImage(SPR.luu[0][0],60,14);
+  for(let x=0;x<6;x++)drawGrass(tg,x,2);const T=(sp,x,y)=>tg.drawImage(sp,x-(sp.ox||0),y-(sp.oy||0));T(SPR.chloe[0][0],20,14);T(SPR.player[0][0],40,14);T(SPR.luu[0][0],60,14);
   drawCrop(tg,'kabu',3,4,28);drawCrop(tg,'ichigo',3,78,28);
   const sv=loadSave();if(sv){S=sv;$('#contBtn').hidden=false;}
   $('#newBtn').onclick=()=>begin(true);$('#contBtn').onclick=()=>begin(false);
@@ -1819,6 +1839,7 @@ async function boot(){
   if(!sv)S=null;
   requestAnimationFrame(loop);
   window.__game={get S(){return S;},P,RT,Q,onTap,sleep,openNpc,view,cam,canAct,LIT,
+    ui:{say,choose,openShop,openShip,openBag,openMap,openFriends,bubble},
     fps(){const a=LIT.fr||[];return a.length?Math.round(a.length/a.reduce((x,y)=>x+y,0)):0;},
     debug(o){if(o.time!=null)S.time=o.time;if(o.map)S.map=o.map;if(o.cam&&o.cam[0]>=0)setFree({x:o.cam[0],y:o.cam[1]});if(o.light!=null){LIT.q=o.light;applyLight();}if(o.pos){P.x=o.pos[0];P.y=o.pos[1];P.path=[];}if(o.npc)Object.assign(DBGN,o.npc);if(o.pdir!=null)P.dir=o.pdir;if(o.wear){CHARS.player.wear=o.wear;makeSprites('player');}}};
 }

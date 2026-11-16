@@ -38,7 +38,7 @@ async function boot(){
   initRT();
   // タイトルの絵
   const tg=$('#tcv').getContext('2d');tg.imageSmoothingEnabled=false;
-  for(let x=0;x<6;x++)drawGrass(tg,x,2);tg.drawImage(SPR.chloe[0][0],20,14);tg.drawImage(SPR.player[0][0],40,14);tg.drawImage(SPR.luu[0][0],60,14);
+  for(let x=0;x<6;x++)drawGrass(tg,x,2);const T=(sp,x,y)=>tg.drawImage(sp,x-(sp.ox||0),y-(sp.oy||0));T(SPR.chloe[0][0],20,14);T(SPR.player[0][0],40,14);T(SPR.luu[0][0],60,14);
   drawCrop(tg,'kabu',3,4,28);drawCrop(tg,'ichigo',3,78,28);
   const sv=loadSave();if(sv){S=sv;$('#contBtn').hidden=false;}
   $('#newBtn').onclick=()=>begin(true);$('#contBtn').onclick=()=>begin(false);
@@ -59,6 +59,7 @@ async function boot(){
   if(!sv)S=null;
   requestAnimationFrame(loop);
   window.__game={get S(){return S;},P,RT,Q,onTap,sleep,openNpc,view,cam,canAct,LIT,
+    ui:{say,choose,openShop,openShip,openBag,openMap,openFriends,bubble},
     fps(){const a=LIT.fr||[];return a.length?Math.round(a.length/a.reduce((x,y)=>x+y,0)):0;},
     debug(o){if(o.time!=null)S.time=o.time;if(o.map)S.map=o.map;if(o.cam&&o.cam[0]>=0)setFree({x:o.cam[0],y:o.cam[1]});if(o.light!=null){LIT.q=o.light;applyLight();}if(o.pos){P.x=o.pos[0];P.y=o.pos[1];P.path=[];}if(o.npc)Object.assign(DBGN,o.npc);if(o.pdir!=null)P.dir=o.pdir;if(o.wear){CHARS.player.wear=o.wear;makeSprites('player');}}};
 }

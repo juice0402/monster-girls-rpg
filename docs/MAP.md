@@ -14,12 +14,12 @@
 | ファイル | 行 | 役目・おもな名前 |
 |---|---|---|
 | src/page.html | 67 | 画面の形（上の板・地図・下の板・ふきだし・まど・タイトル）と印の行 |
-| src/style.css | 117 | 見た目（地図に重ねる上の文字と下の道具の列・紙のふきだし・DotGothic16） |
+| src/style.css | 132 | 見た目（上の文字・下の道具の列・ふきだし・まどは、枠なし・半透明で地図に重ねる。色は :root の --veil・--chip・--line・--dim・--gold-*。ふきだしとまどが出ている間は下の列をかくす・DotGothic16） |
 | src/data/rules.js | 21 | 数字：CROPS（作物）・RENO（改築）・HEART・COST（体力）・TOOLS・1日の長さ・SAVE_KEY |
 | src/data/maps.js | 68 | MAPS（牧場・街のマスの文字）・BLOCK（歩けない文字）・tile・blocked・SPOTS（地図の行き先） |
 | src/dialogue.js | 13 | DLG の最小版と loadDLG（台詞は src/data/dialogue.json） |
 | src/data/chars.js | 60 | CHARS：人の絵の表（16×32・前／後ろ／横・足3コマ・pal＝[色, 部分, つや]）・着せかえの部品 items（帽子など）と wear（いま身につけている物） |
-| src/art/people.js | 35 | charFrame（身につけた物を重ねてから、部分ごとの面の向き）・makeSprites（着せかえたらもう一度）・SPR |
+| src/art/people.js | 40 | charFrame（絵の枠は24×36＝体16×32のまわりに横4・上4のゆとり。身につけた物を重ねてから、部分ごとの面の向き）・makeSprites（着せかえたらもう一度）・SPR。描く所は sp.ox・sp.oy だけずらす |
 | src/art/pixel.js | 138 | ドット絵の道具（mk・grid）・面の向きの道具（NBuf・nput・nrect・bumpLum・nHouse）・草・道・木・さく・池 |
 | src/art/town.js | 248 | 街の3枚組：Surf3・stamp3・PS（色の段）・makeBld（家）・街灯・ベンチ・金床・材木・たる・袋・噴水（makeFountain・fountainWater）・石だたみ（drawTownGround）・置き場所（drawTownThings） |
 | src/art/farm.js | 186 | 牧場の家の部品（roof・wall・door・win・shipBox）・土・作物・岩・花・道具の絵・drawBuildings・renderBase（地図ごとの土台＝色・面の向き・高さ/かげ/つや・影の形） |
@@ -33,7 +33,7 @@
 | src/light/particles.js | 42 | 花びら・光のちり・ほたる（drawLP）・LAMPS・lightsFor（夜のあかりの一覧） |
 | src/render.js | 123 | resize・カメラ（clampCam・setFree）・粒・toast・render（毎コマ：土台→畑→人→影→光） |
 | src/ui.js | 130 | updHud・ふきだし（say・scene・choose）・まど（openShop・openShip・openBag・openMap・openFriends）・warp・dayCard・seasonEnd |
-| src/main.js | 65 | update・loop・initRT・begin・boot・`window.__game`（試す用の debug） |
+| src/main.js | 66 | update・loop・initRT・begin・boot・`window.__game`（試す用の debug） |
 
 ## データ・数字の場所
 - 作物・改築・体力・1日の長さ → src/data/rules.js
@@ -45,10 +45,12 @@
 
 ## 試す
 - `window.__game.debug({time:分, map:'farm'|'town', cam:[x,y], light:0〜3, pos:[x,y], npc:{id:[map,x,y,向き]}})`・`__game.fps()`
+- ふきだし・まどを出す：`__game.ui.say(id,文)`・`choose(id,文,[選択肢],true)`・`openShop()`・`openShip()`・`openBag()`・`openMap()`・`openFriends()`・`bubble(id,文)`
 - 確かめはビルド → スクショ（牧場と街・朝昼夕夜）。読み直して確かめない
 
 ## ほか
 - art-samples/hikari.html … 光の見本（1ファイル・ゲームとは別）
+- tools/hat3d.py … 麦わら帽子を立体から向きごとのドットにする道具。UFO 型（頭に沿うふくらみ＋平らなつば）を少しうしろへ傾けてかぶる（斜めかぶり）。前・後ろ・横は同じ1つの立体を真正面から見る。つばの高さは、前と横で目が見えるように計算。新しい帽子もこれで作る
 - tools/greenkey.py・tools/import_single.py … Codex の絵の緑を抜く道具
 - art-requests/ … Codex への絵の依頼書（AGENTS.md の決まり）
 - index.html … 自動で作るファイル。読まない・手で直さない
