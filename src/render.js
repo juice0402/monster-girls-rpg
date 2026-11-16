@@ -55,9 +55,9 @@ function render(){
       if(F.soil[i])blit3(SOILC[F.wet[i]?1:0][soilMask(x,y)],'flat',X,Y);
       const c=F.crop[i];if(c){const cd=CROPS[c.id];const stg=c.ready?3:c.d===0?0:c.d<cd.days/2?1:2;
         if(stg>=1){ctx.fillStyle='rgba(40,20,10,.25)';ctx.fillRect(X+4,Y+13,8,2);}
-        const o=blit3(cropSprite(stg===3?c.id:'s'+stg),'round',X,Y);if(o&&stg>=2)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});
+        const o=blit3(cropSprite(stg===3?c.id:'s'+stg,stg>=1?cropLean(x,y,now):0),'round',X,Y);if(o&&stg>=2)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});
         if(c.ready&&((now*2+x+y)|0)%5===0){E.fillStyle='#fffbe0';E.fillRect(X+12,Y+2,1,1);E.fillRect(X+11,Y+3,3,1);E.fillRect(X+12,Y+4,1,1);}}
-      if(F.rock[i]){const o=blit3(ROCK,'round',X,Y);if(o)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});}
+      if(F.rock[i]){if(!L){ctx.fillStyle='rgba(20,40,15,.3)';ctx.fillRect(X+3,Y+13,10,2);}const o=blit3(rockSprite(x,y),'round',X,Y);if(o)dyn.push({sil:o.sil,X,Y,ay:Y+o.by});}
       if(F.flower[i])blit3(FLOWERC[(x+y)%3],'round',X,Y);
     }
     // 池のきらめき（光の演出のときは水のつやで光る）
@@ -76,8 +76,15 @@ function render(){
   const ents=[];
   ents.push({id:'player',x:P.x,y:P.y,dir:P.dir,act:P.act,mov:P.path.length>0,anim:P.anim});
   for(const id in RT){const r=RT[id];if(!r.hidden&&r.map===pm)ents.push({id,x:r.x,y:r.y,dir:r.dir,act:r.act,mov:r.path.length>0,anim:r.anim});}
+  // 木（風でゆれる）：画面に入る木は人といっしょに奥から描く。画面の外の木も、光の演出のときは影だけ落とす
+  const tm=L?110:0;
+  for(const t of TREES[pm]){const X=t.X-cx,Y=t.Y-cy;if(X>view.w+tm||Y>view.h+tm||X+TW<-tm||Y+TH<-tm)continue;
+    const f=treeNow(t,now);if(X>view.w||Y>view.h||X+TW<0||Y+TH<0){dyn.push({sil:f.sil,X,Y,ay:Y+TAY});continue;}
+    ents.push({tree:f,X,Y,y:t.y-.02});}
   ents.sort((a,b)=>a.y-b.y);
-  for(const e of ents){const X=Math.round(e.x*TS)-cx,Y=Math.round(e.y*TS)-cy;
+  for(const e of ents){
+    if(e.tree){const f=e.tree;ctx.drawImage(f.c,e.X,e.Y);if(L){nctx.drawImage(f.n,e.X,e.Y);dctx.drawImage(f.d,e.X,e.Y);}dyn.push({sil:f.sil,X:e.X,Y:e.Y,ay:e.Y+TAY});continue;}
+    const X=Math.round(e.x*TS)-cx,Y=Math.round(e.y*TS)-cy;
     ctx.fillStyle=L?'rgba(0,0,0,.16)':'rgba(0,0,0,.22)';ctx.fillRect(X+3,Y+14,10,2);ctx.fillRect(X+4,Y+13,8,4);
     const fr=e.act?3:e.mov?[1,0,2,0][((e.anim*8)|0)%4]:0;
     const bob=e.id==='luu'&&!e.mov?((now*3)|0)%2:0;

@@ -41,18 +41,6 @@ function bufCanvas(w,h,data){const c=document.createElement('canvas');c.width=w;
 // 影を落とす物（土台に描いた木・家・さく）。sil＝黒いかたち、ay＝地面に立つ線
 let CAST=null;
 function rectSil(w,h,rects){return mk(w,h,g=>{g.fillStyle='#000';for(const r of rects)g.fillRect(r[0],r[1],r[2],r[3]);});}
-// 家：手前に向いた屋根＋南を向く壁（はしは丸める）
-function nHouse(X,Y,w,rh,wh){
-  const zb=Y+rh+wh;
-  if(NB){
-    for(let y=Y-1;y<=Y+rh;y++){const t=(y-(Y-1))/(rh+1);for(let x=X-3;x<X+w+3;x++){const e=x<X+3?-(X+3-x)/6:x>=X+w-3?(x-(X+w-4))/6:0;
-      nput(x,y,y>=Y+rh-1?[e*.4,.9,.42]:[e*.55,.3+.4*t,.95-.3*t],wh+(Y+rh-y)*.7+1,1,.05);}}
-    for(let y=Y+rh;y<zb;y++)for(let x=X;x<X+w;x++)nput(x,y,[x<X+2?-.65:x>=X+w-2?.65:0,1,0],zb-y,y>=zb-6?.85:1,0);
-    nrect(X-1,zb-4,w+2,1,[0,.55,.83],zb,1,0);
-  }
-  if(CAST)CAST.push({sil:rectSil(w+6,rh+wh+1,[[0,0,w+6,rh+wh+1]]),x:X-3,y:Y-1,ay:zb});
-  return zb;}
-function nGlass(wx,wy,zb){nrect(wx,wy,10,9,NF,zb,1,.6);}
 
 /* ---- 草 ---- */
 const GR={b:'#6db34b',d:'#579d3d',dd:'#468a32',l:'#87c95c',h:'#a6dd73'};
@@ -83,44 +71,7 @@ function drawPath(g,x,y){
   if(!isPathT(m,x,y-1))edge(0);if(!isPathT(m,x,y+1))edge(1);if(!isPathT(m,x-1,y))edge(2);if(!isPathT(m,x+1,y))edge(3);
 }
 
-/* ---- 木（まわりの森。となりと重なる丸い木） ---- */
-const TREE={o:'#1d4a2a',d:'#2b6638',m:'#3c8344',l:'#55a24e',h:'#7fc45c',tr:'#6b4529',trd:'#4c2f1b',trl:'#8c5f38'};
-function drawTree(g,x,y){
-  const X=x*TS,Y=y*TS,h=hash(x,y),h2=hash(y+3,x+7);
-  const cx=X+8+((h*3)|0)-1,cy=Y+6+((h2*3)|0)-1,r=9.2+h2*.8;
-  if(tile(RBM,x,y+1)!=='T'){g.fillStyle='rgba(20,50,20,.35)';g.fillRect(X+3,Y+14,11,2);
-    g.fillStyle=TREE.trd;g.fillRect(X+6,Y+9,5,6);g.fillStyle=TREE.tr;g.fillRect(X+6,Y+9,3,6);g.fillStyle=TREE.trl;g.fillRect(X+7,Y+10,1,4);
-    nrect(X+6,Y+9,5,6,i=>cylN((i-2)/2.6),Y+15,.85,0);}
-  for(let j=-12;j<=12;j++)for(let i=-12;i<=12;i++){
-    const d=Math.hypot(i,j*1.08),a=Math.atan2(j,i),rr=r+Math.sin(a*5+h*9)*1.1+Math.sin(a*9+h2*5)*.5;
-    if(d>rr)continue;const px=cx+i,py=cy+j;
-    if(d>rr-1.1){pset(g,px,py,TREE.o);nput(px,py,sphereN(i/rr,j/rr),Y+19-py,.7,0);continue;}
-    const s=(-(i*.62+j*.78))/rr+(hash(px*3,py*5)-.5)*.32;
-    pset(g,px,py,s>.5?TREE.h:s>.12?TREE.l:s>-.32?TREE.m:TREE.d);nput(px,py,sphereN(i/rr*.92,j/rr*.92),Y+19-py,1,.04);
-  }
-  // 葉のかたまりの光
-  for(let k=0;k<3;k++){const hx=cx-5+((hash(x*7+k,y)*8)|0),hy=cy-6+((hash(x,y*7+k)*7)|0);pset(g,hx,hy,TREE.h);pset(g,hx+1,hy,'#a5dc78');pset(g,hx,hy+1,TREE.l);}
-}
-
-/* ---- さく ---- */
-const WOOD={o:'#4e311c',d:'#87562e',b:'#b37b45',l:'#d8a466',h:'#ecc48a'};
-function drawFence(g,m,x,y){const X=x*TS,Y=y*TS;drawGrass(g,x,y);
-  const L=tile(m,x-1,y)==='F',R=tile(m,x+1,y)==='F',U=tile(m,x,y-1)==='F',D=tile(m,x,y+1)==='F';
-  const rail=(rx,ry,w)=>{g.fillStyle=WOOD.o;g.fillRect(rx,ry-1,w,4);g.fillStyle=WOOD.l;g.fillRect(rx,ry,w,1);g.fillStyle=WOOD.b;g.fillRect(rx,ry+1,w,1);};
-  g.fillStyle='rgba(25,60,20,.3)';
-  if(L)g.fillRect(X,Y+13,8,2);if(R)g.fillRect(X+8,Y+13,8,2);
-  if(L){rail(X,Y+5,8);rail(X,Y+10,8);}if(R){rail(X+8,Y+5,8);rail(X+8,Y+10,8);}
-  if(U){g.fillStyle=WOOD.o;g.fillRect(X+6,Y,4,4);g.fillStyle=WOOD.b;g.fillRect(X+7,Y,2,4);}
-  if(D){g.fillStyle=WOOD.o;g.fillRect(X+6,Y+13,4,3);g.fillStyle=WOOD.b;g.fillRect(X+7,Y+13,2,3);}
-  const rn=(i,j)=>j===0?[0,.25,1]:[0,1,.12];
-  if(L){nrect(X,Y+4,8,4,rn,Y+14);nrect(X,Y+9,8,4,rn,Y+14);}if(R){nrect(X+8,Y+4,8,4,rn,Y+14);nrect(X+8,Y+9,8,4,rn,Y+14);}
-  if(U)nrect(X+6,Y,4,4,i=>cylN((i-1.5)/2),Y+14);if(D)nrect(X+6,Y+13,4,3,i=>cylN((i-1.5)/2),Y+16);
-  if(CAST){const r=[[5,2,6,12]];if(L)r.push([0,4,8,4],[0,9,8,4]);if(R)r.push([8,4,8,4],[8,9,8,4]);CAST.push({sil:rectSil(16,16,r),x:X,y:Y,ay:Y+14});}
-  // 杭
-  g.fillStyle='rgba(25,60,20,.38)';g.fillRect(X+4,Y+14,8,2);
-  grid(g,['.oooo.','olhbdo','olhbdo','olbbdo','olbbdo','olbbdo','olbbdo','olbbdo','olbbdo','olbbdo','odbbdo','.oooo.'],WOOD,X+5,Y+2);
-  nrect(X+5,Y+2,6,12,(i,j)=>j<1?[0,.2,1]:cylN((i-2.5)/3),Y+14,1,.02);
-}
+/* 木・さく・岩は src/art/scenery.js */
 
 /* ---- 水（池） ---- */
 const WAT={b:'#3e92d2',d:'#2f78b8',l:'#62afe6',h:'#a8dcf6',rim:'#2a5f8f'};

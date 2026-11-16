@@ -64,7 +64,7 @@ function makeBld(o){
       if(sy===0){n[2]=.6;v+=.4;}if(sy===4){v=1.2;ao*=.6;}if(sx===0){v=1.3;ao*=.6;}if(sx===1)n[0]=-.5;if(sx===8)n[0]=.5;
       S(x,y,PS.wall,v,n,ao);}
     else if(o.wall==='plank'){const py=(y-wT)%4;let v=3.3+(h3(Math.floor((x+(py*7))/23),Math.floor((y-wT)/4),55+sd)-.5)*.8+(h3(x,y,56)<.05?-.8:0);
-      const n=py===0?[0,.75,.65]:py===3?[0,.8,-.6]:NF;S(x,y,PS.wood,py===3?2:v,n,top*(py===3?.75:1));}
+      const n=py===0?[0,.75,.65]:py===3?[0,.8,-.6]:NF;S(x,y,PS[o.wallP||'wood'],py===3?2:v,n,top*(py===3?.75:1));}
     else if(o.wall==='brick'){const course=Math.floor((y-wT)/3),off=(course&1)*3,sx=(x+off)%6,sy=(y-wT)%3;let v=3.4+(h3(Math.floor((x+off)/6),course,57+sd)-.5)*.9;
       let n=NF,ao=top;if(sy===2||sx===0){v=1.2;ao*=.65;}else if(sy===0)n=[0,.7,.7];S(x,y,PS.brick,v,n,ao);}
     else{const v=3.6+(h3(x,y,31+sd)-.5)*.5+(vn3(x/6,y/6,32)-.5)*.6;S(x,y,PS.plast,v,[(vn3(x*.6,y*.6,33)-.5)*.2,1,(vn3(x*.6,y*.6,34)-.5)*.2],top);}}
@@ -75,11 +75,12 @@ function makeBld(o){
     let v=3.1+(h3(bx,c,41+sd)-.5)*1;const n=[0,1,0];let ao=1;
     if(sy===0)n[2]=.8;if(sy===2){n[2]=-.6;ao=.7;}if(sx===1)n[0]=-.7;if(sx===9)n[0]=.7;if(sx===0){v=1.2;ao=.5;}if(y===H-1)ao=.5;
     if(o.door&&x>=o.door[0]-2&&x<=o.door[0]+o.door[1]+1&&y<H-3){v+=.6;n[2]+=.6;}S(x,y,PS.stone[2],v,n,ao,0,H-1-y);}
-  for(const[wx,wy,box]of(o.wins||[])){               // 窓（木のわく・ガラス・十字・花のプランター）
+  for(const[wx,wy,box,cur]of(o.wins||[])){           // 窓（木のわく・ガラス・十字・花のプランター・cur＝カーテンの色の段）
     for(let y=wy;y<=wy+13;y++)for(let x=wx;x<=wx+13;x++){let v=3.2,n=NF;if(y===wy){n=[0,.6,.8];v=3.6;}if(y===wy+13){n=[0,.3,.95];v=3.8;}
       if(x===wx)n=[-.7,.7,0];if(x===wx+13)n=[.7,.7,0];S(x,y,PS.wood,v,n,1);}
     for(let gy=0;gy<10;gy++)for(let gx=0;gx<10;gx++){const x=wx+2+gx,y=wy+2+gy;
       if(gx===4||gx===5){S(x,y,PS.wood,3,[gx===4?-.6:.6,.8,0],.8);continue;}if(gy===5){S(x,y,PS.wood,3,[0,.6,.8],.8);continue;}
+      if(cur){const e=gx<4?gx:9-gx;if(gy<9-e*3){S(x,y,cur,e===0?1.6:2.8-gy*.12,NF,.9,0);continue;}}
       S(x,y,PS.glass,(gy<2?2.6:1.6)-gy*.05+(gx+gy===3?2:0),NF,.7,.95);}
     wins.push([wx+2,wy+2,10,10]);
     if(box){for(let x=wx-1;x<=wx+14;x++){S(x,wy+14,PS.wood,3.8,[0,.4,.9],1);S(x,wy+15,PS.wood,3.2,NF,1);S(x,wy+16,PS.wood,1.6,[0,.5,-.85],.6);}
