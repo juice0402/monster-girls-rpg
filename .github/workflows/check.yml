@@ -1,0 +1,17 @@
+name: Build check
+# src/ と index.html がずれていたら落とす（index.html は node tools/build.mjs で作る）
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node tools/build.mjs --check

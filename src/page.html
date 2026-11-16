@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>モン娘牧場 試作1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
+<style>
+/*@CSS*/
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="hud">
+    <div class="when"><span id="date">春 1日（月）</span><span id="clock">6:00</span></div>
+    <div id="money">300</div>
+    <div class="st"><span>体力</span><span class="bar"><i id="stbar"></i></span></div>
+    <div class="hudbtns">
+      <button class="hb" id="lightBtn" hidden>光 中</button>
+      <button class="hb" id="ffBtn" aria-pressed="false">早送り</button>
+      <button class="hb" id="friendBtn">なかよし</button>
+    </div>
+  </header>
+  <main id="stage">
+    <canvas id="gl" hidden></canvas>
+    <canvas id="cv"></canvas>
+    <canvas id="pfx" hidden></canvas>
+    <div id="fx"></div>
+    <div id="toast" class="off"></div>
+    <button id="recenter" hidden>自分にもどる</button>
+    <div id="dlg" hidden>
+      <canvas id="face" width="16" height="16"></canvas>
+      <div id="dname"></div>
+      <div id="dtext"></div>
+      <div id="dopts" hidden></div>
+      <div id="dnext" hidden>▼</div>
+    </div>
+  </main>
+  <footer id="bar">
+    <div id="hotbar"></div>
+    <button class="big" id="bagBtn">かばん</button>
+    <button class="big" id="mapBtn">地図</button>
+  </footer>
+  <div id="modal" hidden><div class="panel" id="panel"></div></div>
+  <div id="fade"></div>
+  <div id="title">
+    <canvas id="tcv" width="96" height="48"></canvas>
+    <h1>モン娘×牧場</h1>
+    <p>試作1　春の28日</p>
+    <div class="tb">
+      <button class="go" id="contBtn" hidden>つづきから</button>
+      <button id="newBtn">はじめから</button>
+    </div>
+  </div>
+</div>
+<!--@DATA-->
+<script>
+(()=>{
+'use strict';
+const $=s=>document.querySelector(s);
+//@JS
+})();
+</script>
+</body>
+</html>
