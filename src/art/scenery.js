@@ -122,9 +122,13 @@ function treeAt(m,x,y){const z=m==='town'?57:0,h=h3(x,y,11+z),h2=h3(y,x,23+z),jx
   if(y===MH-1&&h<.7)return Object.assign(o,{kind:'bush',sd:pal+3*((h2*2)|0)});
   const size=y===0?(h2<.7?2:1):y===MH-1?0:(h2<.25?0:h2<.72?1:2),shape=(h3(x,y,43+z)*4)|0;
   return Object.assign(o,{kind:'oak',sd:shape+4*size+12*(size===0&&h3(x,y,47+z)<.45?3:pal)});}
+// 1コマで新しく作ってよい木の絵の枚数（作るのは重いので、強い風で一気に変わるコマに集めない。まだない絵は前の絵のまま待つ）
+let TFB=2;
+const hasTF=(kind,sd,lean,fl)=>{const M=TREEM[kind+sd+'_'+fl];return !!(M&&M.fr[lean]);};
 function treeNow(t,now){const w=windAt(t.X+TAX,t.Y+TAY,now);
-  if(Math.abs(w-t.lean)>.62)t.lean=Math.max(-1,Math.min(3,Math.round(w)));
-  const fl=w>.85?(Math.floor(now*(1.5+w*1.6)+t.ph)&1):0;   // 風が強いと葉がちらちら
+  if(Math.abs(w-t.lean)>.62){const nl=Math.max(-1,Math.min(3,Math.round(w)));if(hasTF(t.kind,t.sd,nl,0)||TFB-->0)t.lean=nl;}
+  let fl=w>.85?(Math.floor(now*(1.5+w*1.6)+t.ph)&1):0;   // 風が強いと葉がちらちら
+  if(fl&&!hasTF(t.kind,t.sd,t.lean,1)){if(TFB>0)TFB--;else fl=0;}
   return treeFrame(t.kind,t.sd,t.lean,fl);}
 // 木の下の地面（少し暗く・落ち葉）
 function drawForestFloor(g,x,y){const X=x*TS,Y=y*TS;g.fillStyle='rgba(18,40,24,.3)';g.fillRect(X,Y,TS,TS);

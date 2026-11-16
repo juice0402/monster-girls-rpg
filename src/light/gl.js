@@ -78,7 +78,10 @@ function initGL(){
     return true;
   }catch(err){console.error(err);G=null;return false;}
 }
-function upT(t,src){gl.bindTexture(gl.TEXTURE_2D,t);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);}
+// 毎コマの絵を GPU へ送る。大きさが同じあいだは、作り直さず中身だけ入れかえる（texSubImage2D のほうが軽い）
+function upT(t,src){gl.bindTexture(gl.TEXTURE_2D,t);
+  if(t._w===src.width&&t._h===src.height)gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,gl.RGBA,gl.UNSIGNED_BYTE,src);
+  else{gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);t._w=src.width;t._h=src.height;}}
 function gpass(P,target,bind){gl.bindFramebuffer(gl.FRAMEBUFFER,target?target.f:null);gl.viewport(0,0,target?target.w:glc.width,target?target.h:glc.height);gl.useProgram(P.p);bind(P.u);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);}
 function gbt(unit,t,loc){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);gl.uniform1i(loc,unit);}
 function gblur(a,b,step){gpass(G.blur,b,u=>{gbt(0,a.t,u.uTex);gl.uniform2f(u.uDir,step/a.w,0);});gpass(G.blur,a,u=>{gbt(0,b.t,u.uTex);gl.uniform2f(u.uDir,0,step/a.h);});}
