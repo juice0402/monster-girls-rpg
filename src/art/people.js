@@ -1,13 +1,18 @@
-function charFrame(id,view,f,flip){
+function charFrame(id,view,f,flip,wear){
   const C=CHARS[id],v=C.views[view],pal=C.pal,W=16,H=32;
-  let rows=v.rows.concat(v.legs[f]);if(flip)rows=rows.map(r=>[...r].reverse().join(''));
+  let rows=v.rows.concat(v.legs[f]);
+  // 着せかえ：身につけた物（帽子など）を上に重ねる。'.' はすけて下の体が見える
+  for(const k in(wear||{})){const it=wear[k]&&C.items&&C.items[wear[k]],L=it&&it.views[view];if(!L)continue;
+    rows=rows.map((r,y)=>{const o=L.rows[y-L.y];if(!o)return r;let t='';for(let x=0;x<W;x++)t+=o[x]!=='.'?o[x]:r[x];return t;});}
+  if(flip)rows=rows.map(r=>[...r].reverse().join(''));
   const col=new Uint8ClampedArray(W*H*4),n=new Uint8ClampedArray(W*H*4),d=new Uint8ClampedArray(W*H*4),em=new Uint8ClampedArray(W*H*4),NN=[];
   const at=(x,y)=>x<0||y<0||x>=W||y>=H||rows[y][x]==='.'?null:pal[rows[y][x]];
   const hx=flip?15-C.head[0]:C.head[0],hy=C.head[1],hr=C.head[2];let hasEm=false;
   const cl=v=>Math.max(-.98,Math.min(.98,v));
   for(let y=0;y<H;y++)for(let x=0;x<W;x++){const p=at(x,y);if(!p)continue;const i=y*W+x,c=hexRGB(p[0]);
     col[i*4]=c[0];col[i*4+1]=c[1];col[i*4+2]=c[2];col[i*4+3]=255;const pt=p[1];let N=null;
-    if(pt==='hd'||pt==='hc')N=sphereN(cl((x+.5-hx)/hr),cl((y+.5-hy)/hr));
+    if(pt==='hc'&&C.hatC){const c=C.hatC,cx=flip?15-c[0]:c[0];N=sphereN(cl((x+.5-cx)/c[2]),cl((y+.5-c[1])/c[2]));}   // 帽子のふくらみは帽子の丸で
+    else if(pt==='hd'||pt==='hc')N=sphereN(cl((x+.5-hx)/hr),cl((y+.5-hy)/hr));
     else if(pt==='hn')N=sphereN(cl((x+.5-hx)/hr),-.75);
     else if(pt==='hb')N=[(x+.5-8)/8*.35,.32,.9];
     else if(pt==='em'){N=NF;hasEm=true;em[i*4]=255;em[i*4+1]=240;em[i*4+2]=150;em[i*4+3]=170;}
@@ -26,6 +31,7 @@ function charFrame(id,view,f,flip){
   c.nd={n:bufCanvas(W,H,nb),d:bufCanvas(W,H,d),sil:silOf(c),by:H};if(hasEm)c.em=bufCanvas(W,H,em);
   return c;}
 const SPR={};
-function makeSprites(id){const fr=(d,f)=>d===0?charFrame(id,'front',f):d===1?charFrame(id,'back',f):charFrame(id,'side',f,d===2);
+// wear：身につける物（例 {hat:'straw'}）。着せかえたら makeSprites(id) をもう一度
+function makeSprites(id){const w=CHARS[id].wear,fr=(d,f)=>d===0?charFrame(id,'front',f,false,w):d===1?charFrame(id,'back',f,false,w):charFrame(id,'side',f,d===2,w);
   SPR[id]=[0,1,2,3].map(d=>{const a=[0,1,2].map(f=>fr(d,f));a[3]=a[0];return a;});SPR[id].faceY=CHARS[id].faceY;}
 
