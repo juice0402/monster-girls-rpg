@@ -52,7 +52,7 @@ function doField(x,y,item){
   const tool=TOOLS[item]&&(k==='till'||k==='water'||k==='rock')?item:null;
   P.act={t:0,dur:k==='rock'?.5:.28,tool,done:()=>{
     S.stamina-=need;
-    if(k==='till'){S.farm.soil[i]=1;dust(x*TS+8,y*TS+10,'#8a5a35',5);hint('till','つぎは下の板で種をえらんで、耕したマスをタップ');}
+    if(k==='till'){S.farm.soil[i]=1;dust(x*TS+8,y*TS+10,'#8a5a35',5);hint('till','つぎは下の道具から種をえらんで、耕したマスをタップ');}
     else if(k==='plant'){S.seeds[item]--;S.farm.crop[i]={id:item,d:0,ready:false};hint('plant','じょうろに持ちかえて水やり。毎日やると育つよ');}
     else if(k==='water'){S.farm.wet[i]=1;splash(x*TS+8,y*TS+8);}
     else if(k==='harvest'){const c=S.farm.crop[i];S.inv[c.id]++;fxText(x*TS+8,y*TS,'+1 '+CROPS[c.id].name);const cd=CROPS[c.id];if(cd.regrow){c.d=cd.days-cd.regrow;c.ready=false;}else{S.farm.crop[i]=null;}hint('harvest','とれた作物は出荷箱へ。あげると喜ぶ住人もいるよ');}

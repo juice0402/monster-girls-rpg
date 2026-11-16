@@ -14,7 +14,7 @@
 | ファイル | 行 | 役目・おもな名前 |
 |---|---|---|
 | src/page.html | 67 | 画面の形（上の板・地図・下の板・ふきだし・まど・タイトル）と印の行 |
-| src/style.css | 115 | 見た目（木の板と紙のふきだし・DotGothic16） |
+| src/style.css | 117 | 見た目（地図に重ねる上の文字と下の道具の列・紙のふきだし・DotGothic16） |
 | src/data/rules.js | 21 | 数字：CROPS（作物）・RENO（改築）・HEART・COST（体力）・TOOLS・1日の長さ・SAVE_KEY |
 | src/data/maps.js | 68 | MAPS（牧場・街のマスの文字）・BLOCK（歩けない文字）・tile・blocked・SPOTS（地図の行き先） |
 | src/dialogue.js | 13 | DLG の最小版と loadDLG（台詞は src/data/dialogue.json） |

@@ -25,7 +25,7 @@ async function begin(fresh){
   renderBase('farm');renderBase('town');updHud();updClock();started=true;
   if(!S.flags.intro){S.flags.intro=true;
     const intro=DLG.intro&&DLG.intro.length?DLG.intro:[{who:'narr',text:'モン娘だけが暮らす街の、はずれの牧場。'},{who:'player',text:'今日からここが、わたしの牧場。がんばろう！'}];
-    await scene(intro);toast('下の板でクワをえらんで、畑のマスをタップ。指でなぞると見わたせるよ');save();}
+    await scene(intro);toast('下の道具からクワをえらんで、畑のマスをタップ。指でなぞると見わたせるよ');save();}
   await runVisits();
 }
 async function boot(){
